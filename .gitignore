@@ -1,0 +1,77 @@
+# ─── Secrets & environment ───────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.jks
+*.keystore
+key.properties
+secrets.properties
+**/Secrets.xcconfig
+google-services.json
+GoogleService-Info.plist
+
+# ─── Flutter / Dart ──────────────────────────────────────────────────────────
+**/build/
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/.pub-cache/
+**/.pub/
+**/doc/api/
+*.g.dart.bak
+coverage/
+
+# ─── Logs & crash reports ────────────────────────────────────────────────────
+*.log
+flutter_*.log
+hs_err_pid*
+crash_*.txt
+
+# ─── Android ─────────────────────────────────────────────────────────────────
+**/android/.gradle/
+**/android/local.properties
+**/android/captures/
+**/android/app/release/
+**/android/**/GeneratedPluginRegistrant.java
+**/android/.idea/
+
+# ─── iOS / macOS ─────────────────────────────────────────────────────────────
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/DerivedData/
+**/macos/Flutter/ephemeral/
+**/macos/Pods/
+*.xcuserstate
+**/xcuserdata/
+
+# ─── Windows / Linux ─────────────────────────────────────────────────────────
+**/windows/flutter/ephemeral/
+**/linux/flutter/ephemeral/
+
+# ─── IDE / editor ────────────────────────────────────────────────────────────
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# ─── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Supabase local ──────────────────────────────────────────────────────────
+supabase/.temp/
+supabase/.branches/

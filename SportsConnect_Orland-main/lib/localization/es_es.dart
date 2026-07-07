@@ -1,0 +1,912 @@
+const Map<String, String> esEs = {
+  // ONBOARDING
+  'choose_your_role': 'Elige Tu Rol',
+  'role_prompt':
+      '¿Estás aquí para jugar y mejorar tu juego, o para oficializar y asegurar un juego justo? Selecciona tu rol para comenzar.',
+  'join_as_player': 'Únete Como Jugador',
+  'join_as_referee': 'Únete Como Árbitro',
+  'gather_friends': 'Junta a tus amigos y crea un equipo',
+  'set_up_match':
+      'Crea fácilmente un Partido o únete a uno existente con nuestro revolucionario algoritmo. Invita amigos o encuentra a tu nuevo oponente basado en tu nivel de experiencia.',
+  'getting_started': 'Comencemos',
+  'track_your_progress': 'Revisa Tu Progreso',
+  'monitor_progress':
+      'Monitorea tu historial de partida y estadísticas de rendimiento. Escala la tabla de posiciones y desbloquea logros a medida que mejoras tu nivel de juego.',
+  'next': 'Siguiente',
+  'compete_in_ranked_matches': 'Compite en Partidos Rankeados',
+  'challenge_yourself':
+      'Desafíate con partidos rankeados. Compite contra otros jugadores con niveles de habilidad similares y asciende en los juegos competitivos para convertirte en el mejor jugador.',
+  'lets_get_started': 'Empecemos',
+  'setup_matches_track_progress':
+      'Crea partidos y revisa tu progreso. Compite en juegos rankeados y sube en las clasificaciones para mostrar tu talento.',
+  'register': 'Registro',
+  'login': 'Iniciar Sesión',
+  'terms_of_service': 'Términos de Servicio',
+  'privacy_policy': 'Políticas de Privacidad',
+  'agreement_prompt': 'Al seleccionar una opción, estás aceptando los ',
+  'matchmake': 'MATCHMAKE',
+
+  // AUTH
+  'welcome_back': 'Bienvenido de vuelta',
+  'enter_credentials':
+      'Ingresa tus credenciales para acceder a tu cuenta y continuar con tu emparejamiento.',
+  'your_email_here': 'Tu correo aquí...',
+  'your_password_here': 'Tu contraseña aquí...',
+  'forget_password': '¿Olvidaste tu contraseña?',
+  'remember_me': 'Recuérdame',
+  'or_continue_with': 'o continúa con',
+  'dont_have_account': '¿No tienes una cuenta?',
+  'create_account': 'Crear cuenta',
+  'forgot_password_title': 'Olvidaste tu Contraseña',
+  'forgot_password_prompt':
+      '¿Olvidaste tu contraseña? ¡No te preocupes! Ingresa tu correo abajo para recibir un enlace de restablecimiento.',
+  'send_password_reset_link': 'Enviar enlace para cambiar contraseña',
+  'back_to': 'Volver a',
+  'create_an_account': 'Crea una cuenta',
+  'start_finding_matches':
+      'Comienza a encontrar parejas que coincidan con tus habilidades y preferencias. Empieza a subir de rango ahora.',
+  'your_name_here': 'Tu nombre aquí...',
+  'create_password': 'Crea tu contraseña',
+  'retype_password': 'Reingresa tu contraseña',
+  'agree_to': 'Acepto los ',
+  'terms': 'Términos y Condiciones',
+  'already_have_account': '¿Ya tienes una cuenta?',
+  'otp_verification': 'Verificación OTP',
+  'enter_otp_prompt':
+      'Ingresa la contraseña de un solo uso (OTP) enviada a tu correo para verificar tu cuenta.',
+  'resend_code': 'Reenviar Código',
+  'confirm': 'Confirmar',
+  'success': '¡Éxito!',
+  'account_verified_prompt':
+      'Tu cuenta ha sido verificada, ya está todo listo para que explores la app.',
+  'please_wait': 'Por favor espera...',
+  'signing_in': 'Iniciando sesión...',
+  'verifying': 'Verificando...',
+
+  // IDENTITY VERIFICATION
+  'identity_verification': 'Verificación de Identidad',
+  'choose_document_prompt':
+      'Por favor elige el documento que quieres usar para verificar tu identidad.',
+  'passport': 'Pasaporte',
+  'id_card': 'Carnet de identidad',
+  'drivers_license': 'Licencia de conducir',
+  'continue_text': 'Continuar',
+  'scan_document_front': 'Escanear Parte Frontal del Documento',
+  'scan_front_page_prompt':
+      'Escanea la parte frontal del documento para completar el proceso de verificación.',
+  'hold_still': '¡Mantente Quieto!',
+  'capture': 'Captura',
+  'scan_document_back': 'Escanear Parte Trasera del Documento',
+  'scan_back_page_prompt':
+      'Escanea la parte trasera del documento para completar la verificación.',
+  'live_photo_scan': 'Escaneo de Foto en Vivo',
+  'live_photo_scan_prompt':
+      'Escanea tu cara usando la cámara frontal para completar la verificación de identidad.',
+  'failed': '¡Falla!',
+  'retry_capture_prompt':
+      'Intenta no mover la cámara mientras tomas la foto del ID y asegúrate de que la foto sea clara.',
+  'try_again': 'Inténtalo nuevamente',
+  'documents_uploaded_successfully':
+      'Los documentos han sido subidos exitosamente. Tomará unos momentos para que la verificación se complete.',
+
+  // PROFILE
+  'profile_information': 'Información de Perfil',
+  'personal_information': 'Información personal',
+  'upload': 'Subir',
+  'country': 'País',
+  'date_of_birth': 'Fecha de nacimiento',
+  'gender': 'Género',
+  'skill_level_hint': 'Principiante, Intermedio, Profesional',
+  'favorite_position': 'Posición favorita',
+  'replace': 'Reemplazar',
+  'remove': 'Remover',
+  'skills_and_more_info': 'Habilidades y más información',
+  'profile_setup_complete': 'Configuración del Perfil Completa',
+  'profile_updated_message':
+      'Tu información de perfil ha sido actualizada y completada. Ahora puedes continuar en la app.',
+  'my_profile': 'Mi Perfil',
+  'edit_profile': 'Editar Perfil',
+  'my_qr_code': 'Mi Código QR',
+  'manage_matches': 'Administrar Partidos',
+  'verified': 'Verificado',
+  'pending': 'Pendiente',
+  'security': 'Seguridad',
+  'notification': 'Notificación',
+  'notifications_section': 'Notificaciones',
+  'other_section': 'Otros',
+  'help_center': 'Centro de Ayuda',
+  'language': 'Idioma',
+  'logout': 'Cerrar Sesión',
+  'profile': 'Perfil',
+  'guest': 'Invitado',
+  'rank': 'Rango',
+  'name': 'Nombre',
+  'email_address': 'Correo Electrónico',
+  'more_info': 'Más Información',
+  'skills': 'Habilidades',
+  'skill_level': 'Nivel de Habilidad',
+  'gallery': 'Galería',
+  'camera': 'Cámara',
+  'remove_photo': 'Eliminar Foto',
+  'update': 'Actualizar',
+
+  // SECURITY & PASSWORD
+  'face_id': 'Face ID',
+  'biometric_id': 'ID Biométrico',
+  'change_password': 'Cambiar Contraseña',
+  'current_password': 'Contraseña Actual',
+  'create_new_password': 'Crear nueva contraseña',
+  'retype_new_password': 'Reingresa tu contraseña',
+  'update_password': 'Actualizar Contraseña',
+  'updating': 'Actualizando...',
+
+  // NOTIFICATIONS SETTINGS
+  'general_notifications': 'Notificaciones Generales',
+  'events': 'Eventos',
+  'matches_notification': 'Partidos',
+  'offers': 'Ofertas',
+  'news': 'Noticias',
+  'payment': 'Pago',
+  'vibrate': 'Vibración',
+  'others': 'Otros',
+
+  // HOME
+  'hi': 'Hola, ',
+  'sports_team': 'Equipos',
+  'courts_detected': 'Canchas alrededor tuyo detectadas',
+  'play_now': 'Juega ahora',
+  'gather_companions': 'Reúne a tus compañeros y formen un equipo oficial.',
+  'invite': 'Invitar',
+  'final_prize': 'Pozo acumulado total ',
+  'win_great_invitation': 'Gana una invitación a la final',
+  'ranking_season': 'Logros',
+  'search': 'Buscar Canchas/Partidos/Eventos',
+  'sports': 'Deportes',
+  'tennis': 'Tenis',
+  'matches': 'Partidos',
+  'location_radius': 'Radio de Ubicación',
+  'apply_filters': 'Aplicar Filtros',
+  'away': 'lejos',
+  'description': 'Descripción',
+  'view_details': 'Ver Detalles',
+  'direction': 'Direcciones',
+  'notifications': 'Notificaciones',
+  'reviews': 'Reseñas',
+  'profile_info': 'Información de perfil',
+  'ranking': 'Clasificación',
+  'games_played': 'Partidos Jugados',
+  'win': 'victoria',
+  'lose': 'derrota',
+  'player_skill': 'Habilidad del jugador',
+  'professional': 'Profesional',
+  'left': 'izquierda',
+  'linked_team': 'Equipo Vinculado',
+  'next_match': 'Siguiente Partido',
+  'no_dates_available': 'Sin Fechas Disponibles',
+  'schedule': 'Calendario',
+  'send_notification': 'Enviar notificación al equipo',
+  'find_match': 'Buscar Partido',
+  'create_match': 'Crear Partido',
+  'available_matches': 'Partidos Disponibles',
+  'view_all': 'Ver Todo',
+  'your_active_matches': 'Tus Partidos Activos',
+  'no_courts_available': 'No hay canchas disponibles',
+  'available_courts': 'Canchas Disponibles',
+  'invite_friends_to_match': 'Invita a tus amigos a un partido',
+  'wins_to_final': 'victorias — @percentage% para la Final',
+  'join_match': 'Unirse al Partido',
+  'enter_invite_code':
+      'Ingresa el código de invitación compartido por tu amigo',
+  'cancel': 'Cancelar',
+  'join': 'Unirse',
+
+  // MATCHMAKING
+  'quick_play': 'Juego Rápido',
+  'matches_available': '15 partidos disponibles',
+  'competitive_match': 'Partido Competitivo',
+  'manage_my_matches': 'Administrar Mis Partidos',
+  'match_detail': 'Detalles Del Partido',
+  'datetime': 'Elige día y hora',
+  'vs': 'VS',
+  'searching_for_match': 'Buscando partido...',
+  'price': 'Precio',
+  'play': 'Jugar',
+  'invitation_link': 'Link de Invitación',
+  'invitation_link_description':
+      'Debajo está el link de invitación para unirse al partido, puedes compartirlo con tus amigos y otros jugadores.',
+  'review_summary': 'Resumen de Revisión',
+  'match_type': 'Tipo de partido',
+  'friendly': 'Amistoso',
+  'court': 'Cancha',
+  'total': 'Total',
+  'start_point': 'Punto de Inicio',
+  'end_point': 'Punto de Llegada',
+  'start_journey': 'Empezar el Viaje',
+  'manage_match': 'Administrar Partido',
+  'cancel_match': 'Cancelar Partido',
+  'are_you_sure': '¿Estás Seguro?',
+  'cancel_order_prompt':
+      'Estás a punto de cancelar una solicitud de pedido. Por favor, menciona una razón válida para cancelar esta orden.',
+  'write_reason_here': 'Escribe tu razón aquí...',
+  'yes': 'Sí',
+  'no': 'No',
+  'match_cancelled': 'Partido cancelado',
+  'match_cancelled_message': 'Tu partido ha sido cancelado exitosamente.',
+  'car': 'Auto',
+  'bike': 'Bicicleta',
+  'walk': 'Caminando',
+  'match_time': 'Hora del Partido',
+  'you': 'Tú',
+  'amount': 'Monto',
+  'tax': 'Impuesto',
+  'select_match': 'Seleccionar Partido',
+  'match_type_label': 'Tipo de Partido',
+  'one_vs_one': '1 vs 1',
+  'single_player_match': 'Partido individual',
+  'two_vs_two': '2 vs 2',
+  'team_doubles_match': 'Partido de dobles en equipo',
+  'match_mode': 'Modo de Partido',
+  'competitive': 'Competitivo',
+  'competitive_description':
+      'Partido rankeado con un árbitro asignado por el sistema',
+  'friendly_description':
+      'Partido casual visible en Buscar Partido, sin árbitro necesario',
+  'select_court': 'Seleccionar Cancha',
+  'tap_to_select_court': 'Toca para seleccionar una cancha',
+  'selected_court': 'Cancha Seleccionada',
+  'please_select_court_to_continue':
+      'Por favor selecciona una cancha para continuar',
+  'find_a_match': 'Buscar un Partido',
+  'all_matches': 'Todos los Partidos',
+  'no_1v1_matches':
+      'No hay partidos 1v1 disponibles.\n¡Prueba otro filtro o crea el tuyo!',
+  'no_2v2_matches':
+      'No hay partidos 2v2 disponibles.\n¡Prueba otro filtro o crea el tuyo!',
+  'no_open_matches':
+      'No hay partidos abiertos para unirse ahora.\n¡Sé el primero en crear uno!',
+  'no_matches_available': 'No Hay Partidos Disponibles',
+  'create_your_own_match': 'Crea Tu Propio Partido',
+
+  // STORE / TICKETS
+  'virtual_store': 'Tienda Virtual',
+  'explore': 'Explorar',
+  'simple_ticket': 'Pase Simple',
+  'buy': 'Comprar',
+  'buy_tickets': 'Comprar Pases',
+  'your_tickets': 'Tus Pases',
+  'match_ticket': 'Pase de Partido',
+  'quantity': 'Cantidad',
+  'price_per_ticket': 'Precio por pase',
+  'ticket_info':
+      'Se requiere 1 pase por partido. Los pases no son reembolsables una vez usados.',
+  'pay_amount': 'Pagar',
+
+  // EVENTS
+  'tournament': 'Torneos',
+  'event_nearby': 'Eventos Cercanos',
+  'event_details': 'Detalles del Evento',
+  'participants': 'Participantes',
+  'referee_label': 'Árbitro',
+  'starting_from': 'Empezar Desde',
+  'join_event': 'Unirse al Evento',
+  'select_payment_method': 'Selecciona Método de Pago',
+  'add_card': 'Agregar Tarjeta',
+  'add_card_details': 'Agrega Detalles de la Tarjeta',
+  'card_holder_name': 'Nombre en la Tarjeta',
+  'card_number': 'Número de Tarjeta',
+  'expiry_date': 'Fecha de Expiración',
+  'cvv_code': 'Código CVV',
+  'confirm_payment': 'Confirmar Pago',
+  'payment_success': 'Tu pago se ha realizado exitosamente',
+
+  // HISTORY
+  'history': 'Historial',
+  'my_rank': 'Mi Clasificación',
+  'season_rankings': 'Clasificación de Temporada',
+  'view': 'Vista',
+  'my_points': 'Mis Puntos',
+  'total_matches': 'Total de Partidos',
+  'you_won': 'Victoria',
+  'won_matches': 'Partidos Ganados',
+  'you_lose': 'Derrota',
+  'recent_matches': 'Partidos Recientes',
+  'participate_to_final':
+      'Participa en modo competitivo para ser invitado a la Final',
+  'monthly_points': 'Puntos Mensuales',
+  'weekly_points': 'Puntos Semanales',
+  'no_match_history': 'Aún no hay historial de partidos',
+  'completed_matches_appear_here': 'Los partidos completados aparecerán aquí',
+
+  // REFEREE MATCHES
+  'available': 'Disponible',
+  'scheduled': 'Programado',
+  'recent': 'Reciente',
+  'accept_to_begin': 'Acepta el Partido para Comenzar',
+  'accept': 'Aceptar',
+  'decline': 'Rechazar',
+  'winner_is': 'es el Ganador ¡Wohoo!',
+  'continue_to_rate':
+      'ganó este partido, para calificar a ambos jugadores haz clic en "continuar"',
+  'tomorrow': 'Mañana',
+  'today': 'Hoy',
+  'match_timer': 'Temporizador de Partido',
+  'start': 'Comenzar',
+  'game': 'Juego',
+  'services': 'Servicios',
+  'add_point': 'Agregar Punto',
+  'foul': 'Falta',
+  'fine': 'Multa',
+  'winner': 'Ganador',
+  'sportsmanship': 'Deportividad',
+  'skill_level_ref': 'Nivel de Habilidad',
+  'overall_performance': 'Desempeño General',
+
+  // REFEREE HOME
+  'my_assigned_courts': 'Mis Canchas Asignadas',
+  'view_all_lower': 'Ver todo',
+  'pending_matches': 'Partidos Pendientes',
+  'matches_count': 'partidos',
+  'scheduled_matches': 'Partidos Programados',
+  'no_scheduled_matches': 'No hay partidos programados',
+  'accept_pending_hint': 'Acepta partidos pendientes para verlos aquí',
+  'no_upcoming_matches': 'No hay próximos partidos',
+
+  // CONTACT US
+  'full_name': 'Nombre Completo',
+  'phone_number': 'Número de Teléfono',
+  'send': 'Enviar',
+  'sending': 'Enviando...',
+  'faqs': 'Preguntas frecuentes',
+  'contact_us': 'Contáctenos',
+
+  // LANGUAGE
+  'select_language': 'Seleccionar Idioma',
+  'languages': 'Idiomas',
+  'english': 'Inglés',
+  'spanish': 'Español',
+
+  // DIALOG
+  'invitation_code': 'Código de Invitación',
+  'type_invitation_code':
+      'Escribe tu código de invitación abajo para unirte al partido',
+
+  // PROFILE DROPDOWN OPTIONS
+  'select_country': 'Seleccionar País',
+  'select_gender': 'Seleccionar Género',
+  'male': 'Masculino',
+  'female': 'Femenino',
+  'other': 'Otro',
+  'beginner': 'Principiante',
+  'intermediate': 'Intermedio',
+  'advanced': 'Avanzado',
+  'goalkeeper': 'Portero',
+  'defender': 'Defensor',
+  'midfielder': 'Mediocampista',
+  'forward': 'Delantero',
+  'striker': 'Delantero Centro',
+  'winger': 'Extremo',
+  'center_back': 'Defensa Central',
+  'full_back': 'Lateral',
+  'attacking_midfielder': 'Mediocampista Ofensivo',
+  'defensive_midfielder': 'Mediocampista Defensivo',
+
+  // RANK TIERS
+  'diamond': 'Diamante',
+  'platinum': 'Platino',
+  'gold': 'Oro',
+  'silver': 'Plata',
+  'bronze': 'Bronce',
+  'top': 'TOP',
+
+  // COUNTRIES
+  'united_states': 'Estados Unidos',
+  'united_kingdom': 'Reino Unido',
+  'canada': 'Canadá',
+  'australia': 'Australia',
+  'germany': 'Alemania',
+  'france': 'Francia',
+  'spain': 'España',
+  'italy': 'Italia',
+  'brazil': 'Brasil',
+  'argentina': 'Argentina',
+  'mexico': 'México',
+  'japan': 'Japón',
+  'china': 'China',
+  'india': 'India',
+  'pakistan': 'Pakistán',
+  'south_africa': 'Sudáfrica',
+  'nigeria': 'Nigeria',
+  'egypt': 'Egipto',
+
+  // MONTHS
+  'january': 'Enero',
+  'february': 'Febrero',
+  'march': 'Marzo',
+  'april': 'Abril',
+  'may': 'Mayo',
+  'june': 'Junio',
+  'july': 'Julio',
+  'august': 'Agosto',
+  'september': 'Septiembre',
+  'october': 'Octubre',
+  'november': 'Noviembre',
+  'december': 'Diciembre',
+
+  // TOAST / SNACKBAR MESSAGES
+  'error': 'Error',
+  'success_title': 'Éxito',
+  'terms_required': 'Términos Requeridos',
+  'please_agree_terms': 'Por favor acepta los términos y condiciones',
+  'validation_error': 'Error de Validación',
+  'please_fill_all_fields': 'Por favor completa todos los campos',
+  'weak_password': 'Contraseña Débil',
+  'passwords_do_not_match': 'Las contraseñas no coinciden',
+  'verification_sent': 'Verificación Enviada',
+  'check_email_verification':
+      'Por favor revisa tu correo para el código de verificación',
+  'email_not_found':
+      'Correo no encontrado. Por favor intenta registrarte nuevamente.',
+  'code_sent': 'Código Enviado',
+  'verification_code_resent': 'El código de verificación ha sido reenviado',
+  'failed_resend_code': 'Error al reenviar código',
+  'account_created': '¡Cuenta creada exitosamente!',
+  'verification_failed': 'Verificación Fallida',
+  'invalid_verification_code': 'Código de verificación inválido',
+  'invalid_expired_code': 'Código inválido o expirado',
+  'logged_in_successfully': '¡Sesión iniciada exitosamente!',
+  'login_failed': 'Error de Inicio de Sesión',
+  'failed_create_profile': 'Error al crear perfil de usuario',
+  'signed_in_google': '¡Sesión iniciada con Google exitosamente!',
+  'google_signin_failed': 'Error de Inicio con Google',
+  'something_went_wrong': 'Algo salió mal. Por favor inténtalo de nuevo.',
+  'please_enter_email': 'Por favor ingresa tu correo electrónico',
+  'user_not_found':
+      'Usuario no encontrado. Por favor inicia sesión nuevamente.',
+  'please_fill_required_fields':
+      'Por favor completa todos los campos requeridos',
+  'profile_setup_complete_msg': '¡Configuración de perfil completa!',
+  'failed_profile_setup': 'Error al completar la configuración del perfil',
+  'logged_out': 'Sesión cerrada exitosamente',
+  'failed_sign_out': 'Error al cerrar sesión',
+  'please_select_court': 'Por favor selecciona una cancha',
+  'please_select_time_slot': 'Por favor selecciona un horario',
+  'please_login_continue': 'Por favor inicia sesión para continuar',
+  'invalid_date': 'Fecha Inválida',
+  'cannot_schedule_past':
+      'No se puede programar un partido en el pasado. Por favor selecciona hoy o una fecha futura.',
+  'no_tickets': 'Sin Pases',
+  'need_ticket_to_play':
+      'Necesitas un pase para jugar. Compra pases en la Tienda.',
+  'time_slot_taken': 'Horario Ocupado',
+  'time_slot_conflict':
+      'Ya hay un partido programado en esta cancha, fecha y hora. Por favor elige un horario diferente.',
+  'match_found': '¡Partido Encontrado!',
+  'matched_with': 'Has sido emparejado con',
+  'match_created': 'Partido Creado',
+  'share_code_with_friend': 'Comparte el código: @code con tu amigo',
+  'searching_for_match_title': 'Buscando Partido',
+  'waiting_for_opponent': 'Esperando a que un oponente se una...',
+  'failed_create_match': 'Error al crear partido',
+  'joined_match': '¡Unido al Partido!',
+  'now_matched_with': 'Ahora estás emparejado con',
+  'invalid_code': 'Código Inválido',
+  'match_not_found_or_full': 'Partido no encontrado o ya está lleno',
+  'failed_join_match': 'Error al unirse al partido',
+  'your_match_cancelled': 'Tu partido ha sido cancelado',
+  'failed_cancel_match': 'Error al cancelar partido',
+  'copied': '¡Copiado!',
+  'invite_code_copied': 'Código de invitación copiado al portapapeles',
+  'cannot_accept': 'No se puede Aceptar',
+  'match_past_cannot_accept':
+      'Este partido está programado en el pasado y no puede ser aceptado.',
+  'match_accepted': 'Partido Aceptado',
+  'you_will_referee': 'Serás el árbitro de este partido',
+  'failed_accept_match': 'Error al aceptar partido',
+  'match_declined': 'Partido Rechazado',
+  'match_removed_from_list': 'Este partido ha sido eliminado de tu lista',
+  'failed_decline_match': 'Error al rechazar partido',
+  'cannot_start_match': 'No se puede Iniciar Partido',
+  'match_past_cannot_start':
+      'Este partido fue programado en el pasado y no puede ser iniciado.',
+  'match_scheduled_for':
+      'Este partido está programado para @date. Solo puedes iniciarlo el día del partido.',
+  'match_started': 'Partido Iniciado',
+  'match_now_in_progress': 'El partido está ahora en progreso',
+  'failed_start_match': 'Error al iniciar partido',
+  'cannot_complete': 'No se puede Completar',
+  'only_in_progress_completed':
+      'Solo los partidos en progreso pueden ser completados.',
+  'match_completed': 'Partido Completado',
+  'match_recorded': 'El partido ha sido registrado',
+  'failed_complete_match': 'Error al completar partido',
+  'new_match': 'Nuevo Partido',
+  'new_match_scheduled_at': 'Un nuevo partido ha sido programado en @court',
+  'opponent_found': '¡Oponente Encontrado!',
+  'your_match_complete': 'Tu partido está ahora completo',
+  'match_confirmed': '¡Partido Confirmado!',
+  'referee_accepted_match': 'Un árbitro ha aceptado tu partido',
+  'match_started_title': '¡Partido Iniciado!',
+  'match_now_in_progress_title': 'Tu partido está ahora en progreso',
+  'failed_join_match_full':
+      'Error al unirse al partido. Puede que ya esté lleno.',
+  'please_login_purchase': 'Por favor inicia sesión para comprar pases',
+  'payment_error': 'Error de Pago',
+  'could_not_initiate_payment':
+      'No se pudo iniciar el pago. Por favor inténtalo de nuevo.',
+  'payment_failed': 'El pago falló. Por favor inténtalo de nuevo.',
+  'purchase_successful': 'Compra Exitosa',
+  'tickets_added': '¡@quantity pase(s) agregado(s)!',
+  'failed_add_tickets': 'Error al agregar pases. Por favor contacta soporte.',
+  'could_not_connect_payment': 'No se pudo conectar al servicio de pago.',
+  'purchase_failed': 'La compra falló. Por favor inténtalo de nuevo.',
+  'failed_use_ticket': 'Error al usar pase. Por favor inténtalo de nuevo.',
+  'profile_updated': '¡Perfil actualizado exitosamente!',
+  'failed_update_profile': 'Error al actualizar perfil',
+  'camera_error': 'Error de Cámara',
+  'failed_capture_image':
+      'Error al capturar imagen. Por favor inténtalo de nuevo.',
+  'failed_capture_selfie':
+      'Error al capturar selfie. Por favor inténtalo de nuevo.',
+  'please_select_document_type': 'Por favor selecciona un tipo de documento',
+  'please_capture_all_images':
+      'Por favor captura todas las imágenes requeridas',
+  'identity_verification_completed': '¡Verificación de identidad completada!',
+  'upload_failed': 'Error de Carga',
+  'failed_upload_documents':
+      'Error al cargar documentos. Por favor inténtalo de nuevo.',
+  'failed_change_password': 'Error al cambiar contraseña',
+  'please_enter_full_name': 'Por favor ingresa tu nombre completo',
+  'please_enter_email_address': 'Por favor ingresa tu correo electrónico',
+  'please_enter_description':
+      'Por favor ingresa una descripción de tu consulta',
+  'opening_email_client': 'Abriendo cliente de correo para enviar tu consulta',
+  'could_not_open_email':
+      'No se pudo abrir el cliente de correo. Por favor inténtalo de nuevo.',
+  'failed_send_inquiry':
+      'Error al enviar consulta. Por favor inténtalo de nuevo.',
+  'face_id_enabled': 'Face ID activado',
+  'face_id_disabled': 'Face ID desactivado',
+  'biometric_id_enabled': 'ID Biométrico activado',
+  'biometric_id_disabled': 'ID Biométrico desactivado',
+  'done': 'Listo',
+  'all_notifications_read': 'Todas las notificaciones marcadas como leídas',
+  'failed_mark_notifications': 'Error al marcar notificaciones como leídas',
+  'failed_load_faqs': 'Error al cargar preguntas frecuentes',
+  'failed_load_policy': 'Error al cargar la política',
+  'password_updated': 'Contraseña actualizada exitosamente',
+  'incorrect_current_password': 'Contraseña actual incorrecta',
+  'failed_update_password': 'Error al actualizar contraseña',
+  'please_enter_current_password': 'Por favor ingresa tu contraseña actual',
+  'please_confirm_new_password': 'Por favor confirma tu nueva contraseña',
+  'welcome_back_title': '¡Bienvenido de vuelta!',
+  'login_successful': 'Inicio de sesión exitoso',
+  'invalid_email_or_password': 'Correo o contraseña inválidos',
+  'please_enter_email_password': 'Por favor ingresa correo y contraseña',
+  'email_sent': 'Correo Enviado',
+  'password_reset_sent':
+      'El enlace para restablecer la contraseña ha sido enviado a tu correo',
+  'failed_send_reset':
+      'Error al enviar correo de restablecimiento de contraseña',
+  'failed_create_referee_profile': 'Error al crear perfil de árbitro',
+  'no_address_available': 'No hay dirección disponible',
+
+  // VALIDATORS
+  'field_required': 'Campo requerido',
+  'please_enter_email_validation': 'Por favor ingresa tu correo electrónico',
+  'invalid_email': 'Correo electrónico inválido',
+  'please_enter_username': 'Por favor ingresa tu nombre de usuario',
+  'invalid_username': 'Nombre de usuario inválido',
+  'password_required': 'La contraseña es requerida',
+  'password_min_8_chars': 'La contraseña debe tener al menos 8 caracteres',
+  'password_uppercase':
+      'La contraseña debe contener al menos una letra mayúscula',
+  'password_lowercase':
+      'La contraseña debe contener al menos una letra minúscula',
+  'password_digit': 'La contraseña debe contener al menos un dígito',
+  'password_special_char':
+      'La contraseña debe contener al menos un carácter especial',
+  'please_enter_password': 'Por favor ingresa una contraseña',
+  'password_no_spaces': 'La contraseña no puede contener solo espacios',
+  'password_min_8': 'La contraseña debe tener al menos 8 caracteres',
+  'please_enter_price': 'Por favor ingresa un precio',
+  'invalid_price': 'Por favor ingresa un precio válido (ej., 10)',
+
+  // HOME - ADDITIONAL
+  'book': 'Reservar',
+  'book_now': 'Reservar Ahora',
+  'indoor': 'Interior',
+  'outdoor': 'Exterior',
+  'location_not_specified': 'Ubicación no especificada',
+  'courts_around_you': '@count Canchas detectadas cerca de ti',
+  'matches_waiting': '@count @word esperando oponentes',
+  'tap_to_browse_match': 'Toca para buscar y unirte a un partido',
+  'looking_for_opponent': 'Buscando oponente',
+  'final_accumulated_prize': 'Premio Final Acumulado',
+
+  // MATCHMAKING - ADDITIONAL
+  'select_date_time': 'Seleccionar Fecha y Hora',
+  'select_date': 'Seleccionar Fecha',
+  'start_time': 'Hora de Inicio',
+  'end_time': 'Hora de Fin',
+  'select_time_range': 'Seleccionar Rango de Hora',
+  'please_select_both_times': 'Por favor selecciona hora de inicio y fin',
+  'review_confirm': 'Revisar y Confirmar',
+  'date': 'Fecha',
+  'time': 'Hora',
+  'not_selected': 'No seleccionado',
+  'confirm_find_match': 'Confirmar y Buscar Partido',
+  'competitive_info':
+      'Serás emparejado con un oponente disponible automáticamente. Un árbitro será asignado por el sistema.',
+  'friendly_info':
+      'Tu partido será visible en Buscar Partido. No se necesita árbitro para partidos amistosos.',
+  'match_joined': 'Partido Unido',
+  'match_created_label': 'Partido Creado',
+  'match_ready': '¡Partido Listo!',
+  'match_created_successfully': '¡Partido Creado Exitosamente!',
+  'opponent_found_waiting':
+      '¡Oponente encontrado! Esperando confirmación del árbitro para iniciar el partido.',
+  'match_confirmed_ready':
+      '¡Partido confirmado por el árbitro! Prepárate para jugar.',
+  'match_in_progress_msg': '¡Tu partido está ahora en progreso!',
+  'waiting_for_opponent_msg': 'Esperando a que se una un oponente...',
+  'match_created_share':
+      '¡Partido creado! Comparte el código de invitación o aparecerá en Buscar Partido.',
+  'invite_code_label': 'Código de Invitación',
+  'share_code_btn': 'Compartir Código',
+  'back_to_home': 'Volver al Inicio',
+  'joined': 'Unido',
+  'full': 'Lleno',
+  'player': 'Jugador',
+
+  // MY MATCHES
+  'my_matches': 'Mis Partidos',
+  'active': 'Activos',
+  'waiting': 'Esperando',
+  'completed': 'Completados',
+  'no_active_matches': 'No hay partidos activos',
+  'join_or_create_match': 'Únete o crea un partido para comenzar',
+  'no_waiting_matches': 'No hay partidos en espera',
+  'create_match_wait': 'Crea un partido y espera oponentes',
+  'no_completed_matches': 'No hay partidos completados',
+  'match_history_appear': 'Tu historial de partidos aparecerá aquí',
+  'refresh': 'Actualizar',
+  'invite_code_prefix': 'Código de Invitación: ',
+  'waiting_for_opponent_suffix': ' - Esperando oponente',
+  'cancel_match_question': '¿Cancelar Partido?',
+  'cancel_match_confirm':
+      '¿Estás seguro de que quieres cancelar este partido? Esta acción no se puede deshacer.',
+  'no_keep_it': 'No, Mantenerlo',
+  'yes_cancel': 'Sí, Cancelar',
+
+  // MATCH DETAILS
+  'match_details': 'Detalles del Partido',
+  'waiting_opponent_join': 'Esperando a que un oponente se una a tu partido',
+  'opponent_found_referee':
+      'Oponente encontrado! Esperando confirmación del árbitro',
+  'match_confirmed_play': '¡Partido confirmado! Prepárate para jugar',
+  'match_in_progress': 'El partido está actualmente en progreso',
+  'match_completed_msg': 'El partido ha sido completado',
+  'match_cancelled_msg': 'Este partido fue cancelado',
+  'players': 'Jugadores',
+  'waiting_dots': 'Esperando...',
+  'match_information': 'Información del Partido',
+  'type': 'Tipo',
+  'mode': 'Modo',
+  'referee': 'Árbitro',
+  'share_with_friends': 'Compartir con Amigos',
+  'share_code_prompt':
+      'Comparte este código con un amigo para que se una a tu partido',
+  'match_completed_title': 'Partido Completado',
+  'winner_label': 'Ganador:',
+  'player_1': 'Jugador 1',
+  'player_2': 'Jugador 2',
+  'tbd': 'Por Definir',
+
+  // SELECT COURT
+  'selected': 'Seleccionado',
+  'no_faqs_available': 'No hay preguntas frecuentes disponibles',
+  'no_policy_available': 'No hay política disponible',
+  'retry': 'Reintentar',
+
+  // REFEREE HOME - ADDITIONAL
+  'no_courts_assigned': 'No hay canchas asignadas',
+  'contact_admin_assignments': 'Contacta al administrador para asignaciones',
+  'active_status': 'Activo',
+  'inactive_status': 'Inactivo',
+  'more_courts': '+@count más canchas',
+  'start_match': 'Iniciar Partido',
+  'complete_match': 'Completar Partido',
+  'who_won_match': '¿Quién ganó este partido?',
+  'confirm_winner': 'Confirmar Ganador',
+
+  // REFEREE MATCHES
+  'matches_at_courts_appear': 'Los partidos en tus canchas aparecerán aquí',
+  'accept_matches_hint': 'Acepta partidos para verlos aquí',
+  'no_recent_matches': 'No hay partidos recientes',
+  'completed_matches_appear': 'Los partidos completados aparecerán aquí',
+  'unknown': 'Desconocido',
+  'accept_available_matches': 'Acepta partidos disponibles para programarlos',
+  'live_scoring': 'Marcador en Vivo',
+
+  // REFEREE MATCH DETAIL
+  'indoor_court': 'Cancha Interior',
+  'outdoor_court': 'Cancha Exterior',
+  'processing': 'Procesando...',
+  'accept_match': 'Aceptar Partido',
+  'starting': 'Iniciando...',
+  'open_live_scoring': 'Abrir Marcador en Vivo',
+  'match_completed_excl': '¡Partido Completado!',
+  'select_winner': 'Selecciona al ganador de este partido',
+  'select_winning_team': 'Selecciona el equipo ganador',
+  'team_1': 'Equipo 1',
+  'team_2': 'Equipo 2',
+  'teams': 'Equipos',
+  'players_joined': 'jugadores unidos',
+  'player_3': 'Jugador 3',
+  'player_4': 'Jugador 4',
+  'score_summary': 'Resumen de Puntuación',
+  'points': 'Puntos',
+  'fouls': 'Faltas',
+
+  // REFEREE SCORING
+  'set_label': 'Set @number',
+  'service_label': 'Servicio: @name',
+  'set_server': 'Asignar Servidor',
+  'server_label': 'Servidor: @name',
+  'end_match': 'Finalizar Partido',
+  'games': 'Juegos',
+  'sets': 'Sets',
+  'game_won': 'Juego Ganado',
+  'set_won': 'Set Ganado',
+  'foul_count': 'Falta (@count)',
+
+  // PRIVACY POLICY
+  'privacy_policy_title': 'Política de Privacidad',
+  'introduction': 'Introducción',
+  'information_we_collect': 'Información que Recopilamos',
+  'how_we_use_info': 'Cómo Usamos Tu Información',
+  'information_sharing': 'Compartir Información',
+
+  // BUY TICKETS
+  'logging_out': 'Cerrando sesión...',
+
+  // SHARE MATCH TEXT
+  'join_match_text': '¡Únete a mi partido en Matchmake!',
+  'use_invite_code': 'Usa el código de invitación:',
+  'pts': 'pts',
+
+  // NOTIFICATIONS SCREEN
+  'mark_all_as_read': 'Marcar todo como leído',
+  'no_notifications_yet': 'Sin notificaciones aún',
+  'updates_here_text': 'Verás actualizaciones aquí cuando algo suceda',
+
+  // PROFILE INFO
+  'add_team': 'Agregar Equipo',
+  'no_dates_earrings': 'Sin Fechas Disponibles',
+  'games_played_count': 'Partidos Jugados: @count',
+  'win_count': 'Ganados @count',
+  'lose_count': 'Perdidos @count',
+
+  // SHARE SCREEN
+  'share': 'Compartir',
+  'invite_friends': 'Invitar Amigos',
+  'share_app': 'Compartir App',
+  'your_match_invite_codes': 'Tus Códigos de Invitación',
+  'no_active_invite_codes': 'Sin códigos de invitación activos',
+  'copy': 'Copiar',
+  'join_match_share_text': '¡Únete a mi partido en Matchmake!\n\n',
+  'share_your_stats': 'Comparte Tus Estadísticas',
+  'wins': 'Victorias',
+  'win_rate': 'Tasa de Victoria',
+  'check_out_stats': '¡Mira mis estadísticas en Matchmake!\n\n',
+  'share_my_stats': 'Compartir Mis Estadísticas',
+
+  // REFEREE COURTS
+  'no_courts_match_sports':
+      'Ninguna cancha coincide con los deportes seleccionados',
+  'no_courts_assigned_msg':
+      'Aún no tienes canchas asignadas.\nPor favor contacta al administrador para asignaciones de canchas.',
+  'assigned_date': 'Asignado: @date',
+
+  // COURT DETAIL
+  'available_sports': 'Deportes Disponibles',
+  'location': 'Ubicación',
+  'contact_information': 'Información de Contacto',
+  'amenities': 'Servicios',
+  'pricing': 'Precios',
+  'get_directions': 'Obtener Direcciones',
+  'per_hour': 'por hora',
+  'assignment_details': 'Detalles de la Asignación',
+  'start_date': 'Fecha de Inicio',
+  'end_date': 'Fecha de Fin',
+  'additional_notes': 'Notas Adicionales',
+  'not_specified': 'No especificado',
+
+  // PAYOUT
+  'payout': 'Pago',
+  'matches_refereed': 'Partidos Arbitrados',
+  'this_week': 'Esta Semana',
+
+  // REFEREE PROFILE DETAIL
+  'profile_details': 'Detalles del Perfil',
+
+  // MATCH MANAGEMENT
+  'no_matches_to_manage': 'Sin partidos para gestionar',
+  'create_or_join_match': 'Crea o únete a un partido para verlo aquí',
+  'in_progress': 'En progreso',
+  'opponent': 'Oponente',
+  'no_available_matches': 'Sin partidos disponibles',
+  'winner_name': 'Ganador: @name',
+
+  // SELECT TIME SLOT
+  'available_time_slots': 'Horarios Disponibles',
+
+  // IDENTITY VERIFICATION
+  'tap_to_take_selfie': 'Toca para tomar selfie',
+  'select_document': 'Seleccionar Documento',
+  'select_document_msg':
+      'Por favor selecciona un tipo de documento para continuar',
+
+  // SEARCH
+  'no_courts_found_area': 'No se encontraron canchas en esta área',
+  'no_description_available': 'Sin descripción disponible',
+  'no_images_available': 'Sin imágenes disponibles',
+  'book_court': 'Reservar Cancha',
+
+  // HISTORY
+  'lost_matches': 'Partidos Perdidos',
+  'match_history': 'Historial de Partidos',
+  'no_matches_found': 'No se encontraron partidos',
+  'completed_matches_here': 'Los partidos completados aparecerán aquí',
+  'cancelled': 'Cancelado',
+  'won': 'Ganado',
+  'lost': 'Perdido',
+  'best_of_month': 'MEJOR DEL MES',
+  'no_ranking_data':
+      '¡Aún no hay datos de ranking. ¡Juega partidos para ver rankings!',
+
+  // PROFILE COMPLETION
+  'incomplete': 'Incompleto',
+
+  // PAYMENT METHOD
+  'save': 'Guardar',
+
+  // SET NUMBER
+  'set_number': 'Set @number',
+
+  // RATE
+  'rate_title': 'Calificar @title',
+
+  // ONBOARDING REFEREE
+  'welcome_to_referee': 'Bienvenido a Árbitro',
+  'referee_onboarding_desc':
+      'Optimiza la gestión de tus partidos con nuestras herramientas de árbitro. Acepta partidos, gestiona puntuación en vivo y sigue tu rendimiento.',
+
+  // SIGN UP FAILED
+  'sign_up_failed': 'Registro Fallido',
+
+  // PAYOUT ADDITIONAL
+  'pending_payouts': 'Pagos Pendientes',
+  'earning_in_month': 'Ganancias en @month',
+  'total_earned': 'Total Ganado',
+  'match_singular': 'Partido',
+  'matches_plural': 'Partidos',
+
+  // ADDITIONAL
+  'complete_setup': 'Completar Configuración',
+  'required_fields': '* Campos obligatorios',
+
+  // REFEREE MARKETPLACE (NEW)
+  'explore_marketplace_hint': 'Explora el mercado para encontrar partidos disponibles.',
+  'nearby_matches': 'Partidos cercanos',
+  'match_marketplace': 'Mercado de Partidos',
+  'schedule_empty': 'Tu agenda está vacía',
+  'claim_matches_hint': 'Reclama partidos en el mercado para verlos aquí.',
+  'claim_match': 'Reclamar Partido',
+  'referee_reward': 'Recompensa',
+
+  // HOME BANNER & PREVIEW
+  'available_now': 'disponibles',
+  'checkin_banner_title': '¡Tienes un partido listo!',
+  'checkin_banner_subtitle': 'Haz check-in con el árbitro para empezar.',
+};
