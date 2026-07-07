@@ -1,4 +1,18 @@
 
+# Crea preferencias de Mercado Pago. Requiere JWT del usuario.
+# Secrets: MP_ACCESS_TOKEN
+[functions.create_preference]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/create_preference/index.ts"
+
+# Webhook de Mercado Pago. Sin JWT (MP no lo envía); se valida x-signature.
+# Secrets: MP_ACCESS_TOKEN, MP_WEBHOOK_SECRET
+[functions.mp_webhook]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/mp_webhook/index.ts"
+
 [functions.notify_onesignal]
 enabled = true
 verify_jwt = true
