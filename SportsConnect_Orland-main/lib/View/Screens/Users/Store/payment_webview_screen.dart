@@ -7,12 +7,15 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentWebViewScreen extends StatefulWidget {
   final String checkoutUrl;
-  final int ticketQuantity;
+
+  /// Referencia de la preferencia creada server-side; se usa para consultar
+  /// el estado real de la transacción al volver del checkout.
+  final String externalReference;
 
   const PaymentWebViewScreen({
     super.key,
     required this.checkoutUrl,
-    required this.ticketQuantity,
+    required this.externalReference,
   });
 
   @override
@@ -73,13 +76,8 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     if (url.startsWith('sportsconnect://payment/success') ||
         url.contains('collection_status=approved') ||
         url.contains('status=approved')) {
-      print('✅ [PaymentWebViewScreen] Payment SUCCESS detected');
-      // Extract payment_id from query if present
-      final uri = Uri.tryParse(url);
-      final paymentId = uri?.queryParameters['payment_id'] ??
-          uri?.queryParameters['collection_id'];
-      print('   paymentId: $paymentId');
-      _onPaymentSuccess(paymentId);
+      print('✅ [PaymentWebViewScreen] Payment SUCCESS redirect detected');
+      _onPaymentReturn();
     } else if (url.startsWith('sportsconnect://payment/failure') ||
         url.contains('status=rejected') ||
         url.contains('collection_status=rejected')) {
@@ -89,16 +87,16 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         url.contains('status=pending') ||
         url.contains('collection_status=pending')) {
       print('⏳ [PaymentWebViewScreen] Payment PENDING detected');
-      _onPaymentPending();
+      _onPaymentReturn();
     }
   }
 
-  void _onPaymentSuccess(String? paymentId) {
+  /// El redirect NO es prueba de pago: cerramos el WebView y dejamos que el
+  /// controller verifique contra ticket_transactions (escrita por mp_webhook).
+  void _onPaymentReturn() {
     if (!mounted) return;
-    // Close the WebView first
     Get.back();
-    // Complete the purchase
-    TicketController.instance.completePurchase(paymentId: paymentId);
+    TicketController.instance.verifyPurchase(widget.externalReference);
   }
 
   void _onPaymentFailure() {
@@ -108,19 +106,6 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       'Payment Failed',
       'Your payment was not completed. Please try again.',
       backgroundColor: Colors.red.shade600,
-      colorText: kwhite,
-      snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 4),
-    );
-  }
-
-  void _onPaymentPending() {
-    if (!mounted) return;
-    Get.back();
-    Get.snackbar(
-      'Payment Pending',
-      'Your payment is being processed. Tickets will be added once confirmed.',
-      backgroundColor: Colors.orange.shade600,
       colorText: kwhite,
       snackPosition: SnackPosition.BOTTOM,
       duration: const Duration(seconds: 4),

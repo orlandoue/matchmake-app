@@ -524,6 +524,14 @@ const Map<String, String> enUs = {
   'payment_failed': 'Payment failed. Please try again.',
   'purchase_successful': 'Purchase Successful',
   'tickets_added': '@quantity ticket(s) added!',
+  'verifying_payment': 'Verifying payment...',
+  'payment_confirmed': 'Your payment was confirmed and your tickets were credited!',
+  'payment_not_confirmed':
+      'We could not confirm your payment. If you were charged, please contact support.',
+  'payment_pending': 'Payment Pending',
+  'payment_pending_message':
+      'Your payment is being processed. Tickets will be credited automatically once confirmed.',
+  'could_not_open_url': 'Could not open the payment link.',
   'failed_add_tickets': 'Failed to add tickets. Please contact support.',
   'could_not_connect_payment': 'Could not connect to payment service.',
   'purchase_failed': 'Purchase failed. Please try again.',

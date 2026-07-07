@@ -15,6 +15,25 @@ class TicketService {
 
   final _supabase = Supabase.instance.client;
 
+  /// Precios vigentes desde `ticket_products` (misma fuente que usa la
+  /// Edge Function `create_preference`). Mapa ticket_type → precio CLP.
+  Future<Map<String, double>> getTicketPrices() async {
+    try {
+      final rows = await _supabase
+          .from('ticket_products')
+          .select('ticket_type, price_clp')
+          .eq('active', true);
+
+      return {
+        for (final row in rows as List)
+          row['ticket_type'] as String: (row['price_clp'] as num).toDouble(),
+      };
+    } catch (e) {
+      print('Error getting ticket prices: $e');
+      return {};
+    }
+  }
+
   /// Get current user's ticket balance
   Future<TicketModel?> getTicketRecord(String userId) async {
     try {

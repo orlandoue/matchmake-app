@@ -4,7 +4,6 @@ import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/const/mercadopago_config.dart';
 import 'package:orland_sports/controllers/ticket_controller.dart';
 import 'package:orland_sports/generated/assets.dart';
 
@@ -80,7 +79,7 @@ class BuyTicketsScreen extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
-                        color: isSingles ? kpurple1 : kgrey2.withOpacity(0.5),
+                        color: isSingles ? kpurple1 : kgrey2.withValues(alpha: 0.5),
                         borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
                       ),
                       alignment: Alignment.center,
@@ -98,7 +97,7 @@ class BuyTicketsScreen extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
-                        color: !isSingles ? kpurple1 : kgrey2.withOpacity(0.5),
+                        color: !isSingles ? kpurple1 : kgrey2.withValues(alpha: 0.5),
                         borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
                       ),
                       alignment: Alignment.center,
@@ -147,7 +146,7 @@ class BuyTicketsScreen extends StatelessWidget {
                           Obx(() => MyText(
                                 text: controller.purchasingTicketType.value == 'singles' ? 'Tus Pases (Singles)' : 'Tus Pases (Dobles)',
                                 size: 14,
-                                color: kwhite.withOpacity(0.8),
+                                color: kwhite.withValues(alpha: 0.8),
                               )),
                           const SizedBox(height: 4),
                           Obx(() => MyText(
@@ -161,7 +160,7 @@ class BuyTicketsScreen extends StatelessWidget {
                     ),
                     Icon(
                       Icons.confirmation_number_outlined,
-                      color: kwhite.withOpacity(0.3),
+                      color: kwhite.withValues(alpha: 0.3),
                       size: 64,
                     ),
                   ],
@@ -202,7 +201,7 @@ class BuyTicketsScreen extends StatelessWidget {
                           )),
                           Obx(() => MyText(
                             text:
-                                '\$${MercadoPagoConfig.priceForType(controller.purchasingTicketType.value).toStringAsFixed(0)} ${MercadoPagoConfig.currency}',
+                                '\$${controller.priceForType(controller.purchasingTicketType.value).toStringAsFixed(0)} ${TicketController.currency}',
                             size: 16,
                             weight: FontWeight.bold,
                             color: kpurple1,
@@ -262,9 +261,9 @@ class BuyTicketsScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: kpurple1.withOpacity(0.03),
+                  color: kpurple1.withValues(alpha: 0.03),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: kpurple1.withOpacity(0.1)),
+                  border: Border.all(color: kpurple1.withValues(alpha: 0.1)),
                 ),
                 child: Column(
                   children: [
@@ -279,7 +278,7 @@ class BuyTicketsScreen extends StatelessWidget {
                         ),
                         Obx(() => MyText(
                               text:
-                                  '\$${controller.totalPrice.toStringAsFixed(0)} ${MercadoPagoConfig.currency}',
+                                  '\$${controller.totalPrice.toStringAsFixed(0)} ${TicketController.currency}',
                               size: 18,
                               weight: FontWeight.bold,
                               color: kpurple1,
@@ -301,7 +300,7 @@ class BuyTicketsScreen extends StatelessWidget {
             color: kwhite,
             boxShadow: [
               BoxShadow(
-                color: kblack2.withOpacity(0.05),
+                color: kblack2.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, -5),
               ),
@@ -316,7 +315,7 @@ class BuyTicketsScreen extends StatelessWidget {
                     width: double.infinity, // Full width button
                     onTap: () => controller.purchaseTickets(),
                     buttonText:
-                        '${'pay_amount'.tr} \$${controller.totalPrice.toStringAsFixed(0)} ${MercadoPagoConfig.currency}',
+                        '${'pay_amount'.tr} \$${controller.totalPrice.toStringAsFixed(0)} ${TicketController.currency}',
                   )),
           ),
         ),
@@ -387,11 +386,11 @@ class BuyTicketsScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.03),
+        color: Colors.white.withValues(alpha: 0.03),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: mainColor.withOpacity(0.5), width: isGold ? 2 : 1),
+        border: Border.all(color: mainColor.withValues(alpha: 0.5), width: isGold ? 2 : 1),
         boxShadow: isGold
-            ? [BoxShadow(color: goldColor.withOpacity(0.1), blurRadius: 20, spreadRadius: 2)]
+            ? [BoxShadow(color: goldColor.withValues(alpha: 0.1), blurRadius: 20, spreadRadius: 2)]
             : [],
       ),
       padding: const EdgeInsets.all(20),
@@ -412,7 +411,7 @@ class BuyTicketsScreen extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: isGold ? goldColor.withOpacity(0.1) : cyberNeon.withOpacity(0.1),
+                backgroundColor: isGold ? goldColor.withValues(alpha: 0.1) : cyberNeon.withValues(alpha: 0.1),
                 side: BorderSide(color: mainColor),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -448,7 +447,7 @@ class _QuantityButton extends StatelessWidget {
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: kpurple1.withOpacity(0.1),
+          color: kpurple1.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: kpurple1),
         ),

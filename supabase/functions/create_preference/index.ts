@@ -15,9 +15,8 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const MP_API = "https://api.mercadopago.com";
 
-// Precios canónicos en CLP — deben coincidir con MercadoPagoConfig del cliente,
-// pero esta es la fuente de verdad: el cliente no puede alterarlos.
-const PRICE_CLP: Record<string, number> = { singles: 500, doubles: 500 };
+// Los precios viven en public.ticket_products (fuente de verdad, editable
+// sin redesplegar). El cliente nunca envía montos.
 const CURRENCY = "CLP";
 const MAX_QUANTITY = 100;
 
@@ -70,7 +69,29 @@ Deno.serve(async (req) => {
     return json(400, { error: "invalid_ticket_quantity" });
   }
 
-  const unitPrice = PRICE_CLP[ticketType];
+  // ── Precio real desde la BD (conexión interna, service role) ──────────────
+  const admin = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+  const { data: product, error: productError } = await admin
+    .from("ticket_products")
+    .select("price_clp, active")
+    .eq("ticket_type", ticketType)
+    .maybeSingle();
+  if (productError) {
+    console.error("ticket_products lookup failed:", productError.message);
+    return json(500, { error: "pricing_unavailable" });
+  }
+  if (!product || !product.active) {
+    return json(400, { error: "product_not_available" });
+  }
+  const unitPrice = Number(product.price_clp);
+  if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
+    console.error(`Invalid price for ${ticketType}: ${product.price_clp}`);
+    return json(500, { error: "pricing_unavailable" });
+  }
+
   const typeLabel = ticketType === "doubles" ? "Dobles" : "Singles";
   const externalReference =
     `user_${user.id}_type_${ticketType}_qty_${quantity}_ts_${Date.now()}`;
@@ -122,10 +143,6 @@ Deno.serve(async (req) => {
 
   // ── Registrar transacción pendiente (service role) para que la app pueda
   //    consultar su estado; el webhook la marcará como approved. ─────────────
-  const admin = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-  );
   const { error: insertError } = await admin.from("ticket_transactions").insert({
     user_id: user.id,
     type: "purchase",
@@ -146,5 +163,8 @@ Deno.serve(async (req) => {
     preference_id: preference.id,
     init_point: preference.init_point,
     external_reference: externalReference,
+    unit_price: unitPrice,
+    total_amount: unitPrice * quantity,
+    currency: CURRENCY,
   });
 });

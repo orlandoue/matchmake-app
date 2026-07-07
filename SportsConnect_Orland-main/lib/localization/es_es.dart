@@ -536,6 +536,14 @@ const Map<String, String> esEs = {
   'payment_failed': 'El pago falló. Por favor inténtalo de nuevo.',
   'purchase_successful': 'Compra Exitosa',
   'tickets_added': '¡@quantity pase(s) agregado(s)!',
+  'verifying_payment': 'Verificando pago...',
+  'payment_confirmed': '¡Tu pago fue confirmado y tus pases fueron acreditados!',
+  'payment_not_confirmed':
+      'No pudimos confirmar tu pago. Si el cargo se realizó, contacta soporte.',
+  'payment_pending': 'Pago Pendiente',
+  'payment_pending_message':
+      'Tu pago está siendo procesado. Los pases se acreditarán automáticamente al confirmarse.',
+  'could_not_open_url': 'No se pudo abrir el enlace de pago.',
   'failed_add_tickets': 'Error al agregar pases. Por favor contacta soporte.',
   'could_not_connect_payment': 'No se pudo conectar al servicio de pago.',
   'purchase_failed': 'La compra falló. Por favor inténtalo de nuevo.',

@@ -1,14 +1,23 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:orland_sports/const/mercadopago_config.dart';
+import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/services/mercadopago_service.dart';
 import 'package:orland_sports/services/ticket_service.dart';
 import 'package:orland_sports/utils/custom_toast.dart';
 import 'package:orland_sports/View/Screens/Users/Store/payment_webview_screen.dart';
+import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Controller for managing user tickets and payment flow
+/// Controller for managing user tickets and payment flow.
+///
+/// Los pagos son 100% server-side: la Edge Function `create_preference` crea
+/// el checkout (precios desde `ticket_products`) y `mp_webhook` acredita los
+/// tickets. Este controller nunca modifica saldos por una compra: solo
+/// observa `ticket_transactions` hasta que el webhook confirme `approved`.
 class TicketController extends GetxController {
   static TicketController get instance => Get.find<TicketController>();
 
@@ -21,25 +30,30 @@ class TicketController extends GetxController {
   final RxInt selectedQuantity = 1.obs;
   final RxBool isLoading = false.obs;
   final RxBool isPurchasing = false.obs;
-  
+  final RxBool isVerifyingPayment = false.obs;
+
   // Type of ticket being purchased
   final RxString purchasingTicketType = 'singles'.obs;
 
-  // Pending purchase info (to complete after payment redirect)
-  int _pendingQuantity = 0;
+  /// Precios vigentes (ticket_type → CLP), cargados desde `ticket_products`.
+  /// Solo para mostrar en la tienda: el cobro real lo calcula el servidor.
+  final RxMap<String, double> ticketPrices =
+      <String, double>{'singles': 500, 'doubles': 500}.obs;
+
+  static const String currency = 'CLP';
 
   String? get currentUserId => Supabase.instance.client.auth.currentUser?.id;
-  String? get currentUserEmail =>
-      Supabase.instance.client.auth.currentUser?.email;
+
+  double priceForType(String ticketType) => ticketPrices[ticketType] ?? 0;
 
   double get totalPrice =>
-      selectedQuantity.value *
-      MercadoPagoConfig.priceForType(purchasingTicketType.value);
+      selectedQuantity.value * priceForType(purchasingTicketType.value);
 
   @override
   void onInit() {
     super.onInit();
     _loadTicketBalance();
+    _loadTicketPrices();
   }
 
   /// Load the current user's ticket balance
@@ -55,6 +69,13 @@ class TicketController extends GetxController {
     } else {
       singlesBalance.value = 0;
       doublesBalance.value = 0;
+    }
+  }
+
+  Future<void> _loadTicketPrices() async {
+    final prices = await _ticketService.getTicketPrices();
+    if (prices.isNotEmpty) {
+      ticketPrices.addAll(prices);
     }
   }
 
@@ -80,22 +101,16 @@ class TicketController extends GetxController {
   /// Check if user has at least 1 ticket of a specific type
   bool hasTickets(String type) {
     if (type == 'singles') {
-       return singlesBalance.value > 0;
+      return singlesBalance.value > 0;
     } else {
-       return doublesBalance.value > 0;
+      return doublesBalance.value > 0;
     }
   }
 
-  /// Purchase tickets via Mercado Pago Checkout Pro
+  /// Purchase tickets via Mercado Pago Checkout Pro (server-side preference).
   Future<void> purchaseTickets() async {
     final userId = currentUserId;
-    final email = currentUserEmail;
-    print('🎫 [TicketController.purchaseTickets] Starting purchase flow');
-    print('   userId: $userId');
-    print('   email: $email');
-
-    if (userId == null || email == null) {
-      print('❌ [TicketController.purchaseTickets] Missing userId or email');
+    if (userId == null) {
       CustomToast.instance.showFailureToast(
         title: 'error'.tr,
         message: 'please_login_purchase'.tr,
@@ -107,21 +122,12 @@ class TicketController extends GetxController {
       isPurchasing.value = true;
 
       final quantity = selectedQuantity.value;
-      print('🎫 [TicketController.purchaseTickets] Quantity: $quantity');
-
-      // Create Mercado Pago preference
-      print(
-          '🎫 [TicketController.purchaseTickets] Creating Mercado Pago preference...');
       final preference = await _mercadoPagoService.createPreference(
         ticketQuantity: quantity,
         ticketType: purchasingTicketType.value,
-        userId: userId,
-        userEmail: email,
       );
 
       if (preference == null) {
-        print(
-            '❌ [TicketController.purchaseTickets] Preference creation failed (returned null)');
         CustomToast.instance.showFailureToast(
           title: 'payment_error'.tr,
           message: 'could_not_initiate_payment'.tr,
@@ -129,41 +135,23 @@ class TicketController extends GetxController {
         return;
       }
 
-      print(
-          '✅ [TicketController.purchaseTickets] Preference created successfully');
-      print('   Preference ID: ${preference.id}');
-      print('   Init Point: ${preference.initPoint}');
-      print('   Sandbox Mode: ${MercadoPagoConfig.useSandbox}');
-
-      // Store pending purchase info
-      _pendingQuantity = quantity;
-
-      // Open Mercado Pago checkout in browser
-      final checkoutUrl = _mercadoPagoService.getCheckoutUrl(preference);
-      print('🎫 [TicketController.purchaseTickets] Checkout URL: $checkoutUrl');
-
       if (kIsWeb) {
-        print('🎫 [TicketController.purchaseTickets] Launching external URL for Web...');
-        final url = Uri.parse(checkoutUrl);
+        final url = Uri.parse(preference.initPoint);
         if (await canLaunchUrl(url)) {
           await launchUrl(url, mode: LaunchMode.externalApplication);
         } else {
           CustomToast.instance.showFailureToast(
             title: 'error'.tr,
-            message: 'could_not_open_url'.tr ?? 'Could not open URL',
+            message: 'could_not_open_url'.tr,
           );
         }
       } else {
-        // Open Mercado Pago checkout in a WebView inside the app
-        print('🎫 [TicketController.purchaseTickets] Opening WebView payment screen...');
         Get.to(() => PaymentWebViewScreen(
-              checkoutUrl: checkoutUrl,
-              ticketQuantity: quantity,
+              checkoutUrl: preference.initPoint,
+              externalReference: preference.externalReference,
             ));
-        print('✅ [TicketController.purchaseTickets] WebView opened successfully');
       }
-    } catch (e) {
-      print('❌ [TicketController.purchaseTickets] Exception: $e');
+    } catch (_) {
       CustomToast.instance.showFailureToast(
         title: 'error'.tr,
         message: 'payment_failed'.tr,
@@ -173,48 +161,98 @@ class TicketController extends GetxController {
     }
   }
 
-  /// Complete the purchase after user returns from Mercado Pago
-  /// Called when the app receives the deep link callback
-  Future<void> completePurchase({String? paymentId}) async {
-    final userId = currentUserId;
-    if (userId == null) return;
+  /// Verifica el resultado de una compra tras volver del checkout.
+  ///
+  /// No acredita nada localmente: consulta `ticket_transactions` (que solo
+  /// escribe el webhook) hasta ver `approved`, con un spinner bloqueante
+  /// "Verificando pago...". Timeout → mensaje de pendiente.
+  Future<void> verifyPurchase(String externalReference) async {
+    if (isVerifyingPayment.value) return;
+    isVerifyingPayment.value = true;
+    _showVerifyingDialog();
 
-    final quantity = _pendingQuantity;
-    if (quantity <= 0) return;
+    const pollInterval = Duration(seconds: 2);
+    const maxAttempts = 45; // ~90 segundos
 
     try {
-      isLoading.value = true;
+      for (var attempt = 0; attempt < maxAttempts; attempt++) {
+        final status =
+            await _mercadoPagoService.getTransactionStatus(externalReference);
 
-      // Add tickets to balance
-      final ticketType = purchasingTicketType.value;
-      final success = await _ticketService.addTickets(userId, quantity, ticketType);
-      if (success) {
-        // Record the transaction
-        await _ticketService.recordPurchaseTransaction(
-          userId: userId,
-          quantity: quantity,
-          ticketType: ticketType,
-          amount: quantity * MercadoPagoConfig.priceForType(ticketType),
-          currency: MercadoPagoConfig.currency,
-          mercadopagoPaymentId: paymentId,
-          paymentStatus: 'approved',
-        );
+        if (status == 'approved') {
+          await _loadTicketBalance();
+          _closeVerifyingDialog();
+          CustomToast.instance.showSuccessToast(
+            title: 'purchase_successful'.tr,
+            message: 'payment_confirmed'.tr,
+          );
+          return;
+        }
 
-        await _loadTicketBalance();
+        if (status == 'rejected' ||
+            status == 'cancelled' ||
+            status == 'credit_failed') {
+          _closeVerifyingDialog();
+          CustomToast.instance.showFailureToast(
+            title: 'payment_error'.tr,
+            message: 'payment_not_confirmed'.tr,
+          );
+          return;
+        }
 
-        CustomToast.instance.showSuccessToast(
-          title: 'purchase_successful'.tr,
-          message: 'tickets_added'.trParams({'quantity': '$quantity'}),
-        );
-      } else {
-        CustomToast.instance.showFailureToast(
-          title: 'error'.tr,
-          message: 'failed_add_tickets'.tr,
-        );
+        // pending / in_process / aún sin webhook → seguir esperando
+        await Future.delayed(pollInterval);
       }
+
+      // Timeout: el webhook aún no confirma. No acreditar nada.
+      _closeVerifyingDialog();
+      CustomToast.instance.showWarningToast(
+        title: 'payment_pending'.tr,
+        message: 'payment_pending_message'.tr,
+      );
+    } catch (_) {
+      _closeVerifyingDialog();
+      CustomToast.instance.showFailureToast(
+        title: 'error'.tr,
+        message: 'payment_not_confirmed'.tr,
+      );
     } finally {
-      _pendingQuantity = 0;
-      isLoading.value = false;
+      isVerifyingPayment.value = false;
+    }
+  }
+
+  void _showVerifyingDialog() {
+    Get.dialog(
+      PopScope(
+        canPop: false,
+        child: Dialog(
+          backgroundColor: kwhite,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.all(28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(color: kpurple1),
+                const SizedBox(height: 20),
+                MyText(
+                  text: 'verifying_payment'.tr,
+                  size: 16,
+                  weight: FontWeight.w600,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  void _closeVerifyingDialog() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
     }
   }
 
@@ -238,69 +276,6 @@ class TicketController extends GetxController {
     }
   }
 
-  /// Simulate a successful purchase (for testing when deep links aren't set up)
-  Future<void> simulatePurchase() async {
-    final userId = currentUserId;
-    if (userId == null) {
-      CustomToast.instance.showFailureToast(
-        title: 'error'.tr,
-        message: 'please_login_purchase'.tr,
-      );
-      return;
-    }
-
-    try {
-      isPurchasing.value = true;
-      final quantity = selectedQuantity.value;
-      final ticketType = purchasingTicketType.value;
-      final amount = quantity * MercadoPagoConfig.priceForType(ticketType);
-
-      // Create preference to validate with Mercado Pago
-      final preference = await _mercadoPagoService.createPreference(
-        ticketQuantity: quantity,
-        ticketType: ticketType,
-        userId: userId,
-        userEmail: currentUserEmail ?? '',
-      );
-
-      if (preference == null) {
-        CustomToast.instance.showFailureToast(
-          title: 'payment_error'.tr,
-          message: 'could_not_connect_payment'.tr,
-        );
-        return;
-      }
-
-      // Add tickets
-      final success = await _ticketService.addTickets(userId, quantity, ticketType);
-      if (success) {
-        await _ticketService.recordPurchaseTransaction(
-          userId: userId,
-          quantity: quantity,
-          ticketType: ticketType,
-          amount: amount,
-          currency: MercadoPagoConfig.currency,
-          mercadopagoPaymentId: preference.id,
-          paymentStatus: 'approved',
-        );
-
-        await _loadTicketBalance();
-
-        CustomToast.instance.showSuccessToast(
-          title: 'purchase_successful'.tr,
-          message: 'tickets_added'.trParams({'quantity': '$quantity'}),
-        );
-      }
-    } catch (e) {
-      CustomToast.instance.showFailureToast(
-        title: 'error'.tr,
-        message: 'purchase_failed'.tr,
-      );
-    } finally {
-      isPurchasing.value = false;
-    }
-  }
-
   /// Use a ticket for a match - returns true if successful
   Future<bool> useTicketForMatch(String matchId, String ticketType) async {
     final userId = currentUserId;
@@ -316,7 +291,8 @@ class TicketController extends GetxController {
 
     try {
       isLoading.value = true;
-      final success = await _ticketService.useTicket(userId, matchId, ticketType);
+      final success =
+          await _ticketService.useTicket(userId, matchId, ticketType);
       if (success) {
         await _loadTicketBalance();
         return true;
@@ -333,10 +309,12 @@ class TicketController extends GetxController {
   }
 
   /// Refund ticket (used when match is cancelled or invitation rejected)
-  Future<bool> refundTicketForUser(String matchId, String userId, String ticketType) async {
+  Future<bool> refundTicketForUser(
+      String matchId, String userId, String ticketType) async {
     try {
       isLoading.value = true;
-      final success = await _ticketService.refundTicket(userId, matchId, ticketType);
+      final success =
+          await _ticketService.refundTicket(userId, matchId, ticketType);
       if (success) {
         // If it's the current user, refresh the balance state
         if (userId == currentUserId) {

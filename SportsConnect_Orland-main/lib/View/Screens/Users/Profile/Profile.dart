@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:orland_sports/View/Screens/Users/Events/Payments/PaymentMethod.dart';
 import 'package:orland_sports/View/Screens/Users/Profile/EditProfile.dart';
@@ -110,7 +110,7 @@ class Profile extends StatelessWidget {
                             Icon(Icons.sports_score_rounded, size: 48, color: kgrey1.withOpacity(0.4)),
                             const SizedBox(height: 8),
                             MyText(
-                              text: 'AÃºn no tienes ligas clasificadas.',
+                              text: 'Aún no tienes ligas clasificadas.',
                               color: kgrey1,
                               size: 14,
                               weight: FontWeight.w500,
@@ -130,11 +130,11 @@ class Profile extends StatelessWidget {
                         final lp = ranking.lp;
                         final league = ranking.leagueData;
                         
-                        // Determinar Ã­cono dinÃ¡mico basado en el nombre del deporte
+                        // Determinar ícono dinámico basado en el nombre del deporte
                         final sportLower = ranking.sportName.toLowerCase();
                         IconData sportIcon = Icons.sports;
                         if (sportLower.contains('teni') || sportLower.contains('tennis')) sportIcon = Icons.sports_tennis;
-                        else if (sportLower.contains('padel') || sportLower.contains('pÃ¡del')) sportIcon = Icons.sports_tennis;
+                        else if (sportLower.contains('padel') || sportLower.contains('pádel')) sportIcon = Icons.sports_tennis;
                         else if (sportLower.contains('futbol') || sportLower.contains('soccer')) sportIcon = Icons.sports_soccer;
                         else if (sportLower.contains('basket')) sportIcon = Icons.sports_basketball;
                         else if (sportLower.contains('volley')) sportIcon = Icons.sports_volleyball;
