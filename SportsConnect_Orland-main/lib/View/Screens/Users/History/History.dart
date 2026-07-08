@@ -4,6 +4,7 @@ import 'package:orland_sports/View/Screens/Users/History/history_matches_screen.
 import 'package:orland_sports/View/Screens/Users/matchmaking/player_match_detail_screen.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
+import 'package:orland_sports/View/Widgets/star_rating_row.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/controllers/player_matches_controller.dart';
 import 'package:orland_sports/controllers/profile_controller.dart';
@@ -65,6 +66,8 @@ class History extends StatelessWidget {
         // any Obx reading this getter rebuilds automatically on pill tap.
         final ranking   = profileController.currentSportRanking;
         final tier      = ranking?.tier             ?? 'Bronce';
+        final division  = ranking?.division         ?? 3;
+        final stars     = ranking?.currentStars     ?? 1;
         final tierColor = ranking?.leagueData.color ?? const Color(0xFFCD7F32);
 
         return RefreshIndicator(
@@ -94,13 +97,13 @@ class History extends StatelessWidget {
                 _SportSelectorBar(profileController: profileController),
               const SizedBox(height: 14),
 
-              // ── Player Rating Card (static, star-based) ───────────────────
-              // Reactive via the parent Obx; the sport pills above swap `tier`,
-              // which maps to a 1–5 star rating. No navigation (Ranking screen
-              // removed) and no gamey tier/LP text.
+              // ── Rank Card (static, League + star progression) ─────────────
+              // Reactive via the parent Obx; the sport pills above swap the
+              // ranking → rank name and its 4-star division progress. No
+              // navigation (Ranking screen removed) and no numeric LP.
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(22),
                   gradient: const LinearGradient(
                     colors: [
                       Color(0xFF1E2024), // Dark metallic base (kept)
@@ -111,69 +114,69 @@ class History extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: _kRatingGold.withValues(alpha: 0.22),
-                      blurRadius: 18,
+                      color: tierColor.withValues(alpha: 0.28),
+                      blurRadius: 20,
                       spreadRadius: -2,
                       offset: const Offset(0, 8),
                     ),
                   ],
                   border: Border.all(
-                    color: _kRatingGold.withValues(alpha: 0.45),
+                    color: tierColor.withValues(alpha: 0.5),
                     width: 1.5,
                   ),
                 ),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 22, vertical: 24),
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 26),
                 child: Row(
                   children: [
-                    // Trophy badge (accompanies the stars)
+                    // Trophy badge — tinted to the current tier, room to breathe
                     Container(
-                      width: 66,
-                      height: 66,
+                      width: 70,
+                      height: 70,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: LinearGradient(
                           colors: [
-                            _kRatingGold.withValues(alpha: 0.30),
-                            tierColor.withValues(alpha: 0.15),
+                            tierColor.withValues(alpha: 0.35),
+                            tierColor.withValues(alpha: 0.10),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
-                        border: Border.all(
-                            color: _kRatingGold.withValues(alpha: 0.6)),
+                        border:
+                            Border.all(color: tierColor.withValues(alpha: 0.65)),
                       ),
-                      child: const Icon(Icons.emoji_events_rounded,
-                          color: _kRatingGold, size: 32),
+                      child: Icon(Icons.emoji_events_rounded,
+                          color: tierColor, size: 34),
                     ),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 22),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MyText(
-                            text: 'Calificación Global',
+                            text: 'Rango Actual',
                             weight: FontWeight.w600,
-                            size: 14,
-                            color: kwhite.withValues(alpha: 0.7),
+                            size: 13,
+                            color: kwhite.withValues(alpha: 0.65),
+                          ),
+                          const SizedBox(height: 3),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: MyText(
+                              text: '$tier $division',
+                              weight: FontWeight.w800,
+                              size: 27,
+                              color: tierColor,
+                            ),
                           ),
                           const SizedBox(height: 10),
-                          Row(
-                            children: List.generate(5, (i) {
-                              final filled = i < _playerStars(tier);
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 6),
-                                child: Icon(
-                                  filled
-                                      ? Icons.star_rounded
-                                      : Icons.star_outline_rounded,
-                                  color: filled
-                                      ? _kRatingGold
-                                      : kwhite.withValues(alpha: 0.25),
-                                  size: 30,
-                                ),
-                              );
-                            }),
+                          StarRatingRow(
+                            stars: stars,
+                            size: 26,
+                            gap: 6,
+                            emptyColor: kwhite.withValues(alpha: 0.22),
                           ),
                         ],
                       ),
@@ -289,27 +292,7 @@ class History extends StatelessWidget {
     );
   }
 
-  /// Maps a league tier to a 1–5 star rating (Pokémon-Unite-style).
-  /// The sport pills swap the tier, so switching sport updates the stars.
-  int _playerStars(String tier) {
-    switch (tier.toLowerCase()) {
-      case 'challenger':
-      case 'diamante':
-        return 5;
-      case 'platino':
-        return 4;
-      case 'oro':
-        return 3;
-      case 'plata':
-        return 2;
-      default: // bronce / unknown
-        return 1;
-    }
-  }
 }
-
-/// Premium gold used for the global-rating stars (harmonizes with the dark card).
-const Color _kRatingGold = Color(0xFFFFD54A);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Sport Selector Bar

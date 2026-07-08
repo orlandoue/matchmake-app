@@ -34,6 +34,17 @@ class LeagueRanking {
     required this.division,
     required this.lp,
   });
+
+  /// Max stars per division (strict business rule: 4).
+  static const int maxStars = 4;
+
+  /// Division progress rendered as filled stars (0–4), translated from [lp]
+  /// (0–100). Buckets: 0–24 → 1, 25–49 → 2, 50–74 → 3, 75–100 → 4.
+  /// LP is clamped so out-of-range values never break the scale.
+  int get currentStars {
+    final clamped = lp.clamp(0, 100);
+    return (clamped ~/ 25) + 1 > maxStars ? maxStars : (clamped ~/ 25) + 1;
+  }
 }
 
 /// Controller for managing user profile operations
@@ -153,6 +164,11 @@ class ProfileController extends GetxController {
     if (w >= 5)  return 'Plata';
     return 'Bronce 3';
   }
+
+  /// Division-progress stars (0–4) for the header rank, aligned with
+  /// [userRank] (both read `userRankings.first`). 0 for brand-new users.
+  int get userRankStars =>
+      userRankings.isNotEmpty ? userRankings.first.currentStars : 0;
 
   /// Get user ranking position based on wins
   String get rankingPosition =>

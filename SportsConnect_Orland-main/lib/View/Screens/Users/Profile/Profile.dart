@@ -11,6 +11,7 @@ import 'package:orland_sports/View/Screens/Users/matchmaking/ManageMatch.dart';
 import 'package:orland_sports/View/Widgets/CommonImageView.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
+import 'package:orland_sports/View/Widgets/star_rating_row.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/controllers/auth_controller.dart';
 import 'package:orland_sports/controllers/identity_verification_controller.dart';
@@ -65,21 +66,32 @@ class Profile extends StatelessWidget {
                 Obx(() {
                   // Re-read to trigger reactivity
                   final _ = profileController.currentUser;
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  return Column(
                     children: [
-                      MyText(
-                        text: '${'rank'.tr}: ${profileController.userRank}',
-                        color: kgrey1,
-                        size: 16,
-                        weight: FontWeight.w500,
-                        paddingRight: 6,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          MyText(
+                            text: '${'rank'.tr}: ${profileController.userRank}',
+                            color: kgrey1,
+                            size: 16,
+                            weight: FontWeight.w500,
+                            paddingRight: 6,
+                          ),
+                          Image.asset(
+                            Assets.imagesTrophyicon,
+                            width: 20,
+                            height: 20,
+                          ),
+                        ],
                       ),
-                      Image.asset(
-                        Assets.imagesTrophyicon,
-                        width: 20,
-                        height: 20,
-                      )
+                      const SizedBox(height: 8),
+                      StarRatingRow(
+                        stars: profileController.userRankStars,
+                        size: 18,
+                        gap: 5,
+                        emptyColor: kgrey5,
+                      ),
                     ],
                   );
                 }),
@@ -124,9 +136,7 @@ class Profile extends StatelessWidget {
                       itemCount: profileController.userRankings.length,
                       itemBuilder: (context, index) {
                         final ranking = profileController.userRankings[index];
-                        final tier = ranking.tier;
                         final division = ranking.division;
-                        final lp = ranking.lp;
                         final league = ranking.leagueData;
                         
                         // Determinar ícono dinámico basado en el nombre del deporte
@@ -190,19 +200,12 @@ class Profile extends StatelessWidget {
                                 color: league.color,
                                 maxLines: 1,
                               ),
-                              const SizedBox(height: 6),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: league.color.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: MyText(
-                                  text: '$lp LP',
-                                  size: 16,
-                                  weight: FontWeight.bold,
-                                  color: kblack2,
-                                ),
+                              const SizedBox(height: 10),
+                              StarRatingRow(
+                                stars: ranking.currentStars,
+                                size: 18,
+                                gap: 4,
+                                emptyColor: kgrey5,
                               ),
                             ],
                           ),
