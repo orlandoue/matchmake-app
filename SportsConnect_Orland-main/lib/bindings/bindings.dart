@@ -7,7 +7,10 @@ import 'package:orland_sports/controllers/geo_filter_controller.dart';
 import 'package:orland_sports/controllers/identity_verification_controller.dart';
 import 'package:orland_sports/controllers/language_controller.dart';
 import 'package:orland_sports/controllers/maps_controller.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/match_form_controller.dart';
+import 'package:orland_sports/controllers/match_creation_controller.dart';
+import 'package:orland_sports/controllers/player_matches_controller.dart';
+import 'package:orland_sports/controllers/referee_match_controller.dart';
 import 'package:orland_sports/controllers/payout_controller.dart';
 import 'package:orland_sports/controllers/profile_controller.dart';
 import 'package:orland_sports/controllers/referee_auth_controller.dart';
@@ -40,7 +43,9 @@ class CourtBinding implements Bindings {
 class MatchBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<MatchController>(() => MatchController());
+    Get.lazyPut<MatchFormController>(() => MatchFormController());
+    Get.lazyPut<PlayerMatchesController>(() => PlayerMatchesController());
+    Get.lazyPut<MatchCreationController>(() => MatchCreationController());
     Get.lazyPut<GeoFilterController>(() => GeoFilterController());
   }
 }
@@ -63,8 +68,7 @@ class InitialBinding implements Bindings {
     Get.put<RefereeAuthController>(RefereeAuthController());
     Get.put<IdentityVerificationController>(IdentityVerificationController());
 
-    // Match and Ticket controllers (Lazy with fenix:true for global availability)
-    Get.lazyPut<MatchController>(() => MatchController(), fenix: true);
+    // Ticket controller available globally (needed by match creation)
     Get.lazyPut<TicketController>(() => TicketController(), fenix: true);
   }
 }
@@ -79,12 +83,12 @@ class RefereeBinding implements Bindings {
     if (!Get.isRegistered<IdentityVerificationController>()) {
       Get.put<IdentityVerificationController>(IdentityVerificationController());
     }
-    // Initialize all controllers needed for referee screens
+    // Referee screens only need referee-side match logic + supporting data
     Get.put<CourtController>(CourtController());
-    Get.put<MatchController>(MatchController());
     Get.put<SportController>(SportController());
     Get.put<ScoreController>(ScoreController());
     Get.put<PayoutController>(PayoutController());
+    Get.put<RefereeMatchController>(RefereeMatchController());
   }
 }
 
@@ -101,11 +105,13 @@ class PlayerBinding implements Bindings {
     if (!Get.isRegistered<IdentityVerificationController>()) {
       Get.put<IdentityVerificationController>(IdentityVerificationController());
     }
-    // Initialize all controllers needed for player screens
-    Get.put<MatchController>(MatchController());
+    // Player screens: form + own matches + creation, plus supporting data
     Get.put<CourtController>(CourtController());
     Get.put<SportController>(SportController());
     Get.put<TicketController>(TicketController());
     Get.put<GeoFilterController>(GeoFilterController());
+    Get.put<MatchFormController>(MatchFormController());
+    Get.put<PlayerMatchesController>(PlayerMatchesController());
+    Get.put<MatchCreationController>(MatchCreationController());
   }
 }

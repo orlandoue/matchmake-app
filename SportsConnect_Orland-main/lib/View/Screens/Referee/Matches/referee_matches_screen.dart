@@ -5,7 +5,7 @@ import 'package:orland_sports/View/Screens/Referee/Matches/referee_score_screen.
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/referee_match_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/models/match_model.dart';
 
@@ -17,12 +17,12 @@ class RefereeMatchesScreen extends StatefulWidget {
 }
 
 class _RefereeMatchesScreenState extends State<RefereeMatchesScreen> {
-  late final MatchController matchController;
+  late final RefereeMatchController matchController;
 
   @override
   void initState() {
     super.initState();
-    matchController = Get.find<MatchController>();
+    matchController = Get.find<RefereeMatchController>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (matchController.refereeAvailableMatches.isEmpty) {
@@ -101,7 +101,7 @@ class _RefereeMatchesScreenState extends State<RefereeMatchesScreen> {
 }
 
 class _AvailableMatchesTab extends StatelessWidget {
-  final MatchController matchController;
+  final RefereeMatchController matchController;
 
   const _AvailableMatchesTab({required this.matchController});
 
@@ -159,7 +159,7 @@ class _AvailableMatchesTab extends StatelessWidget {
 }
 
 class _ScheduledMatchesTab extends StatelessWidget {
-  final MatchController matchController;
+  final RefereeMatchController matchController;
 
   const _ScheduledMatchesTab({required this.matchController});
 
@@ -256,7 +256,7 @@ class _AvailableMatchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<RefereeMatchController>();
 
     return GestureDetector(
       onTap: () => Get.to(() => RefereeMatchDetailScreen(match: match)),
@@ -449,7 +449,7 @@ class _ScheduledMatchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<RefereeMatchController>();
 
     return GestureDetector(
       onTap: () => Get.to(() => RefereeMatchDetailScreen(match: match)),

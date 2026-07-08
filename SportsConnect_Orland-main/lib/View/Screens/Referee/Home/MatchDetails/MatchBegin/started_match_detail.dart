@@ -9,7 +9,7 @@ import 'package:orland_sports/View/Widgets/view_score_referee.dart';
 import 'package:orland_sports/const/App_strings.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/generated/assets.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/referee_match_controller.dart';
 import 'package:orland_sports/controllers/scoreboard_controller.dart';
 
 class StartedMatchDetail extends StatelessWidget {
@@ -17,7 +17,7 @@ class StartedMatchDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<RefereeMatchController>();
     final match = matchController.currentMatch.value!;
     
     // Inject Controller

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/match_form_controller.dart';
 import 'package:orland_sports/models/club_model.dart';
 import 'package:orland_sports/services/club_service.dart';
 
@@ -122,8 +122,8 @@ class GeoFilterController extends GetxController {
     try {
       // Resolve the selected sport UUID (null = no sport filter)
       String? sportId;
-      if (Get.isRegistered<MatchController>()) {
-        final matchCtrl = Get.find<MatchController>();
+      if (Get.isRegistered<MatchFormController>()) {
+        final matchCtrl = Get.find<MatchFormController>();
         final sportName = matchCtrl.selectedSport.value;
         sportId = matchCtrl.sportUUIDMap[sportName];
         debugPrint('GeoFilter: sport="$sportName" → uuid=$sportId');

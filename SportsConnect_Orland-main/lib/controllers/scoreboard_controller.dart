@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:get/get.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/referee_match_controller.dart';
 import 'package:orland_sports/models/match_model.dart';
 
 class ScoreboardController extends GetxController {
@@ -193,7 +193,7 @@ class ScoreboardController extends GetxController {
   }
 
   void endMatch({String? winnerId, bool isDraw = false}) async {
-    final mc = Get.find<MatchController>();
+    final mc = Get.find<RefereeMatchController>();
     _timer?.cancel();
 
     Map<String, dynamic> finalScore = {

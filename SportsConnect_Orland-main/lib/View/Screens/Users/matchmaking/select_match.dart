@@ -11,7 +11,9 @@ import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/match_form_controller.dart';
+import 'package:orland_sports/controllers/match_creation_controller.dart';
+import 'package:orland_sports/controllers/player_matches_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/generated/assets.dart';
 import 'package:orland_sports/models/court_model.dart';
@@ -24,7 +26,7 @@ class SelectMatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<MatchFormController>();
 
     // If a court is pre-selected, set it
     if (preSelectedCourt != null) {
@@ -724,7 +726,7 @@ class SelectTimeslotScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<MatchFormController>();
 
     return Scaffold(
       backgroundColor: kwhite,
@@ -816,7 +818,7 @@ class SelectTimeslotScreen extends StatelessWidget {
 }
 
 class _DateSelector extends StatelessWidget {
-  final MatchController controller;
+  final MatchFormController controller;
 
   const _DateSelector({required this.controller});
 
@@ -909,7 +911,7 @@ class _DateSelector extends StatelessWidget {
 }
 
 class _TimeSlotGrid extends StatelessWidget {
-  final MatchController controller;
+  final MatchFormController controller;
   final bool isStartTime;
 
   const _TimeSlotGrid({
@@ -1026,7 +1028,7 @@ class ReviewMatchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<MatchFormController>();
     final court = matchController.selectedCourt.value;
 
     return Scaffold(
@@ -1154,12 +1156,12 @@ class ReviewMatchScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20),
             child: Obx(
-              () => matchController.isSearchingMatch.value
+              () => MatchCreationController.instance.isSearchingMatch.value
                   ? const Center(
                       child: CircularProgressIndicator(color: kpurple1))
                   : MyButton(
                       onTap: () async {
-                        final match = await matchController.createOrJoinMatch();
+                        final match = await MatchCreationController.instance.createOrJoinMatch();
                         if (match != null) {
                           Get.offAll(() => MatchWaitingScreen(match: match));
                         }
@@ -1243,11 +1245,11 @@ class MatchWaitingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<MatchFormController>();
 
     // Set currentMatch so realtime subscription can update it
     if (match is MatchModel) {
-      matchController.currentMatch.value = match as MatchModel;
+      PlayerMatchesController.instance.currentMatch.value = match as MatchModel;
     }
 
     return Scaffold(
@@ -1255,7 +1257,7 @@ class MatchWaitingScreen extends StatelessWidget {
       appBar:
           simpleAppBar2(title: isJoining ? 'match_joined'.tr : 'match_created_label'.tr),
       body: Obx(() {
-        final currentMatch = matchController.currentMatch.value;
+        final currentMatch = PlayerMatchesController.instance.currentMatch.value;
         final matchStatus = currentMatch?.status ?? MatchStatus.pending;
         final isMatched = matchStatus == MatchStatus.matched ||
             matchStatus == MatchStatus.confirmed ||

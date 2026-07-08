@@ -8,7 +8,8 @@ import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/player_matches_controller.dart';
+import 'package:orland_sports/controllers/match_creation_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/generated/assets.dart';
 import 'package:orland_sports/models/match_model.dart';
@@ -38,12 +39,12 @@ class _AvailableMatchesScreenState extends State<AvailableMatchesScreen> {
   }
 
   final selectedFilter = 'all'.obs;
-  late final MatchController matchController;
+  late final PlayerMatchesController matchController;
 
   @override
   void initState() {
     super.initState();
-    matchController = Get.find<MatchController>();
+    matchController = Get.find<PlayerMatchesController>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       matchController.loadAvailableMatchesToJoin();
     });
@@ -128,7 +129,7 @@ class _AvailableMatchesScreenState extends State<AvailableMatchesScreen> {
                                         children: [
                                            Expanded(
                                               child: ElevatedButton(
-                                                 onPressed: () => matchController.rejectInvitation(inv),
+                                                 onPressed: () => MatchCreationController.instance.rejectInvitation(inv),
                                                  style: ElevatedButton.styleFrom(
                                                     backgroundColor: kwhite,
                                                     padding: EdgeInsets.zero,
@@ -140,7 +141,7 @@ class _AvailableMatchesScreenState extends State<AvailableMatchesScreen> {
                                            const SizedBox(width: 8),
                                            Expanded(
                                               child: ElevatedButton(
-                                                 onPressed: () => matchController.acceptInvitation(inv),
+                                                 onPressed: () => MatchCreationController.instance.acceptInvitation(inv),
                                                  style: ElevatedButton.styleFrom(
                                                     backgroundColor: kpurple1,
                                                     padding: EdgeInsets.zero,
@@ -340,7 +341,7 @@ class _AvailableMatchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
     final dateFormat = DateFormat('EEE, MMM d');
     final formattedDate = dateFormat.format(match.scheduledDate);
 
@@ -555,7 +556,7 @@ class _AvailableMatchCard extends StatelessWidget {
                       }
 
                       final isThisJoining =
-                          matchController.joiningMatchId.value == match.id;
+                          MatchCreationController.instance.joiningMatchId.value == match.id;
                       return ElevatedButton(
                         onPressed: isThisJoining
                             ? null
@@ -565,7 +566,7 @@ class _AvailableMatchCard extends StatelessWidget {
                                     Get.to(() => ReviewSummary(
                                       onConfirm: () async {
                                         // TODO: Pass position to joinAvailableMatch if supported
-                                        final joinedMatch = await matchController
+                                        final joinedMatch = await MatchCreationController.instance
                                             .joinAvailableMatch(match.id);
                                         if (joinedMatch != null) {
                                           Get.off(() => MatchWaitingScreen(

@@ -7,7 +7,8 @@ import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/match_form_controller.dart';
+import 'package:orland_sports/controllers/match_creation_controller.dart';
 
 class SelectTimeslot extends StatefulWidget {
   SelectTimeslot({super.key});
@@ -310,7 +311,7 @@ class _SelectTimeslotState extends State<SelectTimeslot> {
   void _proceedToNext() {
     if (!_canConfirm) return;
     
-    final matchCtrl = Get.find<MatchController>();
+    final matchCtrl = Get.find<MatchFormController>();
     matchCtrl.selectedTimeSlot.value = selectedStartSlot!;
     matchCtrl.selectedEndTimeSlot.value = selectedEndSlot!;
     
@@ -341,7 +342,7 @@ class _SelectTimeslotState extends State<SelectTimeslot> {
         // TODO: Save position to matchController
         Get.to(() => ReviewSummary(
               onConfirm: () async {
-                final result = await matchCtrl.createOrJoinMatch();
+                final result = await MatchCreationController.instance.createOrJoinMatch();
                 return result != null;
               },
             ));

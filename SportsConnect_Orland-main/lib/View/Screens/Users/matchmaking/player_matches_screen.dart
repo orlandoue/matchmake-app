@@ -4,7 +4,8 @@ import 'package:orland_sports/View/Screens/Users/matchmaking/player_match_detail
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/player_matches_controller.dart';
+import 'package:orland_sports/controllers/match_creation_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/models/match_model.dart';
 
@@ -14,7 +15,7 @@ class PlayerMatchesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
 
     // Ensure fresh data when screen opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -73,7 +74,7 @@ class PlayerMatchesScreen extends StatelessWidget {
 }
 
 class _ActiveMatchesTab extends StatelessWidget {
-  final MatchController matchController;
+  final PlayerMatchesController matchController;
 
   const _ActiveMatchesTab({required this.matchController});
 
@@ -118,7 +119,7 @@ class _ActiveMatchesTab extends StatelessWidget {
 }
 
 class _WaitingMatchesTab extends StatelessWidget {
-  final MatchController matchController;
+  final PlayerMatchesController matchController;
 
   const _WaitingMatchesTab({required this.matchController});
 
@@ -160,7 +161,7 @@ class _WaitingMatchesTab extends StatelessWidget {
 }
 
 class _CompletedMatchesTab extends StatelessWidget {
-  final MatchController matchController;
+  final PlayerMatchesController matchController;
 
   const _CompletedMatchesTab({required this.matchController});
 
@@ -250,8 +251,6 @@ class _PlayerMatchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
-
     return GestureDetector(
       onTap: () => Get.to(() => PlayerMatchDetailScreen(match: match)),
       child: Container(
@@ -385,7 +384,7 @@ class _PlayerMatchCard extends StatelessWidget {
                     const Spacer(),
                     IconButton(
                       onPressed: () {
-                        matchController.copyInviteCode(match.inviteCode!);
+                        MatchCreationController.instance.copyInviteCode(match.inviteCode!);
                       },
                       icon: const Icon(Icons.copy, size: 20, color: kpurple1),
                       padding: EdgeInsets.zero,
@@ -466,7 +465,7 @@ class _PlayerMatchCard extends StatelessWidget {
   }
 
   void _showCancelConfirmation(MatchModel match) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
 
     Get.dialog(
       AlertDialog(
@@ -492,7 +491,7 @@ class _PlayerMatchCard extends StatelessWidget {
                 onPressed: matchController.isLoading.value
                     ? null
                     : () async {
-                        await matchController.cancelMatch(match.id);
+                        await MatchCreationController.instance.cancelMatch(match.id);
                         Navigator.pop(Get.context!);
                       },
                 style: ElevatedButton.styleFrom(

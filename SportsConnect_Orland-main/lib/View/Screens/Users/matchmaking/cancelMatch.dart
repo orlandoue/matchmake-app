@@ -7,7 +7,7 @@ import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/App_strings.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/player_matches_controller.dart';
 import 'package:orland_sports/generated/assets.dart';
 import 'package:orland_sports/models/match_model.dart';
 
@@ -17,7 +17,7 @@ class CancelMatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
     final court = match?.court;
 
     return Scaffold(

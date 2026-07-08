@@ -12,7 +12,9 @@ import 'package:orland_sports/View/Widgets/CommonImageView.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/player_matches_controller.dart';
+import 'package:orland_sports/controllers/match_form_controller.dart';
+import 'package:orland_sports/controllers/match_creation_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/generated/assets.dart';
 import 'package:orland_sports/models/court_model.dart';
@@ -24,11 +26,11 @@ class MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get match controller
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
 
     // Load courts when home loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      matchController.loadAvailableCourts();
+      MatchFormController.instance.loadAvailableCourts();
       matchController.loadPlayerMatches();
       matchController.loadAvailableMatchesToJoin();
     });
@@ -41,7 +43,7 @@ class MyHome extends StatelessWidget {
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                await matchController.loadAvailableCourts();
+                await MatchFormController.instance.loadAvailableCourts();
                 await matchController.loadPlayerMatches();
               },
               child: ListView(
@@ -198,7 +200,7 @@ class MyHome extends StatelessWidget {
 
                   // Nearby Courts Section
                   Obx(() {
-                    final courtCount = matchController.availableCourts.length;
+                    final courtCount = MatchFormController.instance.availableCourts.length;
                     return buttonContainer(
                       text: 'courts_around_you'.trParams({'count': '$courtCount'}),
                       icon: Icons.location_on_outlined,
@@ -222,7 +224,7 @@ class MyHome extends StatelessWidget {
                       );
                     }
 
-                    if (matchController.availableCourts.isEmpty) {
+                    if (MatchFormController.instance.availableCourts.isEmpty) {
                       return Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -258,10 +260,10 @@ class MyHome extends StatelessWidget {
                           height: 220,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: matchController.availableCourts.length,
+                            itemCount: MatchFormController.instance.availableCourts.length,
                             itemBuilder: (context, index) {
                               final court =
-                                  matchController.availableCourts[index];
+                                  MatchFormController.instance.availableCourts[index];
                               return _CourtCard(court: court);
                             },
                           ),
@@ -393,7 +395,7 @@ class MyHome extends StatelessWidget {
 
   void _showJoinByCodeDialog() {
     final codeController = TextEditingController();
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
 
     Get.dialog(
       AlertDialog(
@@ -445,11 +447,11 @@ class MyHome extends StatelessWidget {
             child: MyText(text: 'cancel'.tr, color: kgrey1),
           ),
           Obx(() => ElevatedButton(
-                onPressed: matchController.isJoiningMatch.value
+                onPressed: MatchCreationController.instance.isJoiningMatch.value
                     ? null
                     : () async {
                         if (codeController.text.length == 6) {
-                          final match = await matchController.joinMatchByCode(
+                          final match = await MatchCreationController.instance.joinMatchByCode(
                             codeController.text.toUpperCase(),
                           );
                           if (match != null) {
@@ -467,7 +469,7 @@ class MyHome extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: matchController.isJoiningMatch.value
+                child: MatchCreationController.instance.isJoiningMatch.value
                     ? const SizedBox(
                         width: 20,
                         height: 20,
@@ -491,11 +493,11 @@ class _FeaturedCourtCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
 
     return GestureDetector(
       onTap: () {
-        matchController.selectCourt(court);
+        MatchFormController.instance.selectCourt(court);
         Get.to(() => const SelectMatch());
       },
       child: Container(
@@ -634,11 +636,11 @@ class _CourtCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
 
     return GestureDetector(
       onTap: () {
-        matchController.selectCourt(court);
+        MatchFormController.instance.selectCourt(court);
         Get.to(() => const SelectMatch());
       },
       child: Container(
@@ -881,7 +883,7 @@ class _AvailableMatchPreview extends StatelessWidget {
 class _CheckInBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
 
     return Obx(() {
       final confirmedMatches = matchController.activeMatches

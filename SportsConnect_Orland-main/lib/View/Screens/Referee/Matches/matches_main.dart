@@ -6,7 +6,7 @@ import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/App_strings.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/const/app_fonts.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/referee_match_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/models/match_model.dart';
 
@@ -21,7 +21,7 @@ class MatchesMain extends StatelessWidget {
       'recent'.tr,
     ];
 
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<RefereeMatchController>();
     // Load data when screen opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
       matchController.loadRefereeAvailableMatches();
@@ -120,7 +120,7 @@ class MatchesMain extends StatelessWidget {
 
 /// Tab for available matches (pending acceptance)
 class _AvailableMatchesTab extends StatelessWidget {
-  final MatchController matchController;
+  final RefereeMatchController matchController;
 
   const _AvailableMatchesTab({required this.matchController});
 
@@ -159,7 +159,7 @@ class _AvailableMatchesTab extends StatelessWidget {
 
 /// Tab for scheduled/confirmed matches
 class _ScheduledMatchesTab extends StatelessWidget {
-  final MatchController matchController;
+  final RefereeMatchController matchController;
 
   const _ScheduledMatchesTab({required this.matchController});
 
@@ -200,7 +200,7 @@ class _ScheduledMatchesTab extends StatelessWidget {
 
 /// Tab for completed matches (history)
 class _RecentMatchesTab extends StatelessWidget {
-  final MatchController matchController;
+  final RefereeMatchController matchController;
 
   const _RecentMatchesTab({required this.matchController});
 

@@ -5,7 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/player_matches_controller.dart';
 import 'package:orland_sports/controllers/profile_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/utils/custom_toast.dart';
@@ -16,7 +16,7 @@ class ShareScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
     final profileController = Get.find<ProfileController>();
 
     return Scaffold(
@@ -146,7 +146,7 @@ class _ShareAppCard extends StatelessWidget {
 
 /// Section showing active match codes that can be shared
 class _ActiveMatchCodesSection extends StatelessWidget {
-  final MatchController matchController;
+  final PlayerMatchesController matchController;
 
   const _ActiveMatchCodesSection({required this.matchController});
 
@@ -359,7 +359,7 @@ class _InviteCodeCard extends StatelessWidget {
 
 /// Card showing sharable user stats
 class _ShareStatsCard extends StatelessWidget {
-  final MatchController matchController;
+  final PlayerMatchesController matchController;
   final ProfileController profileController;
 
   const _ShareStatsCard({

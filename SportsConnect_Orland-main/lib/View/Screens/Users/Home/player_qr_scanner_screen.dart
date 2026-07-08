@@ -5,7 +5,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/match_creation_controller.dart';
 
 class PlayerQRScannerScreen extends StatefulWidget {
   const PlayerQRScannerScreen({super.key});
@@ -41,7 +41,7 @@ class _PlayerQRScannerScreenState extends State<PlayerQRScannerScreen> {
           if (data['action'] == 'check_in' && data['match_id'] != null) {
             final String matchId = data['match_id'];
             
-            final matchController = Get.find<MatchController>();
+            final matchController = Get.find<MatchCreationController>();
             final success = await matchController.confirmCheckIn(matchId);
             
             if (success) {

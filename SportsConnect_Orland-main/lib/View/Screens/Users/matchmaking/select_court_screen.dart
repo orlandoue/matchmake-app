@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/match_form_controller.dart';
 import 'package:orland_sports/models/court_model.dart';
 
 class SelectCourtScreen extends StatelessWidget {
@@ -11,7 +11,7 @@ class SelectCourtScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<MatchFormController>();
 
     return Scaffold(
       backgroundColor: kwhite,
@@ -73,7 +73,7 @@ class _CourtCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<MatchFormController>();
 
     return Obx(() {
       final isSelected = matchController.selectedCourt.value?.id == court.id;

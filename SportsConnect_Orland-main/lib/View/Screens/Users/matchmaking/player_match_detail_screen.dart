@@ -6,7 +6,8 @@ import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/player_matches_controller.dart';
+import 'package:orland_sports/controllers/match_creation_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/models/match_model.dart';
 import 'package:orland_sports/utils/custom_toast.dart';
@@ -19,7 +20,7 @@ class PlayerMatchDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
 
     return Scaffold(
       backgroundColor: kwhite,
@@ -703,7 +704,7 @@ class _ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<PlayerMatchesController>();
 
     if (match.status == MatchStatus.waitingForOpponent) {
       return MyButton(
@@ -751,7 +752,7 @@ class _ActionButtons extends StatelessWidget {
   }
 
   void _showCancelConfirmation(
-      MatchModel match, MatchController matchController) {
+      MatchModel match, PlayerMatchesController matchController) {
     Get.dialog(
       AlertDialog(
         backgroundColor: kwhite,
@@ -776,7 +777,7 @@ class _ActionButtons extends StatelessWidget {
                 onPressed: matchController.isLoading.value
                     ? null
                     : () async {
-                        await matchController.cancelMatch(match.id);
+                        await MatchCreationController.instance.cancelMatch(match.id);
                         Navigator.pop(Get.context!);
                         Navigator.pop(Get.context!); // Go back to matches list
                       },

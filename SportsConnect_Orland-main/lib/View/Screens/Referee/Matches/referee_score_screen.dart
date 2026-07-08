@@ -5,7 +5,7 @@ import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/referee_match_controller.dart';
 import 'package:orland_sports/controllers/score_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/models/match_model.dart';
@@ -23,7 +23,7 @@ class RefereeScoreScreen extends StatelessWidget {
     final scoreController = Get.put(ScoreController());
     scoreController.initializeMatch(match);
 
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<RefereeMatchController>();
 
     return Scaffold(
       backgroundColor: kwhite,
@@ -246,7 +246,7 @@ class RefereeScoreScreen extends StatelessWidget {
   }
 
   void _showCompleteMatchDialog(
-      BuildContext context, MatchController matchController) {
+      BuildContext context, RefereeMatchController matchController) {
     final selectedWinnerId = ''.obs;
     final scoreController = Get.find<ScoreController>();
     final is2v2 = match.matchType == MatchType.twoVsTwo;

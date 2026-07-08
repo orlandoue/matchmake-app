@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/controllers/geo_filter_controller.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/match_form_controller.dart';
 import 'package:orland_sports/models/club_model.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 
@@ -506,7 +506,7 @@ class _ConfirmButton extends StatelessWidget {
   }
 
   void _handleConfirm() {
-    final matchCtrl = Get.find<MatchController>();
+    final matchCtrl = Get.find<MatchFormController>();
     matchCtrl.setPreferredClubs(geoCtrl.selectedClubIds.toList());
     // Return to SelectMatch — the club selection card will update reactively
     Get.back();

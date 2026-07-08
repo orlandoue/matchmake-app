@@ -8,7 +8,7 @@ import 'package:orland_sports/View/Widgets/ExpandedRow.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/player_matches_controller.dart';
 import 'package:orland_sports/controllers/profile_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/generated/assets.dart';
@@ -32,7 +32,7 @@ class History extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController   = Get.find<MatchController>();
+    final matchController   = Get.find<PlayerMatchesController>();
     final profileController = Get.find<ProfileController>();
     final currentUserId     = matchController.currentUserId;
 

@@ -6,7 +6,7 @@ import 'package:orland_sports/View/Widgets/SummaryCard.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/match_form_controller.dart';
 import 'package:orland_sports/models/match_model.dart';
 import 'package:orland_sports/enums/match_status.dart' as enums;
 
@@ -20,8 +20,8 @@ class ReviewSummary extends StatelessWidget {
     final RxBool isProcessing = false.obs;
     final RxBool hasBalls = false.obs; // Equipment Rule
 
-    // ── Resolve real club/court name from MatchController ──────────────────
-    final matchCtrl = Get.find<MatchController>();
+    // ── Resolve real club/court name from MatchFormController ──────────────────
+    final matchCtrl = Get.find<MatchFormController>();
 
     final String locationLabel;
     if (matchCtrl.preferredClubIds.isNotEmpty) {

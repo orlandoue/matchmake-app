@@ -9,7 +9,7 @@ import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/App_strings.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/controllers/explore_controller.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/match_form_controller.dart';
 import 'package:orland_sports/generated/assets.dart';
 import 'package:orland_sports/models/court_model.dart';
 
@@ -247,7 +247,7 @@ class ViewSearchCardDetail extends StatelessWidget {
           MyButton(
             onTap: () {
               if (court != null) {
-                final matchController = Get.find<MatchController>();
+                final matchController = Get.find<MatchFormController>();
                 matchController.selectCourt(court!);
                 Get.to(() => SelectMatch(preSelectedCourt: court));
               }

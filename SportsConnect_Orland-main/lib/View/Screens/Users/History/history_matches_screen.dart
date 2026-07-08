@@ -4,7 +4,7 @@ import 'package:orland_sports/View/Screens/Users/matchmaking/player_match_detail
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/player_matches_controller.dart';
 import 'package:orland_sports/controllers/profile_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/models/match_model.dart';
@@ -29,7 +29,7 @@ class HistoryMatchesScreen extends StatelessWidget {
     }
   }
 
-  List<MatchModel> _getFilteredMatches(MatchController controller) {
+  List<MatchModel> _getFilteredMatches(PlayerMatchesController controller) {
     switch (filterType) {
       case HistoryFilterType.points:
       case HistoryFilterType.won:
@@ -41,7 +41,7 @@ class HistoryMatchesScreen extends StatelessWidget {
     }
   }
 
-  String _getSummaryText(MatchController controller) {
+  String _getSummaryText(PlayerMatchesController controller) {
     switch (filterType) {
       case HistoryFilterType.points:
         final profileController = Get.find<ProfileController>();
@@ -65,7 +65,7 @@ class HistoryMatchesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<MatchController>();
+    final controller = Get.find<PlayerMatchesController>();
 
     return Scaffold(
       backgroundColor: kwhite,

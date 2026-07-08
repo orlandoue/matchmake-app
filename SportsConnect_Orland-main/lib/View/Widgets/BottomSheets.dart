@@ -6,7 +6,7 @@ import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/View/Widgets/myTextField.dart';
 import 'package:orland_sports/const/App_strings.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/match_creation_controller.dart';
 import 'package:orland_sports/generated/assets.dart';
 
 class CancelMatchBottomSheet extends StatelessWidget {
@@ -70,7 +70,7 @@ class CancelMatchBottomSheet extends StatelessWidget {
                       child: MyButton(
                         onTap: () async {
                           if (matchId != null) {
-                            final controller = Get.find<MatchController>();
+                            final controller = Get.find<MatchCreationController>();
                             final success =
                                 await controller.cancelMatch(matchId!);
                             if (success) {

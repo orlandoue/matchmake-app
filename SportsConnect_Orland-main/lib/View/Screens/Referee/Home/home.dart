@@ -6,7 +6,7 @@ import 'package:orland_sports/View/Widgets/ExpandedRow.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/referee_match_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/models/match_model.dart';
 
@@ -18,12 +18,12 @@ class ReferreHome extends StatefulWidget {
 }
 
 class _ReferreHomeState extends State<ReferreHome> {
-  late final MatchController matchController;
+  late final RefereeMatchController matchController;
 
   @override
   void initState() {
     super.initState();
-    matchController = Get.find<MatchController>();
+    matchController = Get.find<RefereeMatchController>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _refreshData();
@@ -70,7 +70,7 @@ class _ReferreHomeState extends State<ReferreHome> {
     );
   }
 
-  Widget _buildHeader(MatchController matchController) {
+  Widget _buildHeader(RefereeMatchController matchController) {
     return Container(
       color: kpurple1,
       padding: const EdgeInsets.only(top: 30, left: 10, right: 10, bottom: 20),
@@ -209,7 +209,7 @@ class _NextMatchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<RefereeMatchController>();
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -325,7 +325,7 @@ class _MarketplaceMatchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<MatchController>();
+    final matchController = Get.find<RefereeMatchController>();
 
     return GestureDetector(
       onTap: () => Get.to(() => RefereeMatchDetailScreen(match: match)),

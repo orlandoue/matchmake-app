@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:orland_sports/controllers/auth_controller.dart';
 import 'package:orland_sports/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:orland_sports/controllers/match_controller.dart';
+import 'package:orland_sports/controllers/player_matches_controller.dart';
 import 'package:orland_sports/services/player_service.dart';
 import 'package:orland_sports/utils/custom_toast.dart';
 
@@ -161,7 +161,7 @@ class ProfileController extends GetxController {
   /// Get games played from match controller
   int get gamesPlayed {
     try {
-      final matchController = Get.find<MatchController>();
+      final matchController = Get.find<PlayerMatchesController>();
       return matchController.playerMatches
           .where((m) => m.status.value == 'completed')
           .length;
@@ -173,7 +173,7 @@ class ProfileController extends GetxController {
   /// Get wins from match controller
   int get wins {
     try {
-      final matchController = Get.find<MatchController>();
+      final matchController = Get.find<PlayerMatchesController>();
       final currentUserId = matchController.currentUserId;
       return matchController.playerMatches
           .where((m) =>
@@ -187,7 +187,7 @@ class ProfileController extends GetxController {
   /// Get losses from match controller
   int get losses {
     try {
-      final matchController = Get.find<MatchController>();
+      final matchController = Get.find<PlayerMatchesController>();
       final currentUserId = matchController.currentUserId;
       return matchController.playerMatches
           .where((m) =>
