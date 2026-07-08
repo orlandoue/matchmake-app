@@ -1,13 +1,10 @@
--- Fase 5 · Misión 1 — persistencia del "Lado de Pista" (Drive/Revés/Ambos).
+-- Fase 6 · Misión 1 (cierre end-to-end) — persistencia del "Lado de Pista".
 --
--- Hoy la selección vive como estado de formulario (MatchFormController
--- .selectedCourtSide) y se muestra en el wizard y en ReviewSummary, pero NO
--- se guarda en la BD. Para persistirla, aplica esta migración y luego:
---   1. Añade `player1CourtSide` a MatchModel + toInsertJson/fromJson.
---   2. Pásalo desde MatchCreationController.createOrJoinMatch al construir
---      el MatchModel (matchCtrl.selectedCourtSide.value).
--- (No se cableó en toInsertJson todavía para no romper los inserts mientras
---  la columna no exista.)
+-- El cliente YA está cableado (Fase 6): MatchModel.player1CourtSide viaja en
+-- toInsertJson y se envía desde MatchCreationController.createOrJoinMatch con
+-- MatchFormController.selectedCourtSide. Falta SOLO aplicar esta migración en
+-- el dashboard para crear la columna; hasta entonces los inserts que envíen
+-- un valor no-nulo fallarán con "column does not exist".
 
 ALTER TABLE public.matches
   ADD COLUMN IF NOT EXISTS player1_court_side TEXT

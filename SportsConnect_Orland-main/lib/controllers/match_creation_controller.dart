@@ -223,6 +223,9 @@ class MatchCreationController extends GetxController with CurrentUserMixin {
         scheduledEndTime: _form.selectedEndTimeSlot.value.isNotEmpty
             ? _form.selectedEndTimeSlot.value
             : null,
+        player1CourtSide: _form.selectedCourtSide.value.isNotEmpty
+            ? _form.selectedCourtSide.value
+            : null,
       );
 
       print('🔥 MatchCreationController: Iniciando creación en DB...');

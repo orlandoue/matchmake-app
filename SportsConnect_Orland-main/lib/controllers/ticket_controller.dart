@@ -256,15 +256,22 @@ class TicketController extends GetxController {
     }
   }
 
-  /// Subscribe to VIP Plan (Dummy for MercadoPago Preapproval)
-  Future<void> subscribeToPlan(String planName, double price) async {
-    isPurchasing.value = true;
+  /// Id of the VIP plan currently being subscribed (for per-card loaders).
+  /// Empty when idle. Simulation only — no Edge Function yet.
+  final RxString subscribingPlanId = ''.obs;
+
+  /// Subscribe to a VIP Plan — SIMULATION ONLY (no Edge Function yet).
+  ///
+  /// Provides visual feedback (per-card loader + success toast). Real
+  /// Mercado Pago preapproval wiring is a later phase.
+  Future<void> subscribeToPlan(String planId, double price) async {
+    if (subscribingPlanId.value.isNotEmpty) return; // avoid double taps
+    subscribingPlanId.value = planId;
     try {
-      // Dummy logic to simulate subscription
       await Future.delayed(const Duration(seconds: 2));
       CustomToast.instance.showSuccessToast(
         title: 'Suscripción Exitosa',
-        message: 'Te has suscrito al plan: $planName',
+        message: 'Te has suscrito al plan $planId (simulación).',
       );
     } catch (e) {
       CustomToast.instance.showFailureToast(
@@ -272,7 +279,7 @@ class TicketController extends GetxController {
         message: 'No se pudo completar la suscripción.',
       );
     } finally {
-      isPurchasing.value = false;
+      subscribingPlanId.value = '';
     }
   }
 

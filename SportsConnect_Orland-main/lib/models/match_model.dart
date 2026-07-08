@@ -26,6 +26,8 @@ class MatchModel {
   final String? winnerId;
   final Map<String, dynamic>? scoreData;
   final String? notes;
+  /// Player 1's preferred court side: 'Drive' | 'Revés' | 'Ambos' (nullable).
+  final String? player1CourtSide;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final bool player1CheckedIn;
@@ -66,6 +68,7 @@ class MatchModel {
     this.winnerId,
     this.scoreData,
     this.notes,
+    this.player1CourtSide,
     this.createdAt,
     this.updatedAt,
     this.court,
@@ -109,6 +112,7 @@ class MatchModel {
       winnerId: json['winner_id'] as String?,
       scoreData: json['score_data'] as Map<String, dynamic>?,
       notes: json['notes'] as String?,
+      player1CourtSide: json['player1_court_side'] as String?,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'] as String)
           : null,
@@ -168,6 +172,7 @@ class MatchModel {
       'winner_id': winnerId,
       'score_data': scoreData,
       'notes': notes,
+      'player1_court_side': player1CourtSide,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'player1_checked_in': player1CheckedIn,
@@ -200,6 +205,7 @@ class MatchModel {
       'winner_id': winnerId,
       'score_data': scoreData,
       'notes': notes,
+      'player1_court_side': player1CourtSide,
     };
   }
 
@@ -226,6 +232,7 @@ class MatchModel {
     String? winnerId,
     Map<String, dynamic>? scoreData,
     String? notes,
+    String? player1CourtSide,
     DateTime? createdAt,
     DateTime? updatedAt,
     CourtModel? court,
@@ -262,6 +269,7 @@ class MatchModel {
       winnerId: winnerId ?? this.winnerId,
       scoreData: scoreData ?? this.scoreData,
       notes: notes ?? this.notes,
+      player1CourtSide: player1CourtSide ?? this.player1CourtSide,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       court: court ?? this.court,
