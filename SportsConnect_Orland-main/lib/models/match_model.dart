@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:orland_sports/enums/match_status.dart';
 import 'package:orland_sports/models/court_model.dart';
 import 'package:orland_sports/models/user_model.dart';
@@ -462,6 +463,30 @@ class MatchModel {
     final matchDay =
         DateTime(scheduledDate.year, scheduledDate.month, scheduledDate.day);
     return matchDay.isBefore(today);
+  }
+
+  /// Whether the match's scheduled slot has already elapsed (date AND time).
+  ///
+  /// Unlike [isPastMatch] (date-only), this returns true for a match earlier
+  /// *today* whose end time has passed. Used to move stale matches out of the
+  /// active/waiting views and into history. Falls back to the date-only check
+  /// if the time strings can't be parsed.
+  bool get isExpired {
+    try {
+      final timeStr = (scheduledEndTime != null && scheduledEndTime!.isNotEmpty)
+          ? scheduledEndTime!
+          : scheduledTime;
+      final parsed = DateFormat("h:mm a").parse(timeStr);
+      var end = DateTime(scheduledDate.year, scheduledDate.month,
+          scheduledDate.day, parsed.hour, parsed.minute);
+      // If only a start time was available, give the match a 60-min window.
+      if (scheduledEndTime == null || scheduledEndTime!.isEmpty) {
+        end = end.add(const Duration(minutes: 60));
+      }
+      return end.isBefore(DateTime.now());
+    } catch (_) {
+      return isPastMatch;
+    }
   }
 
   /// Whether match is today or in the future

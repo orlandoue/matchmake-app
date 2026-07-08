@@ -88,7 +88,12 @@ class RefereeBinding implements Bindings {
     Get.put<SportController>(SportController());
     Get.put<ScoreController>(ScoreController());
     Get.put<PayoutController>(PayoutController());
-    Get.put<RefereeMatchController>(RefereeMatchController());
+    // permanent + guarded: survives BottomNavBar tab switches and inner
+    // route pops, and re-entering RefereeBinding won't wipe live state.
+    if (!Get.isRegistered<RefereeMatchController>()) {
+      Get.put<RefereeMatchController>(RefereeMatchController(),
+          permanent: true);
+    }
   }
 }
 
@@ -105,13 +110,27 @@ class PlayerBinding implements Bindings {
     if (!Get.isRegistered<IdentityVerificationController>()) {
       Get.put<IdentityVerificationController>(IdentityVerificationController());
     }
-    // Player screens: form + own matches + creation, plus supporting data
+    // Player screens: form + own matches + creation, plus supporting data.
+    // The three match controllers are marked permanent so they survive
+    // BottomNavBar tab switches and the create-match flow's route pops —
+    // their cross-references (MatchFormController.instance, etc.) must stay
+    // resolvable for the whole player session.
     Get.put<CourtController>(CourtController());
     Get.put<SportController>(SportController());
     Get.put<TicketController>(TicketController());
     Get.put<GeoFilterController>(GeoFilterController());
-    Get.put<MatchFormController>(MatchFormController());
-    Get.put<PlayerMatchesController>(PlayerMatchesController());
-    Get.put<MatchCreationController>(MatchCreationController());
+    // Guarded so re-entering PlayerBinding (e.g. "back to home" after
+    // creating a match) does NOT replace the live instances and wipe state.
+    if (!Get.isRegistered<MatchFormController>()) {
+      Get.put<MatchFormController>(MatchFormController(), permanent: true);
+    }
+    if (!Get.isRegistered<PlayerMatchesController>()) {
+      Get.put<PlayerMatchesController>(PlayerMatchesController(),
+          permanent: true);
+    }
+    if (!Get.isRegistered<MatchCreationController>()) {
+      Get.put<MatchCreationController>(MatchCreationController(),
+          permanent: true);
+    }
   }
 }

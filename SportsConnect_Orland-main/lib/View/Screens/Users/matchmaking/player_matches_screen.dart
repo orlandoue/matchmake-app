@@ -89,9 +89,10 @@ class _ActiveMatchesTab extends StatelessWidget {
 
       final activeMatches = matchController.playerMatches
           .where((m) =>
-              m.status == MatchStatus.matched ||
-              m.status == MatchStatus.confirmed ||
-              m.status == MatchStatus.inProgress)
+              (m.status == MatchStatus.matched ||
+                  m.status == MatchStatus.confirmed ||
+                  m.status == MatchStatus.inProgress) &&
+              !m.isExpired) // elapsed matches move to the Completed tab
           .toList();
 
       if (activeMatches.isEmpty) {
@@ -133,7 +134,8 @@ class _WaitingMatchesTab extends StatelessWidget {
       }
 
       final waitingMatches = matchController.playerMatches
-          .where((m) => m.status == MatchStatus.waitingForOpponent)
+          .where((m) =>
+              m.status == MatchStatus.waitingForOpponent && !m.isExpired)
           .toList();
 
       if (waitingMatches.isEmpty) {
@@ -177,7 +179,8 @@ class _CompletedMatchesTab extends StatelessWidget {
       final completedMatches = matchController.playerMatches
           .where((m) =>
               m.status == MatchStatus.completed ||
-              m.status == MatchStatus.cancelled)
+              m.status == MatchStatus.cancelled ||
+              m.isExpired) // elapsed matches surface here as history
           .toList();
 
       if (completedMatches.isEmpty) {

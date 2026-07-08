@@ -43,10 +43,12 @@ class PlayerMatchesController extends GetxController with CurrentUserMixin {
       .where((m) => m.winnerId != null && m.winnerId != currentUserId)
       .toList();
 
+  /// History = completed, cancelled, OR any match whose slot already elapsed.
   List<MatchModel> get historyMatches => playerMatches
       .where((m) =>
           m.status == MatchStatus.completed ||
-          m.status == MatchStatus.cancelled)
+          m.status == MatchStatus.cancelled ||
+          m.isExpired)
       .toList();
 
   @override
@@ -75,7 +77,8 @@ class PlayerMatchesController extends GetxController with CurrentUserMixin {
       activeMatches.assignAll(matches
           .where((m) =>
               m.status != MatchStatus.completed &&
-              m.status != MatchStatus.cancelled)
+              m.status != MatchStatus.cancelled &&
+              !m.isExpired) // drop matches whose slot already elapsed
           .toList());
 
       if (activeMatches.isNotEmpty) {
