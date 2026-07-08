@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:orland_sports/View/Screens/Referee/Home/MatchDetails/match_details.dart';
 import 'package:orland_sports/View/Screens/Users/matchmaking/cancelMatch.dart';
-import 'package:orland_sports/View/Widgets/CommonImageView.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/App_strings.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/controllers/player_matches_controller.dart';
 import 'package:orland_sports/enums/match_status.dart';
-import 'package:orland_sports/main.dart';
 import 'package:orland_sports/models/match_model.dart';
 
 class ManageMatch extends StatelessWidget {

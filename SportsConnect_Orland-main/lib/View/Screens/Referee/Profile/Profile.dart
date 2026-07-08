@@ -1,11 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:orland_sports/View/Screens/Referee/Profile/EditProfile.dart';
 import 'package:orland_sports/View/Screens/Referee/Profile/Help/Help.dart';
 import 'package:orland_sports/View/Screens/Referee/Profile/Notifications.dart';
 import 'package:orland_sports/View/Screens/Referee/Profile/PrivacyPolicy.dart';
 import 'package:orland_sports/View/Screens/Referee/Profile/Security.dart';
-import 'package:orland_sports/View/Screens/Users/Events/Payments/PaymentMethod.dart';
 import 'package:orland_sports/View/Widgets/CommonImageView.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';

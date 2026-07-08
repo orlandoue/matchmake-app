@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -6,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:orland_sports/bindings/bindings.dart';
 import 'package:orland_sports/const/supabase_config.dart';
-import 'package:orland_sports/controllers/language_controller.dart';
 import 'package:orland_sports/localization/app_translations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

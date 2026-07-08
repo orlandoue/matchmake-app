@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:orland_sports/View/Screens/Users/Events/Payments/PaymentMethod.dart';
 import 'package:orland_sports/View/Screens/Users/Profile/EditProfile.dart';
 import 'package:orland_sports/View/Screens/Users/Profile/Help/Help.dart';
 import 'package:orland_sports/View/Screens/Users/Profile/Notifications.dart';

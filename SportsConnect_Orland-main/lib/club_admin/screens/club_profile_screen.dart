@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:orland_sports/club_admin/controllers/club_admin_controller.dart';
 import 'package:orland_sports/controllers/auth_controller.dart';
-import 'package:orland_sports/models/club_model.dart';
-import 'package:orland_sports/const/appColors.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:orland_sports/const/google_maps_config.dart';
@@ -291,7 +289,7 @@ class _ClubProfileScreenState extends State<ClubProfileScreen> {
 
   Widget _buildDropdownField(String label, List<String> options, String? value, Function(String?) onChanged) {
     return DropdownButtonFormField<String>(
-      value: value,
+      initialValue: value,
       items: options.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
       onChanged: onChanged,
       decoration: InputDecoration(

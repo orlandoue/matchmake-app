@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:orland_sports/View/Widgets/CommonImageView.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/App_strings.dart';

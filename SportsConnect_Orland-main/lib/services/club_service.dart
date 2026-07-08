@@ -1,6 +1,5 @@
 import 'package:orland_sports/const/supabase_tables.dart';
 import 'package:orland_sports/models/club_model.dart';
-import 'package:orland_sports/models/club_model.dart';
 import 'package:orland_sports/models/court_model.dart';
 import 'package:orland_sports/models/sport_model.dart';
 import 'package:orland_sports/services/supabase_crud.dart';
@@ -61,8 +60,8 @@ class CourtService {
         print('⚠️ get_clubs_in_range returned 0 results.');
         return [];
       }
-      print('✅ get_clubs_in_range returned ${(response as List).length} clubs.');
-      return (response as List)
+      print('✅ get_clubs_in_range returned ${(response).length} clubs.');
+      return (response)
           .map((json) => ClubModel.fromJson(json as Map<String, dynamic>))
           .toList();
     } catch (e) {

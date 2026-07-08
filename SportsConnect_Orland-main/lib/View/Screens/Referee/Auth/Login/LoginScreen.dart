@@ -8,7 +8,6 @@ import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/View/Widgets/myTextField.dart';
-import 'package:orland_sports/const/App_strings.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/controllers/referee_auth_controller.dart';
 import 'package:orland_sports/generated/assets.dart';

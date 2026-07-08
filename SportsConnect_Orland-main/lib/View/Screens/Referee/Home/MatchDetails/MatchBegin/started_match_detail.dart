@@ -1,14 +1,11 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:orland_sports/View/Widgets/dialogboxes_referre.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/View/Widgets/view_score_referee.dart';
 import 'package:orland_sports/const/App_strings.dart';
 import 'package:orland_sports/const/appColors.dart';
-import 'package:orland_sports/generated/assets.dart';
 import 'package:orland_sports/controllers/referee_match_controller.dart';
 import 'package:orland_sports/controllers/scoreboard_controller.dart';
 

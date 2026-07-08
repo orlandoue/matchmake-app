@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:orland_sports/View/Screens/Users/Events/Payments/AddMethod.dart';
-import 'package:orland_sports/View/Screens/Users/Events/RevieweventSummary.dart';
 import 'package:orland_sports/View/Widgets/Checkbox.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';

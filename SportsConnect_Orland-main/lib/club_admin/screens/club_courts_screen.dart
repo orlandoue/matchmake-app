@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:orland_sports/club_admin/controllers/club_admin_controller.dart';
-import 'package:orland_sports/models/court_model.dart';
 import 'package:orland_sports/models/sport_model.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
@@ -380,7 +379,7 @@ class _ClubCourtsScreenState extends State<ClubCourtsScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  value: selectedSport,
+                  initialValue: selectedSport,
                   items: controller.sports.map((SportModel sport) {
                     return DropdownMenuItem<SportModel>(
                       value: sport,

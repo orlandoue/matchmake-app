@@ -5,7 +5,6 @@ import 'package:orland_sports/utils/custom_toast.dart';
 import 'package:orland_sports/bindings/bindings.dart';
 import 'package:orland_sports/View/BottomNavBars/BottomNavbar.dart';
 import 'package:orland_sports/View/Screens/Users/matchmaking/geo_filter_screen.dart';
-import 'package:orland_sports/View/Screens/Users/matchmaking/select_court_screen.dart';
 import 'package:orland_sports/View/Screens/Users/matchmaking/select_timeslot.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';

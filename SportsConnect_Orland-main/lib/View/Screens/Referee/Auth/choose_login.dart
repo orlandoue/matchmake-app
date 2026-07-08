@@ -4,7 +4,6 @@ import 'package:orland_sports/View/Screens/Referee/Auth/Login/LoginScreen.dart';
 import 'package:orland_sports/View/Widgets/CommonImageView.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
-import 'package:orland_sports/const/App_strings.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/const/app_fonts.dart';
 import 'package:orland_sports/generated/assets.dart';

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:orland_sports/View/Screens/Users/Home/Notifications.dart';
-import 'package:orland_sports/View/Screens/Users/Home/ProfileInfo.dart';
 import 'package:orland_sports/View/Screens/Users/Store/buy_tickets_screen.dart';
-import 'package:orland_sports/View/Widgets/ButtonContainer.dart';
 import 'package:orland_sports/View/Widgets/CommonImageView.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';

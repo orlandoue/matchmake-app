@@ -9,7 +9,6 @@ import 'package:orland_sports/View/OnBoarding/OnboardingMain.dart';
 import 'package:orland_sports/View/Screens/Users/ProfileCompletion/Profileinfo1.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/controllers/auth_controller.dart';
-import 'package:orland_sports/controllers/referee_auth_controller.dart';
 import 'package:orland_sports/enums/user_role.dart';
 import 'package:orland_sports/services/player_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

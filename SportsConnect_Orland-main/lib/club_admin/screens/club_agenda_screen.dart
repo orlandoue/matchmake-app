@@ -4,7 +4,6 @@ import 'package:orland_sports/club_admin/controllers/club_admin_controller.dart'
 import 'package:intl/intl.dart';
 import 'package:orland_sports/models/match_model.dart';
 import 'package:orland_sports/enums/match_status.dart';
-import 'package:orland_sports/enums/user_role.dart';
 
 class ClubAgendaScreen extends StatefulWidget {
   const ClubAgendaScreen({Key? key}) : super(key: key);
@@ -181,7 +180,7 @@ class _ClubAgendaScreenState extends State<ClubAgendaScreen> {
                         final match = controller.dailyMatches.firstWhereOrNull((m) {
                           if (m.courtId != court.id) return false;
                           final rawTime = m.scheduledTime;
-                          if (rawTime == null || rawTime.isEmpty) return false;
+                          if (rawTime.isEmpty) return false;
                           try {
                             final base = DateTime(2000, 1, 1);
                             DateTime matchStart;
@@ -273,9 +272,8 @@ class _ClubAgendaScreenState extends State<ClubAgendaScreen> {
       // Construir etiqueta descriptiva: "Deporte Tipo"
       String sportName = 'Pádel'; // Fallback estático para evitar error de casteo en CourtModel
       label = '$sportName ${match.matchType.displayName}';
-    } else if (match.matchMode != null) {
-      label = match.matchMode!.displayName;
-    }
+    } else    label = match.matchMode.displayName;
+  
 
     return GestureDetector(
       onTap: isBlocked 

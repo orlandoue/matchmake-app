@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:orland_sports/controllers/auth_controller.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

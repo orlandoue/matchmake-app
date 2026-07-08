@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:orland_sports/View/Screens/Referee/Home/MatchDetails/match_details.dart';
 import 'package:orland_sports/View/Widgets/CommonImageView.dart';
 import 'package:orland_sports/View/Widgets/DialogBoxes.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';

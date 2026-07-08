@@ -10,7 +10,6 @@ import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/View/Widgets/myTextField.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/controllers/profile_controller.dart';
-import 'package:orland_sports/generated/assets.dart';
 
 class EditProfile extends StatelessWidget {
   EditProfile({super.key});

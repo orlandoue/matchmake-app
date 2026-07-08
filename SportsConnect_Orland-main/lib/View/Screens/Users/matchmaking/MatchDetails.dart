@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:orland_sports/View/Screens/Users/matchmaking/MatchDetailSearch.dart';
-import 'package:orland_sports/View/Widgets/CommonImageView.dart';
 import 'package:orland_sports/View/Widgets/MatchDetailContainer.dart';
 import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
-import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/View/Widgets/myTextField.dart';
 import 'package:orland_sports/const/App_strings.dart';
 import 'package:orland_sports/const/appColors.dart';
 import 'package:orland_sports/generated/assets.dart';
-import 'package:orland_sports/main.dart';
 
 class MatchDetails extends StatelessWidget {
   const MatchDetails({super.key});

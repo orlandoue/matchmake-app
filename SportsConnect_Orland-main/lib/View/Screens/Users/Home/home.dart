@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:orland_sports/View/BottomNavBars/BottomNavbar.dart';
 import 'package:orland_sports/View/Screens/Users/Home/player_qr_scanner_screen.dart';
 import 'package:orland_sports/View/Screens/Users/matchmaking/available_matches_screen.dart';
 import 'package:orland_sports/View/Screens/Users/matchmaking/player_match_detail_screen.dart';
 import 'package:orland_sports/View/Screens/Users/matchmaking/player_matches_screen.dart';
-import 'package:orland_sports/View/Screens/Users/matchmaking/geo_filter_screen.dart';
 import 'package:orland_sports/View/Screens/Users/matchmaking/select_match.dart';
 import 'package:orland_sports/View/Widgets/ButtonContainer.dart';
 import 'package:orland_sports/View/Widgets/CommonImageView.dart';
@@ -25,7 +23,6 @@ class MyHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get match controller
     final matchController = Get.find<PlayerMatchesController>();
 
     // Load courts when home loads
@@ -395,7 +392,6 @@ class MyHome extends StatelessWidget {
 
   void _showJoinByCodeDialog() {
     final codeController = TextEditingController();
-    final matchController = Get.find<PlayerMatchesController>();
 
     Get.dialog(
       AlertDialog(
@@ -493,7 +489,6 @@ class _FeaturedCourtCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<PlayerMatchesController>();
 
     return GestureDetector(
       onTap: () {
@@ -636,7 +631,6 @@ class _CourtCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final matchController = Get.find<PlayerMatchesController>();
 
     return GestureDetector(
       onTap: () {
