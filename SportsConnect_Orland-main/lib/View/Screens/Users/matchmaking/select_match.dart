@@ -10,6 +10,7 @@ import 'package:orland_sports/View/Widgets/myAppBar.dart';
 import 'package:orland_sports/View/Widgets/myButton.dart';
 import 'package:orland_sports/View/Widgets/myText.dart';
 import 'package:orland_sports/const/appColors.dart';
+import 'package:orland_sports/View/Widgets/position_selector_modal.dart';
 import 'package:orland_sports/controllers/match_form_controller.dart';
 import 'package:orland_sports/controllers/match_creation_controller.dart';
 import 'package:orland_sports/controllers/player_matches_controller.dart';
@@ -292,6 +293,59 @@ class SelectMatch extends StatelessWidget {
                           ),
                         ),
                     ],
+                  );
+                }),
+
+                const SizedBox(height: 24),
+
+                // Court Side Selection (Lado de Pista)
+                MyText(
+                  text: 'Lado de Pista',
+                  size: 16,
+                  weight: FontWeight.bold,
+                  color: kblack2,
+                  paddingBottom: 12,
+                ),
+                Obx(() {
+                  final side = matchController.selectedCourtSide.value;
+                  final hasSide = side.isNotEmpty;
+                  return GestureDetector(
+                    onTap: () => PositionSelectorModal.show(
+                      current: hasSide ? side : null,
+                      onPositionSelected: (p) =>
+                          matchController.selectedCourtSide.value = p,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 14),
+                      decoration: BoxDecoration(
+                        color: kgrey2,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: hasSide ? kpurple1 : kgrey4,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.sports_tennis_rounded,
+                              size: 20, color: kpurple1),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: MyText(
+                              text: hasSide ? side : 'Elige tu lado preferido',
+                              size: 14,
+                              weight: hasSide
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              color: hasSide ? kblack2 : kgrey1,
+                            ),
+                          ),
+                          if (hasSide) getPositionBadge(side),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.chevron_right, color: kpurple1),
+                        ],
+                      ),
+                    ),
                   );
                 }),
 

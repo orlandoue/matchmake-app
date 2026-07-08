@@ -32,10 +32,13 @@ class ReviewSummary extends StatelessWidget {
       locationLabel = 'Club por asignar';
     }
 
+    final String sideSuffix = matchCtrl.selectedCourtSide.value.isNotEmpty
+        ? ' · ${matchCtrl.selectedCourtSide.value}'
+        : '';
     final String matchTypeName =
         matchCtrl.selectedMatchType.value == enums.MatchType.oneVsOne
-            ? '1v1 · ${matchCtrl.selectedCategory.value}'
-            : '2v2 · ${matchCtrl.selectedCategory.value}';
+            ? '1v1 · ${matchCtrl.selectedCategory.value}$sideSuffix'
+            : '2v2 · ${matchCtrl.selectedCategory.value}$sideSuffix';
 
     final String timeLabel =
         '${matchCtrl.selectedTimeSlot.value} → ${matchCtrl.selectedEndTimeSlot.value}';
@@ -64,23 +67,49 @@ class ReviewSummary extends StatelessWidget {
                   text2: timeLabel,
                 ),
                 const SizedBox(height: 20),
-                Obx(() => Container(
+                Obx(() => AnimatedContainer(
+                      duration: const Duration(milliseconds: 180),
                       decoration: BoxDecoration(
-                        color: hasBalls.value ? kpurple1.withOpacity(0.05) : kgrey2.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: hasBalls.value ? kpurple1 : kgrey2),
+                        color: hasBalls.value
+                            ? kpurple1.withValues(alpha: 0.05)
+                            : kgrey2.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: hasBalls.value ? kpurple1 : kgrey4,
+                          width: hasBalls.value ? 1.5 : 1,
+                        ),
                       ),
                       child: CheckboxListTile(
                         value: hasBalls.value,
                         activeColor: kpurple1,
                         checkColor: kwhite,
                         onChanged: (val) => hasBalls.value = val ?? false,
-                        title: const Text(
-                          'Me comprometo a llevar al menos 2 pelotas en buen estado al partido',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                        title: Row(
+                          children: [
+                            Icon(Icons.sports_baseball_rounded,
+                                size: 18, color: kpurple1),
+                            const SizedBox(width: 8),
+                            const Expanded(
+                              child: Text(
+                                'Me comprometo a llevar pelotas nuevas al partido',
+                                style: TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ],
                         ),
+                        subtitle: const Padding(
+                          padding: EdgeInsets.only(top: 4, left: 26),
+                          child: Text(
+                            'Requisito obligatorio para confirmar el partido.',
+                            style: TextStyle(fontSize: 11, color: kgrey1),
+                          ),
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
                         controlAffinity: ListTileControlAffinity.leading,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       ),
                     )),
               ],

@@ -48,6 +48,9 @@ class MatchFormController extends GetxController with CurrentUserMixin {
   final RxBool hasPartner = false.obs;
   final RxString partnerEmail = ''.obs;
 
+  /// Preferred court side (Drive / Revés / Ambos). Empty = not chosen yet.
+  final RxString selectedCourtSide = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -214,6 +217,7 @@ class MatchFormController extends GetxController with CurrentUserMixin {
     selectedCategory.value = 'Masculino';
     hasPartner.value = false;
     partnerEmail.value = '';
+    selectedCourtSide.value = '';
   }
 
   /// Get available time slots for a date
