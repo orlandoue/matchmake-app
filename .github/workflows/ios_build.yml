@@ -1,0 +1,56 @@
+name: iOS Build (no codesign)
+
+# Manual trigger only — run it from the GitHub "Actions" tab when you want to
+# verify the native iOS build compiles on macOS. No minutes spent on pushes.
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    name: Build iOS (unsigned)
+    runs-on: macos-latest
+
+    # The Flutter project lives in a subdirectory of the repo.
+    defaults:
+      run:
+        working-directory: SportsConnect_Orland-main
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      # `.env` is gitignored but declared as an asset in pubspec.yaml, so the
+      # build fails if it's missing. Use the ENV_FILE secret if provided,
+      # otherwise fall back to the committed .env.example (compile-only run).
+      - name: Prepare .env
+        run: |
+          if [ -n "${{ secrets.ENV_FILE }}" ]; then
+            printf '%s' "${{ secrets.ENV_FILE }}" > .env
+            echo "Using ENV_FILE secret."
+          else
+            cp .env.example .env
+            echo "No ENV_FILE secret set — using .env.example placeholder."
+          fi
+
+      - name: flutter clean
+        run: flutter clean
+
+      - name: flutter pub get
+        run: flutter pub get
+
+      # --no-codesign: proves the native iOS code compiles without needing a
+      # paid Apple Developer account / signing certificates (those come later).
+      - name: Build iOS (no codesign)
+        run: flutter build ios --release --no-codesign
+
+      - name: Report artifact size
+        run: du -sh build/ios/iphoneos/Runner.app || true
