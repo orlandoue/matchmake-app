@@ -1,0 +1,73 @@
+name: Android Build & Analyze
+
+# Runs on every push / PR to main, plus manual dispatch. Ubuntu is cheap on
+# CI minutes, so this is the everyday quality gate (iOS stays manual/macOS).
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  analyze-and-build:
+    name: Analyze + Build APK
+    runs-on: ubuntu-latest
+
+    # The Flutter project lives in a subdirectory of the repo.
+    defaults:
+      run:
+        working-directory: SportsConnect_Orland-main
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      # `.env` is gitignored but declared as an asset in pubspec.yaml, so the
+      # build fails if it's missing. Use the ENV_FILE secret if provided,
+      # otherwise fall back to the committed .env.example.
+      - name: Prepare .env
+        run: |
+          if [ -n "${{ secrets.ENV_FILE }}" ]; then
+            printf '%s' "${{ secrets.ENV_FILE }}" > .env
+            echo "Using ENV_FILE secret."
+          else
+            cp .env.example .env
+            echo "No ENV_FILE secret set — using .env.example placeholder."
+          fi
+
+      - name: flutter clean
+        run: flutter clean
+
+      - name: flutter pub get
+        run: flutter pub get
+
+      # Quality gate: fail the build on real errors. Warnings/infos are not
+      # fatal here because the codebase carries pre-existing structural
+      # warnings (base widgets) we deliberately left — tighten by dropping
+      # these flags once those are cleared.
+      - name: flutter analyze
+        run: flutter analyze --no-fatal-warnings --no-fatal-infos
+
+      # Compilation health check. Release APK uses the debug signing config,
+      # so it builds without any keystore/secret.
+      - name: Build APK (release)
+        run: flutter build apk --release
+
+      - name: Report artifact size
+        run: du -sh build/app/outputs/flutter-apk/app-release.apk || true
