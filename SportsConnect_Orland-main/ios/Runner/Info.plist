@@ -48,6 +48,44 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs camera access to scan QR codes for match check-in.</string>
+	<string>Matchmake usa la cámara para escanear códigos QR de check-in y para tomar fotos de verificación de identidad.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Matchmake accede a tus fotos para que elijas una imagen de perfil.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Matchmake usa tu ubicación para encontrar canchas y partidos cercanos.</string>
+	<!-- Deep links: Mercado Pago vuelve a la app con sportsconnect://payment/* -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.matchmake.deeplink</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>sportsconnect</string>
+			</array>
+		</dict>
+		<!-- TODO(iOS): Google Sign-In. Añade aquí un segundo dict con el
+		     REVERSED_CLIENT_ID del cliente OAuth iOS (ej. com.googleusercontent.apps.XXX)
+		     una vez configurado GOOGLE_IOS_CLIENT_ID en .env / Google Cloud. -->
+	</array>
+	<!-- Esquemas que la app puede abrir con url_launcher -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>mailto</string>
+		<string>tel</string>
+		<string>https</string>
+		<string>maps</string>
+		<string>comgooglemaps</string>
+	</array>
+	<!-- Push (OneSignal) -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<!-- No usa criptografía sujeta a export compliance → evita el prompt en TestFlight -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>
