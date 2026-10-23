@@ -134,3 +134,18 @@ test("return timing requires racket reach and ball height",()=>{
   // Distinguish no contact by rally count:
   assert.equal(s.rallyHits,1);
 });
+
+test("a legal bounce followed by leaving play area is a winner, not an out fault",()=>{
+  const s=startServe();
+  s.ball.lastHit="north";
+  s.ball.bounces=1;
+  s.ball.x=COURT.playableHalfX+2.95;
+  s.ball.z=4;
+  s.ball.vx=35;
+  s.ball.vz=0;
+  s.ball.y=.7;
+  s.ball.vy=1;
+  tickMatch(s,{});
+  assert.equal(s.score.north,1);
+  assert.ok(s.events.some(e=>e.type==="point"&&e.reason==="unreachable_winner"));
+});
