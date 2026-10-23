@@ -12,6 +12,7 @@ export function driveFootwork(p,dx,dz,dt,{sprint=false,prepared=false,split=fals
   if(l>1){dx/=l;dz/=l;}
   let top=sprint?FEEL.sprint:prepared?FEEL.prepared:FEEL.walk;
   if(split && l>.1)top*=FEEL.splitBurst;
+  const speedBefore=mag(p.vx,p.vz);
   const tx=dx*top,tz=dz*top;
   const deltaX=tx-p.vx,deltaZ=tz-p.vz;
   const dot=tx*p.vx+tz*p.vz;
@@ -26,6 +27,9 @@ export function driveFootwork(p,dx,dz,dt,{sprint=false,prepared=false,split=fals
   if(p.z!==oldZ+p.vz*dt)p.vz=0;
   if(l>.08){p.faceX=dx;p.faceZ=dz;}
   const actual=mag(p.vx,p.vz);
+  const hardBrake=speedBefore>2 && speedBefore-actual>18*dt;
+  p.plantTimer=hardBrake?.14:Math.max(0,(p.plantTimer||0)-dt);
+  p.lateralBlend=actual>.1?clamp(p.vx/actual, -1,1)*clamp(actual/3,0,1):0;
   p.setQuality=clamp((p.setQuality||0)+(actual<1.8?1.2:-.9)*dt,0,1);
   p.footworkPhase=(p.footworkPhase||0)+actual*dt*1.45;
 }
