@@ -1,7 +1,8 @@
 // MatchMake Street Arena Alpha 0.3 — four-player, fixed-step arcade football.
 // Simulation is standalone: no renderer, input hardware, timers, network or assets.
+import { COURT } from "./court-config.js";
 export const FIXED_DT = 1/60;
-export const WORLD = Object.freeze({halfWidth:9.5,halfLength:15.5,goalHalfWidth:2.96,crossbar:2.58});
+export const WORLD = Object.freeze({halfWidth:COURT.playHalfWidth,halfLength:COURT.playHalfLength,goalHalfWidth:COURT.goalScoreHalfWidth,crossbar:COURT.goalHeight});
 const clamp=(a,min,max)=>Math.max(min,Math.min(max,a));
 const mag=(x,z)=>Math.hypot(x,z);
 const unit=(x,z,fx=0,fz=-1)=>{const m=mag(x,z);return m>1e-7?[x/m,z/m]:[fx,fz]};
@@ -16,10 +17,10 @@ export function createGameState(seed=221){
   return {seed:seed>>>0,tick:0,timeLeft:150,phase:"playing",goalPauseTicks:0,
     score:{player:0,opponent:0},events:[],selected:"player",
     players:{
-      player:makePlayer("player","cyan",-2.9,6.7),
-      ally:makePlayer("ally","cyan",3.2,8.0),
-      opponent:makePlayer("opponent","pink",-2.9,-6.7),
-      opponent2:makePlayer("opponent2","pink",3.2,-8.0)
+      player:makePlayer("player","cyan",-3.4,8.0),
+      ally:makePlayer("ally","cyan",3.7,9.4),
+      opponent:makePlayer("opponent","pink",-3.4,-8.0),
+      opponent2:makePlayer("opponent2","pink",3.7,-9.4)
     },
     ball:{x:0,z:0,y:.46,vx:0,vz:0,vy:0,spin:0,owner:null,
       contact:"FREE",firstTouchTicks:0,releasedBy:null,releaseTicks:0},
@@ -48,10 +49,10 @@ function move(p,dx,dz,speed,dt,brake=false){
       p.faceX=face[0];p.faceZ=face[1];
     }
   }
-  p.x=clamp(p.x+p.vx*dt,-9.05,9.05);
-  p.z=clamp(p.z+p.vz*dt,-14.95,14.95);
-  if(Math.abs(p.x)>=9.05&&p.vx*p.x>0)p.vx=0;
-  if(Math.abs(p.z)>=14.95&&p.vz*p.z>0)p.vz=0;
+  p.x=clamp(p.x+p.vx*dt,-COURT.playerHalfWidth,COURT.playerHalfWidth);
+  p.z=clamp(p.z+p.vz*dt,-COURT.playerHalfLength,COURT.playerHalfLength);
+  if(Math.abs(p.x)>=COURT.playerHalfWidth&&p.vx*p.x>0)p.vx=0;
+  if(Math.abs(p.z)>=COURT.playerHalfLength&&p.vz*p.z>0)p.vz=0;
 }
 function kick(s,id,dx,dz,speed,type,{vy=0,spin=0}={}){
   const p=s.players[id],b=s.ball;
@@ -79,8 +80,8 @@ function targetPass(s,id,type,dx,dz){
     return;
   }
   const lead=type==="lob_through"?3.5:2.4;
-  const tx=clamp(mate.x+mate.vx*.33,-8.8,8.8);
-  const tz=clamp(mate.z+mate.vz*.3+heading*lead,-14.3,14.3);
+  const tx=clamp(mate.x+mate.vx*.33,-COURT.playerHalfWidth+.7,COURT.playerHalfWidth-.7);
+  const tz=clamp(mate.z+mate.vz*.3+heading*lead,-COURT.playerHalfLength+.8,COURT.playerHalfLength-.8);
   // The ball never homes to the teammate after the kick.
   kick(s,id,tx-b.x,tz-b.z,type==="lob_through"?18.6:16.2,type,
     type==="lob_through"?{vy:7.2}:{});
@@ -149,22 +150,22 @@ function aiMove(s,id,dt){
   const rivalWithBall=b.owner?s.players[b.owner]:null;
   let tx=p.x,tz=p.z,speed=5.4;
   if(b.owner===id){
-    tx=clamp(p.x*.55,-7.8,7.8);tz=team*14;speed=5.5;
+    tx=clamp(p.x*.55,-9.8,9.8);tz=team*(WORLD.halfLength-2.2);speed=5.8;
   }else if(rivalWithBall&&rivalWithBall.team===p.team){
     // Open lateral support passing lane instead of chasing teammate.
     const m=mates[0];
-    tx=clamp(m.x+(p.x<m.x?-4.7:4.7),-8.0,8.0);
-    tz=clamp(m.z+team*3.2,-13.7,13.7);
+    tx=clamp(m.x+(p.x<m.x?-5.2:5.2),-9.9,9.9);
+    tz=clamp(m.z+team*3.55,-16.9,16.9);
   }else{
     const defenders=Object.values(s.players).filter(q=>q.team===p.team);
     const first=defenders.every(q=>q.id===id||dist(p,b)<=dist(q,b));
     if(first){
-      tx=clamp(b.x+b.vx*.13,-8.6,8.6);tz=clamp(b.z+b.vz*.13,-13.9,13.9);
+      tx=clamp(b.x+b.vx*.13,-10.25,10.25);tz=clamp(b.z+b.vz*.13,-17,17);
     }else{
       const threat=Object.values(s.players).filter(q=>q.team!==p.team)
         .sort((a,b)=>dist(a,p)-dist(b,p))[0];
-      tx=clamp((b.x+p.x)*.48+(threat?.x||0)*.10,-8,8);
-      tz=clamp(b.z-team*2.9,-13.8,13.8);
+      tx=clamp((b.x+p.x)*.48+(threat?.x||0)*.10,-9.9,9.9);
+      tz=clamp(b.z-team*3.2,-16.9,16.9);
       speed=4.8;
     }
   }
@@ -202,10 +203,10 @@ function separate(s){
     const a=all[i],b=all[j],d=dist(a,b);
     if(d<.84&&d>.001){
       const off=(.84-d)/d/2;
-      a.x=clamp(a.x+(a.x-b.x)*off,-9.05,9.05);
-      a.z=clamp(a.z+(a.z-b.z)*off,-14.95,14.95);
-      b.x=clamp(b.x-(a.x-b.x)*off,-9.05,9.05);
-      b.z=clamp(b.z-(a.z-b.z)*off,-14.95,14.95);
+      a.x=clamp(a.x+(a.x-b.x)*off,-COURT.playerHalfWidth,COURT.playerHalfWidth);
+      a.z=clamp(a.z+(a.z-b.z)*off,-COURT.playerHalfLength,COURT.playerHalfLength);
+      b.x=clamp(b.x-(a.x-b.x)*off,-COURT.playerHalfWidth,COURT.playerHalfWidth);
+      b.z=clamp(b.z-(a.z-b.z)*off,-COURT.playerHalfLength,COURT.playerHalfLength);
     }
   }
 }
