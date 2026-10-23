@@ -1,0 +1,29 @@
+name: Street Arena gameplay core tests
+on:
+  push:
+    branches:
+      - prototype/street-arena-cloud-20261022
+    paths:
+      - 'street-arena/**'
+      - '.github/workflows/street-arena-tests.yml'
+  pull_request:
+    paths:
+      - 'street-arena/**'
+  workflow_dispatch:
+jobs:
+  simulation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify JavaScript parse
+        run: |
+          node --check street-arena/simulation.js
+          node --check street-arena/gameplay-bridge.js
+          node --check street-arena/game.js
+      - name: Run physics and controls tests
+        run: npm test --prefix street-arena
