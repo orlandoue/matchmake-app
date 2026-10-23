@@ -33,12 +33,13 @@ try{
  assert.ok(moved.player.x>initial.player.x+.1,"player can move");
  // VT-inspired deliberate two-tap serve: toss, release, time second stroke.
  await page.keyboard.down("KeyD");
- await page.waitForTimeout(180);
+ // Wait for a simulation tick rather than assuming 180ms wall-clock in slow software GPU.
+ await page.waitForFunction(()=>window.__matchmakeTennisDebug?.().serve.toss===true,null,{timeout:30000});
  await page.keyboard.up("KeyD");
  const tossed=await page.evaluate(()=>window.__matchmakeTennisDebug());
  assert.equal(tossed.state,"ready");
  assert.equal(tossed.serve.toss,true);
- await page.waitForTimeout(210);
+ await page.waitForFunction(()=>window.__matchmakeTennisDebug?.().serve.clock>.22,null,{timeout:30000});
  await page.keyboard.down("KeyD");
  await page.waitForTimeout(70);
  await page.keyboard.up("KeyD");
