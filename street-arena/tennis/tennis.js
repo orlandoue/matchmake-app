@@ -102,7 +102,9 @@ function render(dt){
   // Shuffle while prepared; turn more into the run when sprinting or recovering.
   const turnWeight=pos.shot?.20:Math.hypot(pos.vx,pos.vz)>5?.68:.38;
   v.group.rotation.y=face+turn*turnWeight;
-  v.motion.update(pos,dt,{aiming:!!pos.shot});
+  v.motion.update(pos,dt,{aiming:!!pos.shot,tennis:true,
+    lateral:pos.lateralBlend||0,braking:Math.min(1,(pos.plantTimer||0)/.14),
+    split:Math.min(1,(pos.splitTimer||0)/.3)});
   v.racket.rotation.y=Math.sin(pos.strokeTimer*18)*.9;
   v.racket.rotation.z=pos.strokeTimer>0?.3:0;
   v.racket.rotation.x=(pos.strokeTimer>0?.45:0)+(pos.shot?.18:0);
