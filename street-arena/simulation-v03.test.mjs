@@ -127,7 +127,7 @@ test("teammate receive switches controlled player to receiver",()=>{
 });
 test("goal crossing adds only one, resets all four players after celebration",()=>{
   const s=createGameState();
-  freeBall(s,0,-15.48);s.ball.vz=-10;
+  freeBall(s,0,-WORLD.halfLength+.02);s.ball.vz=-10;
   stepGame(s,{});
   assert.equal(s.score.player,1);
   assert.ok(s.goalPauseTicks>0);
@@ -141,8 +141,8 @@ test("all four avatars stay within legal playable bounds during long simulation"
   const s=createGameState(901);
   advance(s,5500,{dz:-1,w:true});
   for(const p of Object.values(s.players)){
-    assert.ok(Math.abs(p.x)<=9.06,p.id);
-    assert.ok(Math.abs(p.z)<=14.96,p.id);
+    assert.ok(Math.abs(p.x)<=WORLD.halfWidth-.44,p.id);
+    assert.ok(Math.abs(p.z)<=WORLD.halfLength-.44,p.id);
   }
 });
 test("browser bindings and gameplay references include v03, six action keys",()=>{
