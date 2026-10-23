@@ -41,9 +41,12 @@ try{
  assert.equal(tossed.serve.toss,true);
  await page.waitForFunction(()=>window.__matchmakeTennisDebug?.().serve.clock>.22,null,{timeout:30000});
  await page.keyboard.down("KeyD");
- await page.waitForTimeout(70);
+ await page.waitForFunction(()=>{
+   const s=window.__matchmakeTennisDebug?.();
+   return s && ["rally","point","finished"].includes(s.state);
+ },null,{timeout:30000});
  await page.keyboard.up("KeyD");
- await page.waitForTimeout(650);
+ await page.waitForTimeout(250);
  const rally=await page.evaluate(()=>window.__matchmakeTennisDebug());
  assert.ok(["rally","point","ready","finished"].includes(rally.state),"gameplay state is valid");
  assert.deepEqual(errors,[],"no uncaught script errors");
