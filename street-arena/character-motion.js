@@ -130,6 +130,28 @@ export function advanceMotion(m, actor, dt, flags={}) {
     defaultPose.rightShoulderX+=.5*strength;
     defaultPose.torsoZ+=.12*m.actionSide*strength;
   }
+  // Tennis-only overlay. Football animations never pass this flag.
+  if(flags.tennis&&!slide){
+    const lateral=clamp(flags.lateral||0,-1,1);
+    const braking=clamp(flags.braking||0,0,1);
+    const split=clamp(flags.split||0,0,1);
+    const sideways=Math.abs(lateral);
+    defaultPose.leftHipX*=1-.55*sideways;
+    defaultPose.rightHipX*=1-.55*sideways;
+    defaultPose.leftHipZ=lateral*(.08+.23*Math.max(0,wave));
+    defaultPose.rightHipZ=lateral*(.08+.23*Math.max(0,-wave));
+    defaultPose.leftAnkleZ=-defaultPose.leftHipZ*.45;
+    defaultPose.rightAnkleZ=-defaultPose.rightHipZ*.45;
+    defaultPose.torsoZ-=lateral*.085;
+    defaultPose.rootY-=braking*.045;
+    defaultPose.torsoX+=braking*.10;
+    defaultPose.leftKneeX-=braking*.12;
+    defaultPose.rightKneeX-=braking*.12;
+    const splitLift=Math.sin(Math.PI*split);
+    defaultPose.rootY+=.06*splitLift;
+    defaultPose.leftKneeX-=.12*splitLift;
+    defaultPose.rightKneeX-=.12*splitLift;
+  }
   if(flags.aiming&&!slide){
     defaultPose.leftHipX*=.15;
     defaultPose.rightHipX*=.15;
