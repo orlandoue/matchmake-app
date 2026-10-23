@@ -291,6 +291,10 @@ export function stepGame(s,input={},dt=FIXED_DT){
   }
   const attacking=canKick||b.owner===p.id;
   if(rising("q")&&hasBall&&!s.shot.held)feint(s,p.id,dx,dz);
+  if(rising("q")&&b.owner&&s.players[b.owner].team!==p.team&&!s.shot.held){
+    s.selected=p.id==="player"?"ally":"player";
+    s.events.push({type:"switch",who:s.selected});
+  }
   if(!s.shot.held&&rising("a")){
     if(attacking)targetPass(s,p.id,"ground_through",dx,dz);
     else standingTackle(s,p.id,false);
