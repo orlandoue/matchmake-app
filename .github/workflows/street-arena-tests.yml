@@ -29,6 +29,8 @@ jobs:
           node --check street-arena/gameplay-bridge-v03.js
           node --check street-arena/character-motion.js
           node --check street-arena/character-rig.js
+          node --check street-arena/court-config.js
+          node --check street-arena/court-scene.js
       - name: Run physics and controls tests
         run: npm test --prefix street-arena
   browser:
