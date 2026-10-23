@@ -90,7 +90,7 @@ export function createAnimatedAthlete(THREE, scene, {kit, skinColor, number, sel
       lastPose=advanceMotion(state,player,dt,flags);
       apply(lastPose);
     },
-    play(type,side){return playMotion(state,type,side);},
+    play(type,side,phase=0){return playMotion(state,type,side,phase);},
     debug(){
       return {
         phase:state.phase,speed:lastPose.speed,stride:lastPose.stride,action:lastPose.action,
