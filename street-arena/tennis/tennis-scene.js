@@ -151,8 +151,10 @@ export function createTennisVisuals(T,scene) {
     }
   }
   const south=athlete("south",0x4de9f7,0xb88462,7),north=athlete("north",0xf65991,0xd29a7c,9);
-  // Slightly oversized purely visual ball improves ball reading in a fast arcade match.
-  const ball=new T.Mesh(new T.SphereGeometry(C.ballR*1.38,18,12),mat(0xeaff58,.48,.05,0xa6b600,.18));
+  // Arcade readability is independent from the regulation collision radius.
+  const ballVisualRadius=.085;
+  const ball=new T.Mesh(new T.SphereGeometry(ballVisualRadius,18,12),mat(0xeaff58,.48,.05,0xa6b600,.18));
+  ball.userData.groundOffset=ballVisualRadius-C.ballR;
   ball.name="tennis-ball";scene.add(ball);
   const shadow=new T.Mesh(new T.CircleGeometry(.33,22),new T.MeshBasicMaterial({color:0x020713,transparent:true,opacity:.35,depthWrite:false}));
   shadow.rotation.x=-Math.PI/2;shadow.position.y=.018;scene.add(shadow);
@@ -162,5 +164,6 @@ export function createTennisVisuals(T,scene) {
   landing.rotation.x=-Math.PI/2;landing.position.y=.075;scene.add(landing);
   return {south,north,ball,shadow,landing,stats,group,
     report:()=>({...stats,courtLength:C.halfLength*2,courtWidth:C.singlesHalf*2,
-      totalAreaWidth:32,totalAreaLength:48,netHeight:C.netCenter})};
+      totalAreaWidth:32,totalAreaLength:48,netHeight:C.netCenter,
+      ballCollisionRadius:C.ballR,ballVisualRadius})};
 }
