@@ -96,9 +96,12 @@ function render(dt){
   const oldX=side==="south"?old.sx:old.nx,oldZ=side==="south"?old.sz:old.nz;
   v.group.position.set(lerp(oldX,newX),0,lerp(oldZ,newZ));
   // Keep the torso generally facing the net while feet run omnidirectionally.
-  const face=side==="south"?Math.PI:0;
+  const face=side==="south"?0:Math.PI;
   const heading=Math.atan2(-pos.faceX,-pos.faceZ);
-  v.group.rotation.y=face+Math.atan2(Math.sin(heading-face),Math.cos(heading-face))*.28;
+  const turn=Math.atan2(Math.sin(heading-face),Math.cos(heading-face));
+  // Shuffle while prepared; turn more into the run when sprinting or recovering.
+  const turnWeight=pos.shot?.20:Math.hypot(pos.vx,pos.vz)>5?.68:.38;
+  v.group.rotation.y=face+turn*turnWeight;
   v.motion.update(pos,dt,{aiming:!!pos.shot});
   v.racket.rotation.y=Math.sin(pos.strokeTimer*18)*.9;
   v.racket.rotation.z=pos.strokeTimer>0?.3:0;
@@ -161,6 +164,6 @@ window.__matchmakeTennisDebug=()=>({
  state:state.phase,score:{...state.score},rallyHits:state.rallyHits,serve:{...state.serve},cameraMode,
  player:{x:state.players.south.x,z:state.players.south.z,charge:state.players.south.charge},
  ball:{x:state.ball.x,y:state.ball.y,z:state.ball.z},
- scene:visual.report(),simHz:Math.round(1/DT)
+ scene:visual.report(),avatarYaw:{south:visual.south.group.rotation.y,north:visual.north.group.rotation.y},simHz:Math.round(1/DT)
 });
 requestAnimationFrame(loop);
