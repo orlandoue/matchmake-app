@@ -27,6 +27,8 @@ jobs:
           node --check street-arena/game.js
           node --check street-arena/simulation-v03.js
           node --check street-arena/gameplay-bridge-v03.js
+          node --check street-arena/character-motion.js
+          node --check street-arena/character-rig.js
       - name: Run physics and controls tests
         run: npm test --prefix street-arena
   browser:
@@ -47,3 +49,10 @@ jobs:
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 --directory street-arena >/tmp/matchmake-http.log 2>&1 &
           node street-arena/browser-smoke.mjs
+      - name: Upload animation screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: street-arena-animation-smoke
+          path: street-arena/animated-players-smoke.png
+          if-no-files-found: ignore
