@@ -159,6 +159,16 @@ test("out-of-bounds ball awards point against hitter",()=>{
   tickMatch(s,{});
   assert.equal(s.score.north,1);
 });
+test("net collision uses taller post height instead of centre height everywhere",()=>{
+  const crossing=x=>{
+    const s=newMatch();s.phase="rally";
+    Object.assign(s.ball,{x,y:1.05,z:.1,vx:0,vy:0,vz:-24,lastHit:"south",bounces:0});
+    tickMatch(s,{});
+    return s.events.some(e=>e.type==="net");
+  };
+  assert.equal(crossing(0),false,"clearance over centre");
+  assert.equal(crossing(5.8),true,"same ball contacts taller net near post");
+});
 test("second bounce awards point to last hitter",()=>{
   const s=startServe();
   s.ball.x=0;s.ball.y=.11;s.ball.z=-4;s.ball.vy=-4;s.ball.bounces=1;
