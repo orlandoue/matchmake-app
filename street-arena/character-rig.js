@@ -74,8 +74,10 @@ export function createAnimatedAthlete(THREE, scene, {kit, skinColor, number, sel
     joints.head.rotation.set(p.headX,0,-p.torsoZ*.25);
     for(const key of ["left","right"]){
       joints.hips[key].rotation.x=p[key+"HipX"];
+      joints.hips[key].rotation.z=p[key+"HipZ"]??0;
       joints.knees[key].rotation.x=p[key+"KneeX"];
       joints.ankles[key].rotation.x=p[key+"AnkleX"];
+      joints.ankles[key].rotation.z=p[key+"AnkleZ"]??0;
       joints.shoulders[key].rotation.x=p[key+"ShoulderX"];
       joints.shoulders[key].rotation.z=p[key+"ShoulderZ"];
       joints.elbows[key].rotation.x=p[key+"ElbowX"];
