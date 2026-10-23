@@ -25,5 +25,7 @@ jobs:
           node --check street-arena/simulation.js
           node --check street-arena/gameplay-bridge.js
           node --check street-arena/game.js
+          node --check street-arena/simulation-v03.js
+          node --check street-arena/gameplay-bridge-v03.js
       - name: Run physics and controls tests
         run: npm test --prefix street-arena
