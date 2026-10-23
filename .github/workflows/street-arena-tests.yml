@@ -31,8 +31,13 @@ jobs:
           node --check street-arena/character-rig.js
           node --check street-arena/court-config.js
           node --check street-arena/court-scene.js
+          node --check street-arena/tennis/tennis-sim.js
+          node --check street-arena/tennis/tennis-scene.js
+          node --check street-arena/tennis/tennis.js
       - name: Run physics and controls tests
-        run: npm test --prefix street-arena
+        run: |
+          npm test --prefix street-arena
+          node --test street-arena/tennis/tennis-sim.test.mjs
   browser:
     runs-on: ubuntu-latest
     permissions:
@@ -51,10 +56,13 @@ jobs:
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 --directory street-arena >/tmp/matchmake-http.log 2>&1 &
           node street-arena/browser-smoke.mjs
+          node street-arena/tennis/browser-test.mjs
       - name: Upload animation screenshot
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: street-arena-animation-smoke
-          path: street-arena/animated-players-smoke.png
+          path: |
+            street-arena/animated-players-smoke.png
+            street-arena/tennis/tennis-browser-smoke.png
           if-no-files-found: ignore
