@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - prototype/street-arena-cloud-20261022
+      - prototype/tennis-overnight-20261023
     paths:
       - 'street-arena/**'
       - '.github/workflows/street-arena-tests.yml'
