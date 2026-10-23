@@ -32,12 +32,13 @@ jobs:
           node --check street-arena/court-config.js
           node --check street-arena/court-scene.js
           node --check street-arena/tennis/tennis-sim.js
+          node --check street-arena/tennis/tennis-feel.js
           node --check street-arena/tennis/tennis-scene.js
           node --check street-arena/tennis/tennis.js
       - name: Run physics and controls tests
         run: |
           npm test --prefix street-arena
-          node --test street-arena/tennis/tennis-sim.test.mjs
+          node --test street-arena/tennis/*.test.mjs
   browser:
     runs-on: ubuntu-latest
     permissions:
