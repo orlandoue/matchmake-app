@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {newMatch,tickMatch,DT,COURT,solveShot,projectLanding,pointTo} from "./tennis-sim.js";
+import {newMatch,tickMatch,DT,COURT,BALL_PHYSICS,solveShot,projectLanding,pointTo} from "./tennis-sim.js";
 
 const advance=(s,ticks,input={})=>{for(let i=0;i<ticks;i++)tickMatch(s,input);return s;};
 function startServe(type="d"){
@@ -17,6 +17,8 @@ test("fixed deterministic 120Hz and official singles dimensions",()=>{
   assert.equal(COURT.singlesHalf*2,8.23);
   assert.equal(COURT.doublesHalf*2,10.97);
   assert.equal(COURT.netCenter,.914);
+  assert.equal(COURT.ballR,.0335);
+  assert.equal(BALL_PHYSICS.massKg,.0577);
   assert.throws(()=>tickMatch(newMatch(),{},.016),/120Hz/);
 });
 test("repeatable seed, user input and AI produce identical physics state",()=>{
@@ -71,6 +73,30 @@ test("ballistic target solver yields a landable outgoing serve inside service bo
   assert.ok(impact.netHeight>COURT.netCenter+COURT.ballR,"serve must clear net");
   assert.ok(Math.abs(impact.x-1.2)<.8, "landing x accurate: "+impact.x);
   assert.ok(Math.abs(impact.z+4.4)<.9, "landing z accurate: "+impact.z);
+});
+test("inverse shot trajectories remain accurate with regulation-sized ball",()=>{
+  const s=newMatch();
+  for(const type of ["flat","topspin","slice","lob"]){
+    for(const x of [-3,0,3])for(const z of [-10,-6]){
+      const v=solveShot(s,"south",type,x,z,.8,.9,false);
+      const impact=projectLanding({...s.ball,...v,lastHit:"south"},4);
+      assert.ok(impact?.crossed, type+" must cross net");
+      assert.ok(impact.netHeight>COURT.netCenter+COURT.ballR, type+" clears net");
+      assert.ok(Math.hypot(impact.x-x,impact.z-z)<.8, type+" landing accuracy");
+    }
+  }
+});
+test("100 seeded basic serves receive a legal CPU return",()=>{
+  let returned=0;
+  for(let seed=0;seed<100;seed++){
+    const s=startServe("d");
+    s.seed=seed;
+    for(let i=0;i<600&&s.phase==="rally";i++){
+      tickMatch(s,{});
+      if(s.events.some(e=>e.type==="hit"&&e.side==="north")){returned++;break;}
+    }
+  }
+  assert.equal(returned,100);
 });
 test("topspin, slice and lob have distinct trajectories and spin",()=>{
   const s=newMatch(),type=["topspin","slice","lob","flat"];
