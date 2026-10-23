@@ -29,3 +29,21 @@ jobs:
           node --check street-arena/gameplay-bridge-v03.js
       - name: Run physics and controls tests
         run: npm test --prefix street-arena
+  browser:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser in GitHub cloud runner
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      - name: Serve static prototype and check live gameplay
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory street-arena >/tmp/matchmake-http.log 2>&1 &
+          node street-arena/browser-smoke.mjs
