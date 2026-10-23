@@ -187,4 +187,4 @@ for (const [px, py, pz] of [[0,1,0],[1,0,0],[-1,0,0],[0,0,1],[0,0,-1],[0,-1,0]])
 const ballShadow = new THREE.Mesh(new THREE.CircleGeometry(.65, 25), new THREE.MeshBasicMaterial({ color: 0x010509, transparent: true, opacity: .43, depthWrite:false }));
 ballShadow.rotation.x = -Math.PI/2; ballShadow.position.y = .013; scene.add(ballShadow);
 
-attachGameplay({ renderer, camera, scene, athlete, opponent, sphere, ballShadow, ballRadius: BALL_RADIUS });
+attachGameplay({ THREE, renderer, camera, scene, athlete, opponent, sphere, ballShadow, ballRadius: BALL_RADIUS });
