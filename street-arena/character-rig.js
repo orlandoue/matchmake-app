@@ -99,5 +99,10 @@ export function createAnimatedAthlete(THREE, scene, {kit, skinColor, number, sel
       };
     }
   };
-  return {group,halo,motion};
+  // Optional accessory mount, parented to the racket-hand forearm.
+  const racketGrip=new THREE.Group();
+  racketGrip.name="right-hand-equipment-grip";
+  racketGrip.position.set(0,-.37,-.06);
+  joints.elbows.right.add(racketGrip);
+  return {group,halo,motion,racketGrip};
 }
