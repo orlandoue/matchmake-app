@@ -1,0 +1,1 @@
+{"name":"matchmake-street-arena-prototype","private":true,"type":"module","scripts":{"test":"node --test simulation.test.mjs"}}
