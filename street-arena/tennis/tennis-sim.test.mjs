@@ -148,14 +148,14 @@ test("CPU shot emits hit event with stroke identity",()=>{
 });
 test("wrong-side landing awards point and enters transition state",()=>{
   const s=startServe();
-  s.ball.x=0;s.ball.y=.11;s.ball.z=10;s.ball.vy=-3;s.ball.vz=2;
+  s.ball.x=0;s.ball.y=COURT.ballR+.005;s.ball.z=10;s.ball.vy=-3;s.ball.vz=2;
   tickMatch(s,{});
   assert.equal(s.score.north,1);
   assert.equal(s.phase,"point");
 });
 test("out-of-bounds ball awards point against hitter",()=>{
   const s=startServe();
-  s.ball.x=COURT.singlesHalf+1;s.ball.y=.11;s.ball.z=-4;s.ball.vy=-4;
+  s.ball.x=COURT.singlesHalf+1;s.ball.y=COURT.ballR+.005;s.ball.z=-4;s.ball.vy=-4;
   tickMatch(s,{});
   assert.equal(s.score.north,1);
 });
@@ -171,7 +171,7 @@ test("net collision uses taller post height instead of centre height everywhere"
 });
 test("second bounce awards point to last hitter",()=>{
   const s=startServe();
-  s.ball.x=0;s.ball.y=.11;s.ball.z=-4;s.ball.vy=-4;s.ball.bounces=1;
+  s.ball.x=0;s.ball.y=COURT.ballR+.005;s.ball.z=-4;s.ball.vy=-4;s.ball.bounces=1;
   tickMatch(s,{});
   assert.equal(s.score.south,1);
 });
