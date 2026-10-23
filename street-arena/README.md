@@ -1,4 +1,4 @@
-# MatchMake Street Arena — Alpha 0.3 (local 2v2)
+# MatchMake Street Arena — Alpha 0.4 (articulated 2v2)
 
 Original browser-based arcade street football. Isolated from MatchMake app development and payment production code.
 
@@ -45,3 +45,14 @@ The branch `prototype/street-arena-cloud-20261022` is tested with GitHub Actions
 ## Known limitations
 
 This is still a gameplay prototype. Passing, opponent tactics, curve calibration, contact animation, foul decisions, accessibility, camera and touch action layout require live device playtesting. The match is only local. The primary MatchMake application, databases, and payment systems are unchanged.
+
+## Alpha 0.4: Procedural character animation
+
+- `character-rig.js` creates **original articulated 3D low-poly athletes** with separate hip, knee, ankle, shoulder, elbow, torso and head groups, generated on page load with Three.js. Four player models use the same rig.
+- `character-motion.js` is a pure, unit-tested animation pose engine: gait phase is proportional to travel speed; walk and sprint differ in stride length/frequency; legs and arms swing in opposition; braking fades out footsteps; idle breathes subtly.
+- Kick/pass, finesse, ball reception, dribbling feint, standing tackle and slide have distinct transient motion poses. Shots use a leg swing and torso counterbalance, while slides lower the torso and extend a leg.
+- `gameplay-bridge-v03.js` connects simulation events and velocity to animation poses **without influencing the deterministic 60 Hz match physics**. `window.__streetArenaMotionDebug()` is a read-only visual diagnostic for browser CI.
+- CI now includes `character-motion.test.mjs`, module syntax checks and a Playwright smoke test that **measures shoulder and hip joint rotation in Chromium**, not merely a successful page load. Headless screenshots are stored in GitHub Actions artifacts.
+- **Still stylized procedural motion, not photorealistic motion capture**; polishing footsteps/foot locking, movement transitions, kick-to-ball frame timing and real skeletal GLB assets can be a later upgrade. No licensed third-party animation clips or downloaded human models were introduced.
+
+Technical reference: https://threejs.org/docs/pages/Object3D.html and https://threejs.org/manual/pages/animation-system.html . Future rigged assets can use SkinnedMesh + AnimationMixer, retaining the existing deterministic gameplay simulation.
