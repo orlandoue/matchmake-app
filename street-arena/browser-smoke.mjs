@@ -12,6 +12,16 @@ try {
   page.on("pageerror", error => errors.push(error.message));
   const response = await page.goto("http://127.0.0.1:4173/", { waitUntil:"domcontentloaded", timeout:30000 });
   assert.equal(response?.status(),200,"static HTML must be served");
+  const court = await page.evaluate(() => window.__streetArenaCourtDebug?.());
+  assert.ok(court, "enlarged court scene must be installed");
+  assert.equal(court.floorWidth, 24);
+  assert.equal(court.floorLength, 38);
+  assert.equal(court.lineWidth, 22.7);
+  assert.equal(court.lineLength, 36.4);
+  assert.ok(court.props >= 20, "sideline props and original billboards must render");
+  assert.ok(court.fencing >= 40, "perimeter fencing must follow new extent");
+  assert.ok(court.buildings >= 80, "urban background buildings must render");
+  assert.ok(court.spectators >= 60, "spectators must remain outside playfield");
   await page.locator("#start").click();
   await page.waitForTimeout(1500);
   assert.ok(await page.locator("#menu").evaluate(node=>node.classList.contains("hidden")),"menu must close");
