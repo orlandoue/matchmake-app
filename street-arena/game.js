@@ -1,5 +1,6 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js";
 import { attachGameplayV03 } from "./gameplay-bridge-v03.js";
+import { createAnimatedAthlete } from "./character-rig.js";
 
 const canvas = document.querySelector("#game");
 const menu = document.querySelector("#menu");
@@ -145,35 +146,12 @@ for (let i = 0; i < 120; i++) {
   mesh.position.set(x, .53, z); scene.add(mesh);
 }
 
-// Original low-poly athletes and selection rings.
-function createAthlete(color, skinColor, accent, number, isPlayer) {
-  const group = new THREE.Group(); scene.add(group);
-  const body = material(color, .53, .14);
-  const dark = material(0x10192b);
-  const skin = material(skinColor, .95);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(.37, 14, 10), skin);
-  head.position.y = 2.35; group.add(head);
-  const hair = new THREE.Mesh(new THREE.SphereGeometry(.385, 14, 8, 0, Math.PI * 2, 0, Math.PI * .40), material(0x14121d));
-  hair.position.y = 2.42; group.add(hair);
-  const torso = new THREE.Mesh(new THREE.CylinderGeometry(.43, .57, 1.06, 8), body);
-  torso.position.y = 1.47; group.add(torso);
-  const stripe = box(.5, .065, .1, material(accent, .45), 0, 1.63, -.48, group);
-  for (const side of [-1, 1]) {
-    tube(new THREE.Vector3(side * .65, 1.82, 0), new THREE.Vector3(side * .75, 1.02, -.06), .17, skin, group);
-    tube(new THREE.Vector3(side * .26, .96, 0), new THREE.Vector3(side * .27, .36, .04), .18, dark, group);
-    box(.38, .17, .64, material(0xecf5fa), side * .27, .13, -.12, group);
-  }
-  const halo = new THREE.Mesh(new THREE.TorusGeometry(.85, .045, 6, 32), new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: isPlayer ? .85 : .55 }));
-  halo.rotation.x = -Math.PI / 2; halo.position.y = .045; group.add(halo);
-  const numberTex = labelTexture(String(number), "#ffffff", isPlayer ? "#59eeff" : "#ff527b");
-  const numberPlate = new THREE.Mesh(new THREE.PlaneGeometry(.5, .3), new THREE.MeshBasicMaterial({ map: numberTex, transparent: true, depthWrite: false, side: THREE.DoubleSide }));
-  numberPlate.position.set(0, 1.51, .552); group.add(numberPlate);
-  return { group, halo, facing: new THREE.Vector2(0, isPlayer ? -1 : 1), x: 0, z: 0 };
-}
-const athlete = createAthlete(cyan, 0xb9805f, 0xffffff, 7, true);
-const ally = createAthlete(0x62c7e0, 0x9a6c47, 0xffffff, 11, false);
-const opponent = createAthlete(coral, 0xd39e75, 0xffffff, 9, false);
-const opponent2 = createAthlete(0xee769f, 0xba835f, 0xffffff, 10, false);
+// All four 3D footballers now have articulated shoulders, elbows, hips, knees,
+// ankles, spine and head. Geometry is original and generated in the browser.
+const athlete = createAnimatedAthlete(THREE, scene, {kit: cyan, skinColor:0xb9805f, number:7, selected:true, labelTexture});
+const ally = createAnimatedAthlete(THREE, scene, {kit:0x62c7e0, skinColor:0x9a6c47, number:11, labelTexture});
+const opponent = createAnimatedAthlete(THREE, scene, {kit:coral, skinColor:0xd39e75, number:9, labelTexture});
+const opponent2 = createAnimatedAthlete(THREE, scene, {kit:0xee769f, skinColor:0xba835f, number:10, labelTexture});
 const sphere = new THREE.Group(); scene.add(sphere);
 const ballShell = new THREE.Mesh(new THREE.SphereGeometry(BALL_RADIUS, 24, 16), material(0xf5f6fd, .45, .06));
 sphere.add(ballShell);
