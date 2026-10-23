@@ -83,7 +83,8 @@ function events(){
   if((e.type==="hit"||e.type==="serve")){
    const av=e.side==="south"?visual.south:visual.north;
    av.motion.play(e.type==="serve"?"tennis_serve":e.shotType==="slice"?"tennis_slice":
-     e.shotType==="lob"?"tennis_lob":"tennis_forehand",1);
+     e.shotType==="lob"?"tennis_lob":"tennis_forehand",1,.42);
+   av.impact=e.contact;av.impactAge=0;av.bestImpactError=Infinity;
   }
  }
 }
@@ -105,9 +106,17 @@ function render(dt){
   v.motion.update(pos,dt,{aiming:!!pos.shot,tennis:true,
     lateral:pos.lateralBlend||0,braking:Math.min(1,(pos.plantTimer||0)/.14),
     split:Math.min(1,(pos.splitTimer||0)/.3)});
-  v.racket.rotation.y=Math.sin(pos.strokeTimer*18)*.9;
-  v.racket.rotation.z=pos.strokeTimer>0?.3:0;
-  v.racket.rotation.x=(pos.strokeTimer>0?.45:0)+(pos.shot?.18:0);
+  const follow=pos.strokeTimer>0?1-Math.min(1,pos.strokeTimer/.39):0;
+  v.racket.rotation.y=pos.strokeTimer>0?.24+.67*Math.sin(follow*Math.PI*.8):0;
+  v.racket.rotation.z=pos.strokeTimer>0?.22*(1-follow):0;
+  v.racket.rotation.x=(pos.strokeTimer>0?.16+.52*follow:0)+(pos.shot?.18:0);
+  if(v.impact&&v.impactAge<.16){
+   v.group.updateMatrixWorld(true);
+   const head=v.racket.localToWorld(new THREE.Vector3(0,0,-.19));
+   const contact=new THREE.Vector3(v.impact.x,v.impact.y,v.impact.z);
+   v.bestImpactError=Math.min(v.bestImpactError,head.distanceTo(contact));
+   v.impactAge+=dt;
+  }
  }
  visual.ball.position.set(lerp(old.bx,cur.bx),lerp(old.by,cur.by)+visual.ball.userData.groundOffset,lerp(old.bz,cur.bz));
  visual.ball.rotation.x+=state.ball.vz*dt*2;
@@ -166,6 +175,8 @@ window.__matchmakeTennisDebug=()=>({
  state:state.phase,score:{...state.score},rallyHits:state.rallyHits,serve:{...state.serve},cameraMode,
  player:{x:state.players.south.x,z:state.players.south.z,charge:state.players.south.charge},
  ball:{x:state.ball.x,y:state.ball.y,z:state.ball.z},
- scene:visual.report(),avatarYaw:{south:visual.south.group.rotation.y,north:visual.north.group.rotation.y},simHz:Math.round(1/DT)
+ scene:visual.report(),avatarYaw:{south:visual.south.group.rotation.y,north:visual.north.group.rotation.y},
+ impactError:{south:Number.isFinite(visual.south.bestImpactError)?visual.south.bestImpactError:null,
+ north:Number.isFinite(visual.north.bestImpactError)?visual.north.bestImpactError:null},simHz:Math.round(1/DT)
 });
 requestAnimationFrame(loop);
