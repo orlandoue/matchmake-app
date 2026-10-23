@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07101f"><meta name="robots" content="noindex,nofollow">
+<title>MatchMake Tennis — Night Courts | Physics Lab 0.1</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#ecfaff;background:#070d1b}
+*{box-sizing:border-box}body,html{margin:0;width:100%;height:100%;overflow:hidden;touch-action:none;user-select:none}
+#game{display:block;width:100vw;height:100vh;background:#07101f}
+.shade{position:fixed;inset:0;background:radial-gradient(ellipse 77% 70% at 50% 47%,transparent 60%,#020714b7 100%);pointer-events:none}
+header{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;padding:17px 24px;pointer-events:none;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:900;letter-spacing:.14em}
+.logo{display:grid;place-items:center;width:37px;height:37px;border:1px solid #69f6f7ad;border-radius:9px;background:#092e3dba;color:#69f6f7;box-shadow:0 0 28px #59eff74d}
+.brand small{display:block;color:#809eb2;font-size:9px;letter-spacing:.17em;margin-top:5px}
+.scoreboard{display:flex;align-items:center;gap:12px;background:#0b1934ed;border:1px solid #b2faff3d;border-radius:14px;padding:8px 17px;box-shadow:0 12px 36px #000a}
+.scoreboard strong{font-size:29px;font-variant-numeric:tabular-nums}
+#southScore{color:#6aeeff}#northScore{color:#fa78a5}
+.scoreboard .vs{font-size:11px;letter-spacing:.1em;color:#849db9}
+.scoreboard .caption{font-size:9px;color:#8ab9cb;letter-spacing:.1em;font-weight:800}
+#status{position:fixed;top:92px;left:50%;transform:translateX(-50%);min-width:250px;text-align:center;font-size:11px;font-weight:900;letter-spacing:.12em;color:#effbff;text-shadow:0 2px 12px #000;padding:8px 17px;border:1px solid #a8f6ff3b;border-radius:11px;background:#08152cc2;pointer-events:none}
+#quality{position:fixed;bottom:49px;left:50%;transform:translateX(-50%);width:230px;text-align:center;color:#c2e3f1;font-size:10px;pointer-events:none}
+#chargeTrack{width:100%;height:8px;border:1px solid #6ac6e077;border-radius:20px;background:#0d2032de;overflow:hidden;margin:7px 0}
+#charge{height:100%;width:0;background:linear-gradient(90deg,#57dfff,#e6fd77);transition:width .05s}
+#toast{position:fixed;top:25%;left:50%;transform:translate(-50%,-25%);font-size:clamp(23px,5vw,54px);font-weight:950;text-transform:uppercase;text-shadow:0 5px 30px #4df1ffe8;text-align:center;pointer-events:none;opacity:0;transition:opacity .16s}
+#toast.show{opacity:1}
+#menu{position:fixed;inset:0;background:linear-gradient(115deg,#041323e9,#12203bca);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:22px}
+#menu.hidden{display:none}
+.panel{width:min(480px,100%);padding:32px;text-align:center;background:linear-gradient(150deg,#122741f2,#08162bee);border:1px solid #6be9ef88;box-shadow:0 15px 90px #030612d6,0 0 70px #3fe5ef21;border-radius:24px}
+.eyebrow{font-size:10px;font-weight:900;letter-spacing:.2em;color:#76f9e6}
+h1{font-size:clamp(40px,8vw,62px);letter-spacing:-.065em;text-transform:uppercase;line-height:.96;margin:18px 0}
+h1 em{font-style:normal;color:#65f6ff;text-shadow:0 0 24px #5beaff67}
+.panel p{font-size:14px;line-height:1.65;color:#b9cddd;margin-bottom:20px}
+button{font:inherit;cursor:pointer;color:inherit}
+#start{display:block;width:100%;font-weight:900;letter-spacing:.12em;background:linear-gradient(100deg,#67f5ef,#96a7ff);border:0;border-radius:13px;padding:17px;color:#061121}
+.difficulty{display:flex;justify-content:center;gap:10px;margin:15px auto 20px}
+.difficulty label{display:flex;align-items:center;gap:5px;font-size:11px;color:#cde3ed}
+.hints{margin-top:17px;font-size:10px;color:#86afbe;line-height:1.8}
+kbd{display:inline-block;border:1px solid #ffffff3d;background:#152c45;border-radius:5px;padding:2px 5px;font-family:inherit;font-weight:800;color:#e1faff}
+footer{position:fixed;bottom:11px;left:10px;right:10px;text-align:center;color:#b2d2e3c1;font-size:10px;letter-spacing:.08em;pointer-events:none}
+.touch{display:none;position:fixed;bottom:12px;left:12px;right:12px;justify-content:space-between;align-items:flex-end;pointer-events:none}
+.dpad{display:grid;grid-template-columns:repeat(3,45px);grid-template-rows:repeat(3,45px);gap:4px;pointer-events:auto}
+.touch button{background:#112c4aca;border:1px solid #74d6e566;border-radius:12px;color:#edffff;font-weight:900}
+.dpad button{font-size:18px}.dpad .blank{visibility:hidden}
+.actions{display:grid;grid-template-columns:repeat(2,65px);grid-template-rows:repeat(3,49px);gap:6px;pointer-events:auto}
+.actions button{font-size:11px}.touch button:active,.touch button.active{background:#36cfdebd}
+@media(pointer:coarse),(max-width:720px){.touch{display:flex}footer{display:none}header{padding:10px}.brand{font-size:10px;letter-spacing:.05em}.scoreboard{padding:5px 10px}.scoreboard strong{font-size:21px}#status{top:67px;font-size:9px;min-width:190px}#quality{bottom:17px;display:none}.panel{padding:25px 20px}.actions{grid-template-columns:repeat(2,55px);grid-template-rows:repeat(3,45px)}}
+</style>
+</head><body>
+<canvas id="game" aria-label="Cancha 3D de MatchMake Tennis"></canvas>
+<div class="shade"></div>
+<header><div class="brand"><div class="logo">MM</div><div>MATCHMAKE <span style="color:#73f6f4">TENNIS</span><small>NIGHT COURTS · PHYSICS LAB 0.1</small></div></div>
+<div class="scoreboard"><div><span class="caption">TÚ</span><strong id="southScore">0</strong></div><span class="vs">—</span><div><span class="caption">CPU</span><strong id="northScore">0</strong></div></div></header>
+<div id="status">PREPARA EL PRIMER SAQUE</div>
+<div id="quality"><span id="preparation">MANTÉN UN GOLPE PARA PREPARARLO</span><div id="chargeTrack"><div id="charge"></div></div><span>Anticípate · apunta · equilibra el cuerpo</span></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="menu">
+<section class="panel">
+<div class="eyebrow">● PRIMER LABORATORIO JUGABLE</div>
+<h1>MATCHMAKE<br><em>TENNIS</em></h1>
+<p id="description">Un experimento de tenis arcade inspirado en la precisión de los clásicos. Anticipa dónde llegará la pelota, carga tu golpe antes del contacto y dirige el tiro. Gana el primero que llegue a 7 puntos con dos de ventaja.</p>
+<div class="difficulty"><label><input name="difficulty" type="radio" value="easy"> Tranquilo</label><label><input name="difficulty" type="radio" value="normal" checked> Normal</label><label><input name="difficulty" type="radio" value="hard"> Experto</label></div>
+<button id="start">ENTRAR A LA PISTA →</button>
+<div class="hints"><kbd>FLECHAS</kbd> MOVER / APUNTAR · <kbd>A</kbd> TOPSPIN · <kbd>S</kbd> SLICE · <kbd>D</kbd> PLANO · <kbd>Q</kbd> GLOBO · <kbd>W</kbd> SPRINT · <kbd>E</kbd> SPLIT-STEP</div>
+</section></div>
+<div class="touch">
+<div class="dpad"><button class="blank"></button><button data-key="arrowup">▲</button><button class="blank"></button><button data-key="arrowleft">◀</button><button class="blank"></button><button data-key="arrowright">▶</button><button class="blank"></button><button data-key="arrowdown">▼</button><button class="blank"></button></div>
+<div class="actions"><button data-key="a">A TOP</button><button data-key="d">D PLANO</button><button data-key="s">S SLICE</button><button data-key="q">Q GLOBO</button><button data-key="w">W CORRER</button><button data-key="e">E SPLIT</button></div>
+</div>
+<footer>FLECHAS: MOVER + DIRECCIÓN · A: TOPSPIN · S: SLICE · D: GOLPE PLANO · Q: GLOBO · W: SPRINT · E: SPLIT-STEP · PROTOTIPO LOCAL</footer>
+<script type="module" src="./tennis.js"></script>
+</body></html>
