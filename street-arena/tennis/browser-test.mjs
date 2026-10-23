@@ -55,6 +55,7 @@ try{
  await page.waitForTimeout(250);
  const rally=await page.evaluate(()=>window.__matchmakeTennisDebug());
  assert.ok(["rally","point","ready","finished"].includes(rally.state),"gameplay state is valid");
+ assert.ok(Number.isFinite(rally.impactError.south),"racket contact gap is observable");
  assert.deepEqual(errors,[],"no uncaught script errors");
  await page.screenshot({path:"street-arena/tennis/tennis-browser-smoke.png"});
  console.log("MATCHMAKE TENNIS BROWSER PASS",JSON.stringify({initial,moved,rally}));
