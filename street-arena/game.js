@@ -1,5 +1,5 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js";
-import { attachGameplay } from "./gameplay-bridge.js";
+import { attachGameplayV03 } from "./gameplay-bridge-v03.js";
 
 const canvas = document.querySelector("#game");
 const menu = document.querySelector("#menu");
@@ -171,7 +171,9 @@ function createAthlete(color, skinColor, accent, number, isPlayer) {
   return { group, halo, facing: new THREE.Vector2(0, isPlayer ? -1 : 1), x: 0, z: 0 };
 }
 const athlete = createAthlete(cyan, 0xb9805f, 0xffffff, 7, true);
+const ally = createAthlete(0x62c7e0, 0x9a6c47, 0xffffff, 11, false);
 const opponent = createAthlete(coral, 0xd39e75, 0xffffff, 9, false);
+const opponent2 = createAthlete(0xee769f, 0xba835f, 0xffffff, 10, false);
 const sphere = new THREE.Group(); scene.add(sphere);
 const ballShell = new THREE.Mesh(new THREE.SphereGeometry(BALL_RADIUS, 24, 16), material(0xf5f6fd, .45, .06));
 sphere.add(ballShell);
@@ -187,4 +189,7 @@ for (const [px, py, pz] of [[0,1,0],[1,0,0],[-1,0,0],[0,0,1],[0,0,-1],[0,-1,0]])
 const ballShadow = new THREE.Mesh(new THREE.CircleGeometry(.65, 25), new THREE.MeshBasicMaterial({ color: 0x010509, transparent: true, opacity: .43, depthWrite:false }));
 ballShadow.rotation.x = -Math.PI/2; ballShadow.position.y = .013; scene.add(ballShadow);
 
-attachGameplay({ THREE, renderer, camera, scene, athlete, opponent, sphere, ballShadow, ballRadius: BALL_RADIUS });
+attachGameplayV03({ THREE, renderer, camera, scene,
+  athletes: { player: athlete, ally, opponent, opponent2 },
+  sphere, ballShadow, ballRadius: BALL_RADIUS
+});
