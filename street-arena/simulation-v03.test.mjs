@@ -105,6 +105,17 @@ test("defence A robs on foot; defence E slides with recovery",()=>{
   assert.ok(e.players.player.slideTicks>0);
   assert.ok(e.players.player.tackleCooldown>a.players.player.tackleCooldown);
 });
+test("Q dribbles with possession and switches the active defender without it",()=>{
+  const attack=ownBall(createGameState());
+  stepGame(attack,{q:true});
+  assert.ok(attack.events.some(e=>e.type==="feint"));
+  assert.equal(attack.selected,"player");
+  const defence=createGameState();
+  ownBall(defence,"opponent");
+  stepGame(defence,{q:true});
+  assert.equal(defence.selected,"ally");
+  assert.ok(defence.events.some(e=>e.type==="switch"&&e.who==="ally"));
+});
 test("teammate receive switches controlled player to receiver",()=>{
   const s=createGameState();
   s.players.ally.x=5;s.players.ally.z=5;
