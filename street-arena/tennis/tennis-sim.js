@@ -179,7 +179,7 @@ function attemptReturn(s,side){
   return false;
 }
 function updatePlayerInput(s,input,dt){
-  const p=s.players.south;
+  const p=s.players.south,b=s.ball;
   const x=clamp(input.x||0,-1,1),z=clamp(input.z||0,-1,1);
   const press=key=>!!input[key]&&!s.inputPrev[key];
   const action=Object.entries({a:"topspin",s:"slice",d:"flat",q:"lob"}).find(([key])=>press(key));
