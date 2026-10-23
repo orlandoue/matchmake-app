@@ -1,41 +1,47 @@
-# MatchMake Street Arena — Alpha 0.2
+# MatchMake Street Arena — Alpha 0.3 (local 2v2)
 
-Isolated, original, browser-based street-football playground. The main MatchMake application and its payment stack are untouched.
+Original browser-based arcade street football. Isolated from MatchMake app development and payment production code.
 
-## Current playable features
-- Night-time 3D court and procedural stylized athletes using the original Three.js rendering.
-- Deterministic fixed-step 60Hz gameplay core in `simulation.js`, independent of DOM and WebGL.
-- Accelerated movement, sprint, friction, ball possession states, controlled touches and Q-assisted first touch.
-- Hold **S** and release for a variable-power shot; charge bar shown in the HUD.
-- Experimental **A** short pass, **W** driven forward pass, **D** short feint when attacking / recovery slide when defending.
-- 1v1 against a basic bot, match clock, goals, wall rebounds and touch-screen controls.
+## What changed from Alpha 0.2
 
-## Keyboard mapping (Alpha 0.2)
-- **Arrow keys**: move exclusively.
-- **A**: short pass when in control, standing tackle without possession.
-- **S**: press and hold to charge, release to shoot.
-- **D**: quick side feint when in control; defensive slide otherwise.
-- **W**: driven long pass. Lofted/through-ball trajectory not yet supported.
-- **Q**: softer first touch and slower controlled movement.
-- **E**: sprint, increases speed but limits fine control.
-- **Space and Shift are not gameplay controls.**
-- On mobile: the 4 arrow buttons and the six A/S/D/W/Q/E action buttons.
+- 2v2 local: one human-controlled cyan athlete, one AI partner; two AI opponents.
+- The cyan partner offers support and automatically becomes controlled when receiving a pass. While defending, **Q** switches the controlled cyan athlete.
+- Shot direction and power: hold **D** to charge, use **LEFT / RIGHT ARROWS** while holding D to adjust the visible aim marker at the opposing goal, release **D** to shoot.
+- Curve/controlled shot: hold **Q** and **D** together; a distinct spin term curves the ball in flight. Spin and power are separate.
+- Through passes: **A** grounded, **E** elevated with gravity and bounces; **S** directed short pass with limited receiver assist.
+- Defence: **A** standing steal; **E** sliding challenge. Failed slides commit the defender to recovery.
+- **W** sprint, **Q** skill move/feint when in control; arrows move outside the shot-aim stance.
+- 60 Hz deterministic engine, independent from Three.js rendering; seeded AI and testable match state.
+- All geometry original; no FIFA/PES code or proprietary assets.
 
-## Local/CI testing
-- `node --test street-arena/simulation.test.mjs` on Node 22.
-- GitHub Actions workflow `.github/workflows/street-arena-tests.yml` runs test suite and static parse checks on commits in the isolated prototype branch.
+## Keyboard controls
 
-## Hosting
-Render Static Site: `matchmake-street-arena-prototype`.
-Branch: `prototype/street-arena-cloud-20261022`. Publish directory: `street-arena`.
-Render auto deploy disabled; use manual deploy after verified CI.
-No installation required for players.
+| Button | Attack | Defence |
+| --- | --- | --- |
+| Arrows | Move; left/right aim while D held | Move |
+| A | Ground through pass | Standing steal |
+| S | Directed pass | Hold position / intercept by movement |
+| D | Charged shot | — |
+| W | Sprint | Sprint |
+| E | Lofted through pass | Slide |
+| Q | Feint/dribble (hold for finer control) | Switch cyan player |
+| Q+D | Finesse curled shot | — |
 
-## Next development milestones
-1. Tune reception vs. pressure, skill moves, running animation, responsive camera, directional aim.
-2. Passing to selected teammates, interception prediction, higher/lower pass arcs, goal/physical contact audit.
-3. 2v2 vs AI with team roles, optional manual avatar switch.
-4. 2v2 online using a server-authoritative backend and tested network latency.
+The current version uses one human and three local bots, **not** internet multiplayer or four human players.
+Physical simulation is stylized 2.5D; real-world precision and full animation systems are not yet implemented.
 
-## Non-goals and cautions
-Not an online multiplayer game. No persistent profiles, purchases, analytics, or ranking. All models are generated from original geometry without importing commercial football game assets. Some arcade mechanics are prototypes and need real device playtesting. The first touch is conditional rather than magic ball teleportation; collision and animation fidelity remain limited.
+## Run and test
+
+The static site serves `street-arena/index.html`.
+Run `npm test --prefix street-arena` under Node 22 for both Alpha 0.2 legacy and Alpha 0.3 physics tests.
+The branch `prototype/street-arena-cloud-20261022` is tested with GitHub Actions, and Render static site deployment is manual after CI success.
+
+## Technical research references
+
+- EA SPORTS FC shot assistance: https://www.privacyappendix.ea.com/able/resources/ea-sports-fc/fc-26
+- eFootball official command mapping: https://www.konami.com/efootball/es/page/mobile_controller
+- Gameplay research ledger: `street-arena/docs/RESEARCH_GAMEPLAY_V02_2V2_2026-10-22.md`
+
+## Known limitations
+
+This is still a gameplay prototype. Passing, opponent tactics, curve calibration, contact animation, foul decisions, accessibility, camera and touch action layout require live device playtesting. The match is only local. The primary MatchMake application, databases, and payment systems are unchanged.
