@@ -40,6 +40,7 @@ jobs:
         run: |
           npm test --prefix street-arena
           node --test street-arena/tennis/*.test.mjs
+          node street-arena/tennis/tennis-benchmark.mjs
   browser:
     runs-on: ubuntu-latest
     permissions:
@@ -67,4 +68,5 @@ jobs:
           path: |
             street-arena/animated-players-smoke.png
             street-arena/tennis/tennis-browser-smoke.png
+            street-arena/tennis/tennis-benchmark-result.json
           if-no-files-found: ignore
