@@ -116,8 +116,8 @@ export function attachGameplayV03({THREE,renderer,camera,scene,athletes,sphere,b
     if(toastFor>0){toastFor-=dt;if(toastFor<=0)toast.classList.remove("show");}
     const controlled=athletes[state.selected].group.position;
     const narrow=window.innerWidth/window.innerHeight<.78;
-    camera.position.lerp(new THREE.Vector3(controlled.x*.18,narrow?32:22,narrow?33:29),Math.min(1,dt*2.3));
-    camera.lookAt(new THREE.Vector3(controlled.x*.13,0,narrow?-.4:-.9));
+    camera.position.lerp(new THREE.Vector3(controlled.x*.14,narrow?39:26.5,narrow?43:36.2),Math.min(1,dt*2.3));
+    camera.lookAt(new THREE.Vector3(controlled.x*.11,0,narrow?-.5:-.6));
     renderer.render(scene,camera);
   }
   function frame(now){
@@ -137,7 +137,7 @@ export function attachGameplayV03({THREE,renderer,camera,scene,athletes,sphere,b
   }
   window.addEventListener("resize",()=>{
     camera.aspect=innerWidth/innerHeight;
-    camera.fov=innerWidth/innerHeight<.78?54:49;
+    camera.fov=innerWidth/innerHeight<.78?60:53;
     camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.8));
   });
