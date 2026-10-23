@@ -1,6 +1,6 @@
 import { createGameState, stepGame, FIXED_DT } from "./simulation.js";
 
-export function attachGameplay({ renderer, camera, scene, athlete, opponent, sphere, ballShadow, ballRadius }) {
+export function attachGameplay({ THREE, renderer, camera, scene, athlete, opponent, sphere, ballShadow, ballRadius }) {
   const select = id => document.getElementById(id);
   const menu = select("menu"), start = select("start"), desc = select("menuDesc");
   const toast = select("toast");
@@ -101,8 +101,6 @@ export function attachGameplay({ renderer, camera, scene, athlete, opponent, sph
     camera.lookAt(new THREE.Vector3(athlete.group.position.x*.13,0,narrow?-.4:-.9));
     renderer.render(scene,camera);
   }
-  // Import Three.js via the same pinned CDN used by the renderer.
-  const THREE = { Vector3: camera.position.constructor };
   function frame(time) {
     requestAnimationFrame(frame);
     const dt = Math.min(Math.max(0,(time-lastFrame)/1000),.12);
