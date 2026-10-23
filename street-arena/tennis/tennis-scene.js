@@ -128,7 +128,8 @@ export function createTennisVisuals(T,scene) {
     };
     const a=createAnimatedAthlete(T,scene,{kit,skinColor:skin,number,selected:side==="south",labelTexture});
     const racket=new T.Group();racket.name="tennis-racket";
-    racket.position.set(.78,1.15,-.2);a.group.add(racket);
+    racket.position.set(0,-.29,-.28);racket.rotation.x=-.68;
+    a.racketGrip.add(racket);
     tubeRacket(racket);
     return {...a,racket};
   }
