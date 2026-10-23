@@ -133,6 +133,7 @@ test("server starts a point from south and tracks a legal return trajectory",()=
   const s=startServe("d");
   assert.ok(s.ball.lastHit==="south");
   assert.ok(s.events.some(e=>e.type==="serve"&&e.shotType==="flat"),"serve event retains type and shot class");
+  assert.ok(s.events.some(e=>e.type==="serve"&&Number.isFinite(e.contact?.y)&&Number.isInteger(e.tick)));
   assert.ok(s.ball.vz<0);
   assert.ok(s.rallyHits>=1);
   assert.ok(s.ball.y>.1);
