@@ -11,6 +11,8 @@ try{
  const initial=await page.evaluate(()=>window.__matchmakeTennisDebug());
  assert.equal(initial.scene.courtWidth,8.23);
  assert.equal(initial.scene.netHeight,.914);
+ assert.equal(initial.scene.ballCollisionRadius,.0335);
+ assert.equal(initial.scene.ballVisualRadius,.085);
  assert.equal(initial.scene.totalAreaWidth,32);
  assert.equal(initial.scene.totalAreaLength,48);
  assert.equal(initial.simHz,120);
