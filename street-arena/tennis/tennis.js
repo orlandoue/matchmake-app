@@ -11,7 +11,7 @@ renderer.toneMapping=THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure=1.32;
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(51,innerWidth/innerHeight,.1,190);
-camera.position.set(0,17.2,25.5);
+camera.position.set(0,13.5,25.0);
 camera.lookAt(0,0,-2.0);
 const visual=createTennisVisuals(THREE,scene);
 let state=newMatch(),running=false,lag=0,last=performance.now();
@@ -144,7 +144,7 @@ function render(dt){
  const playerCam=cameraMode==="player";
  const target=playerCam?
   new THREE.Vector3(p.south.x*.62,tall?19.2:11.8,p.south.z+(tall?22:15)):
-  new THREE.Vector3(xFollow,tall?28:17.2,tall?35.2:25.5+zFollow);
+  new THREE.Vector3(xFollow,tall?28:13.5,tall?35.2:25.0+zFollow);
  camera.position.lerp(target,Math.min(1,dt*3.0));
  camera.lookAt(playerCam?
    new THREE.Vector3(p.south.x*.25,0,Math.max(-6,p.south.z-13)):
