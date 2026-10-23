@@ -5,7 +5,9 @@ import {newMatch,tickMatch,DT,COURT,solveShot,projectLanding,pointTo} from "./te
 const advance=(s,ticks,input={})=>{for(let i=0;i<ticks;i++)tickMatch(s,input);return s;};
 function startServe(type="d"){
   const s=newMatch(221,"normal");
-  advance(s,38,{[type]:true});
+  advance(s,16,{[type]:true}); // first tap tosses
+  advance(s,30,{}); // allow the gauge to rise
+  tickMatch(s,{[type]:true}); // second tap strikes
   assert.equal(s.phase,"rally");
   return s;
 }
@@ -40,12 +42,16 @@ test("player momentum accelerates, stops and respects near court bounds",()=>{
   advance(s,30,{});
   assert.ok(Math.hypot(p.vx,p.vz)<speed);
 });
-test("early preparation charges shot while moving and serves on preparation completion",()=>{
+test("serve requires a deliberate second press, and rally shot preparation holds",()=>{
   const s=newMatch();
   advance(s,24,{d:true,x:1});
-  const p=s.players.south;
+  assert.equal(s.phase,"ready");
+  assert.equal(s.serve.toss,true);
+  assert.ok(s.ball.y>1.4);
+  assert.equal(s.ball.lastHit,null);
+  advance(s,8,{x:1});
+  tickMatch(s,{d:true,x:1});
   assert.equal(s.phase,"rally");
-  assert.equal(p.charge,0); // the serve has released the stored preparation
   assert.ok(s.ball.lastHit==="south");
   const r=newMatch();
   r.phase="rally";r.ball.lastHit="north";
