@@ -15,13 +15,17 @@ camera.position.set(0,17.2,25.5);
 camera.lookAt(0,0,-2.0);
 const visual=createTennisVisuals(THREE,scene);
 let state=newMatch(),running=false,lag=0,last=performance.now();
-let pausedForToast=0,previous=null;
+let pausedForToast=0,previous=null,cameraMode="tv";
 const keys=new Set([""]);
 keys.clear();
 const valid=new Set(["arrowup","arrowdown","arrowleft","arrowright","a","s","d","q","w","e"]);
 document.addEventListener("keydown",e=>{
  const k=e.key.toLowerCase();
  if(valid.has(k)){e.preventDefault();keys.add(k);}
+ if(k==="c"&&!e.repeat){
+  cameraMode=cameraMode==="tv"?"player":"tv";
+  notify(cameraMode==="tv"?"CÁMARA TV":"CÁMARA JUGADOR",.7);
+ }
 });
 document.addEventListener("keyup",e=>keys.delete(e.key.toLowerCase()));
 window.addEventListener("blur",()=>keys.clear());
@@ -123,9 +127,14 @@ function render(dt){
  // Three-quarter arcade broadcast camera: lower, closer, subtly tracks the rally.
  const xFollow=Math.max(-2,Math.min(2,p.south.x*.16+state.ball.x*.08));
  const zFollow=state.phase==="rally"?Math.max(-2,Math.min(1,state.ball.z*.055)):0;
- const target=new THREE.Vector3(xFollow,tall?28:17.2,tall?35.2:25.5+zFollow);
+ const playerCam=cameraMode==="player";
+ const target=playerCam?
+  new THREE.Vector3(p.south.x*.62,tall?19.2:11.8,p.south.z+(tall?22:15)):
+  new THREE.Vector3(xFollow,tall?28:17.2,tall?35.2:25.5+zFollow);
  camera.position.lerp(target,Math.min(1,dt*3.0));
- camera.lookAt(new THREE.Vector3(xFollow*.25,0,-2.0+zFollow*.20));
+ camera.lookAt(playerCam?
+   new THREE.Vector3(p.south.x*.25,0,Math.max(-6,p.south.z-13)):
+   new THREE.Vector3(xFollow*.25,0,-2.0+zFollow*.20));
  renderer.render(scene,camera);
 }
 function loop(now){
@@ -149,7 +158,7 @@ addEventListener("resize",()=>{
  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.55));
 });
 window.__matchmakeTennisDebug=()=>({
- state:state.phase,score:{...state.score},rallyHits:state.rallyHits,serve:{...state.serve},
+ state:state.phase,score:{...state.score},rallyHits:state.rallyHits,serve:{...state.serve},cameraMode,
  player:{x:state.players.south.x,z:state.players.south.z,charge:state.players.south.charge},
  ball:{x:state.ball.x,y:state.ball.y,z:state.ball.z},
  scene:visual.report(),simHz:Math.round(1/DT)
