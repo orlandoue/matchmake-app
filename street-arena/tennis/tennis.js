@@ -82,8 +82,8 @@ function events(){
   if(e.type==="toss"&&e.side==="south")visual.south.motion.play("tennis_prepare",1);
   if((e.type==="hit"||e.type==="serve")){
    const av=e.side==="south"?visual.south:visual.north;
-   av.motion.play(e.type==="serve"?"tennis_serve":e.type==="slice"?"tennis_slice":
-     e.type==="lob"?"tennis_lob":"tennis_forehand",1);
+   av.motion.play(e.type==="serve"?"tennis_serve":e.shotType==="slice"?"tennis_slice":
+     e.shotType==="lob"?"tennis_lob":"tennis_forehand",1);
   }
  }
 }
