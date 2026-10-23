@@ -83,9 +83,18 @@ test("topspin, slice and lob have distinct trajectories and spin",()=>{
 test("server starts a point from south and tracks a legal return trajectory",()=>{
   const s=startServe("d");
   assert.ok(s.ball.lastHit==="south");
+  assert.ok(s.events.some(e=>e.type==="serve"&&e.shotType==="flat"),"serve event retains type and shot class");
   assert.ok(s.ball.vz<0);
   assert.ok(s.rallyHits>=1);
   assert.ok(s.ball.y>.1);
+});
+test("CPU shot emits hit event with stroke identity",()=>{
+  const s=startServe();
+  s.ball.x=s.players.north.x;s.ball.z=s.players.north.z;s.ball.y=1.2;
+  s.ball.vx=0;s.ball.vy=0;s.ball.vz=-1;
+  s.players.north.shot="topspin";s.players.north.charge=.5;
+  tickMatch(s,{});
+  assert.ok(s.events.some(e=>e.type==="hit"&&e.shotType==="topspin"));
 });
 test("wrong-side landing awards point and enters transition state",()=>{
   const s=startServe();
