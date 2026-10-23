@@ -18,9 +18,22 @@ try {
   assert.equal(await page.locator("#scoreA").textContent(),"0");
   assert.match(await page.locator("#actionMode").textContent(),/ROBAR|PASE/);
   // Force a visible display loop and attempt the new shot input. The engine owns the state.
+  // Check the actual visual skeleton, not just the simulation state.
+  const diagnostic = await page.evaluate(() => window.__streetArenaMotionDebug?.());
+  assert.ok(diagnostic && Object.keys(diagnostic).length === 4, "four articulated athletes must exist");
+  const samples = [];
   await page.keyboard.down("ArrowUp");
-  await page.waitForTimeout(300);
+  for (let i=0;i<13;i++) {
+    await page.waitForTimeout(70);
+    samples.push(await page.evaluate(() => window.__streetArenaMotionDebug().player));
+  }
   await page.keyboard.up("ArrowUp");
+  const maxSwing = Math.max(...samples.map(p=>Math.abs(p.leftHipX-p.rightHipX)));
+  const maxArms = Math.max(...samples.map(p=>Math.abs(p.leftShoulderX-p.rightShoulderX)));
+  assert.ok(maxSwing>.20,"legs must visibly alternate while moving; observed "+maxSwing);
+  assert.ok(maxArms>.14,"arms must swing opposite while moving; observed "+maxArms);
+  await page.screenshot({path:"street-arena/animated-players-smoke.png"});
+
   await page.keyboard.down("KeyD");
   await page.keyboard.down("ArrowRight");
   await page.waitForTimeout(300);
