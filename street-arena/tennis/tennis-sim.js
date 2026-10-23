@@ -264,7 +264,10 @@ function stepBall(s,dt){
     b.netCrossed=true;
   }
   if(Math.abs(b.x)>COURT.playableHalfX+3 || Math.abs(b.z)>COURT.playableHalfZ+3){
-    pointTo(s,other(b.lastHit),"out");return;
+    // After a first legal bounce, the opponent loses if the ball gets away.
+    // Do NOT reclassify a legal passing winner as an out fault.
+    pointTo(s,b.bounces>=1?b.lastHit:other(b.lastHit),b.bounces>=1?"unreachable_winner":"out");
+    return;
   }
   if(b.y<=COURT.ballR && b.vy<0){
     const fall=clamp((old.y-COURT.ballR)/(old.y-b.y),0,1);
