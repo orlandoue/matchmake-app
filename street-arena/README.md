@@ -1,35 +1,41 @@
-# MatchMake Street Arena — prototype 0.1
+# MatchMake Street Arena — Alpha 0.2
 
-A deliberately isolated, original browser-based street-football experiment.
+Isolated, original, browser-based street-football playground. The main MatchMake application and its payment stack are untouched.
 
-## Scope
-- Rendered in Three.js (pinned CDN dependency); all field geometry, athletes, skyline and procedural scenery are generated in code.
-- One local 1v1 match against a simple deterministic-rules bot (with a small random shot variation).
-- Ball movement, bounces, shooting, tackling, score tracking and 150-second match clock.
-- Keyboard and touch controls, responsive browser presentation.
-- No authentication, personal data, payment processing, database, online matchmaking, or telemetry.
-- No third-party game assets, commercial club logos, FIFA branding or copyrighted character models.
+## Current playable features
+- Night-time 3D court and procedural stylized athletes using the original Three.js rendering.
+- Deterministic fixed-step 60Hz gameplay core in `simulation.js`, independent of DOM and WebGL.
+- Accelerated movement, sprint, friction, ball possession states, controlled touches and Q-assisted first touch.
+- Hold **S** and release for a variable-power shot; charge bar shown in the HUD.
+- Experimental **A** short pass, **W** driven forward pass, **D** short feint when attacking / recovery slide when defending.
+- 1v1 against a basic bot, match clock, goals, wall rebounds and touch-screen controls.
 
-## Run
-Open from a static web server (ES modules cannot reliably run from file://); entrypoint: street-arena/index.html.
-The player downloads the game in the browser; no application installation is necessary.
-Three.js is fetched as a version-pinned module from jsDelivr.
+## Keyboard mapping (Alpha 0.2)
+- **Arrow keys**: move exclusively.
+- **A**: short pass when in control, standing tackle without possession.
+- **S**: press and hold to charge, release to shoot.
+- **D**: quick side feint when in control; defensive slide otherwise.
+- **W**: driven long pass. Lofted/through-ball trajectory not yet supported.
+- **Q**: softer first touch and slower controlled movement.
+- **E**: sprint, increases speed but limits fine control.
+- **Space and Shift are not gameplay controls.**
+- On mobile: the 4 arrow buttons and the six A/S/D/W/Q/E action buttons.
 
-## Deploy
-Render **Static Site** source: orlandoue/matchmake-app, branch: prototype/street-arena-cloud-20261022.
-Build command: echo "Street Arena static prototype".
-Publish path: street-arena.
-Do not deploy or merge this branch into the MatchMake production application.
+## Local/CI testing
+- `node --test street-arena/simulation.test.mjs` on Node 22.
+- GitHub Actions workflow `.github/workflows/street-arena-tests.yml` runs test suite and static parse checks on commits in the isolated prototype branch.
 
-## Controls
-WASD / arrows to move; Space to shoot; Shift to sprint; E to steal. On mobile, use touch controls.
+## Hosting
+Render Static Site: `matchmake-street-arena-prototype`.
+Branch: `prototype/street-arena-cloud-20261022`. Publish directory: `street-arena`.
+Render auto deploy disabled; use manual deploy after verified CI.
+No installation required for players.
 
-## Known limitations
-Gameplay physics are simplified; this is not a full soccer simulation.
-Visual appearance depends on the browser GPU.
-AI, collision, touch feel, and camera need hands-on playtesting.
-No multiplayer, accounts, ranking, persistence, production anti-cheat, audio, or accessibility audit.
-Never market this as a fully competitive release.
+## Next development milestones
+1. Tune reception vs. pressure, skill moves, running animation, responsive camera, directional aim.
+2. Passing to selected teammates, interception prediction, higher/lower pass arcs, goal/physical contact audit.
+3. 2v2 vs AI with team roles, optional manual avatar switch.
+4. 2v2 online using a server-authoritative backend and tested network latency.
 
-## Exit criteria for 0.2
-Human playtest on mobile + desktop; fix interaction and rendering issues; design new mechanics; then assess dedicated multiplayer authoritative servers separately.
+## Non-goals and cautions
+Not an online multiplayer game. No persistent profiles, purchases, analytics, or ranking. All models are generated from original geometry without importing commercial football game assets. Some arcade mechanics are prototypes and need real device playtesting. The first touch is conditional rather than magic ball teleportation; collision and animation fidelity remain limited.
