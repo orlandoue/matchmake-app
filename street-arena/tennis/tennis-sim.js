@@ -17,7 +17,7 @@ const other=s=>s==="south"?"north":"south";
 const rng=s=>((s.seed=(Math.imul(s.seed,1664525)+1013904223)>>>0)/4294967296);
 const precision=1e-8;
 const shotProfiles=Object.freeze({
-  flat:{flight:.94,spin:0,side:.03},
+  flat:{flight:.72,spin:0,side:.03},
   topspin:{flight:1.08,spin:1.2,side:.045},
   slice:{flight:1.25,spin:-.5,side:.035},
   lob:{flight:1.70,spin:.45,side:.015}
