@@ -80,6 +80,8 @@ function integrate(b,dt){
   const ay=-9.81-drag*b.vy-top*horizontal;
   b.vx+=ax*dt;b.vy+=ay*dt;b.vz+=az*dt;
   b.x+=b.vx*dt;b.y+=b.vy*dt;b.z+=b.vz*dt;
+  const spinRetention=Math.exp(-.12*dt);
+  b.spin*=spinRetention;b.sidespin*=spinRetention;
   b.flight+=dt;
 }
 function firstBounce(start,seconds=3){
@@ -262,7 +264,9 @@ function stepBall(s,dt){
   if(old.z*b.z<=0 && Math.abs(b.z-old.z)>precision){
     const t=old.z/(old.z-b.z);
     const y=old.y+(b.y-old.y)*t;
-    if(y < COURT.netCenter+COURT.ballR && Math.abs(old.x+(b.x-old.x)*t)<COURT.doublesHalf+.55){
+    const crossX=old.x+(b.x-old.x)*t;
+    const netAtX=COURT.netCenter+(COURT.netPost-COURT.netCenter)*Math.min(1,Math.abs(crossX)/6.02);
+    if(y < netAtX+COURT.ballR && Math.abs(crossX)<COURT.doublesHalf+.55){
       emitted(s,"net",{by:b.lastHit});pointTo(s,other(b.lastHit),"net");return;
     }
     b.netCrossed=true;
