@@ -162,7 +162,7 @@ function aiMove(s,id,dt){
       tx=clamp(b.x+b.vx*.13,-8.6,8.6);tz=clamp(b.z+b.vz*.13,-13.9,13.9);
     }else{
       const threat=Object.values(s.players).filter(q=>q.team!==p.team)
-        .sort((a,b)=>dist(a,b)-dist(b,b))[0];
+        .sort((a,b)=>dist(a,p)-dist(b,p))[0];
       tx=clamp((b.x+p.x)*.48+(threat?.x||0)*.10,-8,8);
       tz=clamp(b.z-team*2.9,-13.8,13.8);
       speed=4.8;
