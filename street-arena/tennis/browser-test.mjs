@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 const browser=await chromium.launch({headless:true,args:["--no-sandbox","--use-gl=angle","--use-angle=swiftshader","--enable-unsafe-swiftshader"]});
 const errors=[];
 try{
- const page=await browser.newPage({viewport:{width:1440,height:900}});
+ const page=await browser.newPage({viewport:{width:1024,height:700}});
  page.on("pageerror",e=>errors.push(e.message));
  const r=await page.goto("http://127.0.0.1:4173/tennis/",{waitUntil:"domcontentloaded",timeout:30000});
  assert.equal(r?.status(),200);
@@ -27,7 +27,9 @@ try{
  await page.waitForTimeout(350);
  assert.equal(await page.locator("#menu").evaluate(x=>x.classList.contains("hidden")),true);
  await page.keyboard.down("ArrowRight");
- await page.waitForTimeout(500);
+ await page.waitForFunction(startX=>
+   window.__matchmakeTennisDebug?.().player.x>startX+.1,
+   initial.player.x,{timeout:30000});
  await page.keyboard.up("ArrowRight");
  const moved=await page.evaluate(()=>window.__matchmakeTennisDebug());
  assert.ok(moved.player.x>initial.player.x+.1,"player can move");
