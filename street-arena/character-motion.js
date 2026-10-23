@@ -8,7 +8,8 @@ export function createMotionState() {
 const DURATIONS = Object.freeze({
   shot:.43, ai_shot:.43, finesse_shot:.52, directed_pass:.34,
   ground_through:.34, lob_through:.46, receive:.24, feint:.41,
-  tackle:.34, slide:.50
+  tackle:.34, slide:.50,
+  tennis_prepare:.54, tennis_serve:.62, tennis_forehand:.45, tennis_slice:.48, tennis_lob:.54
 });
 export function playMotion(motion, type, side = 1) {
   if (!(type in DURATIONS)) return false;
@@ -81,6 +82,22 @@ export function advanceMotion(m, actor, dt, flags={}) {
     defaultPose.leftShoulderX-=.33*pulse;
     defaultPose.rightShoulderX+=.33*pulse;
     defaultPose.rootY+=.03*pulse;
+  }
+  // Tennis-specific upper-body action poses (do not animate football kick legs).
+  if(action?.startsWith("tennis_")){
+    const winding=action==="tennis_prepare";
+    const serve=action==="tennis_serve",lob=action==="tennis_lob",slice=action==="tennis_slice";
+    const rotate=(winding?-.48:.55)*pulse;
+    defaultPose.torsoY+=rotate;
+    defaultPose.torsoX+=(serve?-.19:lob?-.10:.09)*pulse;
+    defaultPose.rightShoulderX+=(winding?-.62:serve?1.35:lob?1.1:.83)*pulse;
+    defaultPose.leftShoulderX+=(winding?.32:-.24)*pulse;
+    defaultPose.rightShoulderZ+=.24*pulse;
+    defaultPose.rightElbowX+=(slice?.42:serve?.37:-.20)*pulse;
+    defaultPose.leftHipX*=.45;
+    defaultPose.rightHipX*=.45;
+    defaultPose.rootY+=serve?.065*pulse:0;
+    if(slice)defaultPose.torsoZ+=.12*pulse;
   }
   if(action==="receive"){
     defaultPose.rightHipX+=.32*pulse;
