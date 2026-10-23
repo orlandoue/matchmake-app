@@ -38,9 +38,9 @@ export function createTennisVisuals(T,scene) {
   }
   const tex=new T.CanvasTexture(cv);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=4;
   box(85,.4,100,mat(0x0b1627),0,-.35,0,"night-rooftop");
-  box(24.3,.12,38.3,mat(0x1c2a44,.9),0,-.14,0,"court-platform");
-  box(23.9,.018,37.9,new T.MeshStandardMaterial({map:tex,roughness:.96}),0,-.04,0,"blue-hardcourt");
-  box(11.45,.012,C.halfLength*2+.32,mat(0x194e5b,.97),0,-.019,0,"tennis-color-zone");
+  box(33,.12,48.3,mat(0x1c2a44,.9),0,-.14,0,"court-platform");
+  box(32,.018,47.8,new T.MeshStandardMaterial({map:tex,roughness:.96}),0,-.04,0,"blue-hardcourt");
+  box(12.8,.012,C.halfLength*2+.32,mat(0x194e5b,.97),0,-.019,0,"tennis-color-zone");
   const baseline=C.halfLength, singles=C.singlesHalf, doubles=C.doublesHalf;
   for(const side of [-1,1]){
     stripe(-singles,side*baseline,singles,side*baseline,.076);
@@ -67,19 +67,19 @@ export function createTennisVisuals(T,scene) {
     const y1=.914+.156*Math.abs(x)/6,y2=.914+.156*Math.abs(x2)/6;
     tube(x,y1,0,x2,y2,0,.015,netTrim);
   }
-  box(24.6,.09,.12,unlit(0x54d9ed),0,.04,-19,"edge-lights");
-  box(24.6,.09,.12,unlit(0xee6b9f),0,.04,19,"edge-lights");
-  for(const x of [-12.1,12.1])box(.12,.08,37.5,unlit(x<0?blue:pink),x,.04,0,"sideline-led");
+  box(32.6,.09,.12,unlit(0x54d9ed),0,.04,-24,"edge-lights");
+  box(32.6,.09,.12,unlit(0xee6b9f),0,.04,24,"edge-lights");
+  for(const x of [-16.0,16.0])box(.12,.08,47.3,unlit(x<0?blue:pink),x,.04,0,"sideline-led");
   // Rooftop perimeter barrier / chain fence outside playable rectangle.
   const fenceMat=mat(0x708299,.53,.65),wire=new T.MeshBasicMaterial({color:0x9dc5d5,transparent:true,opacity:.16,depthWrite:false});
-  for(const sx of [-12.65,12.65]){
-    for(let z=-20;z<=20.1;z+=3.2){tube(sx,0,z,sx,4.2,z,.045,fenceMat);stats.fence++;}
-    for(let y=.7;y<4.2;y+=.7){tube(sx,y,-20,sx,y,20,.01,wire);stats.fence++;}
+  for(const sx of [-17.05,17.05]){
+    for(let z=-25;z<=25.1;z+=3.2){tube(sx,0,z,sx,4.2,z,.045,fenceMat);stats.fence++;}
+    for(let y=.7;y<4.2;y+=.7){tube(sx,y,-25,sx,y,25,.01,wire);stats.fence++;}
     tube(sx,4.2,-20,sx,4.2,20,.05,fenceMat);
   }
-  for(const sz of [-20,20]){
-    for(let x=-12.65;x<=12.66;x+=3.2){tube(x,0,sz,x,4.2,sz,.045,fenceMat);stats.fence++;}
-    for(let y=.7;y<4.2;y+=.7){tube(-12.65,y,sz,12.65,y,sz,.009,wire);stats.fence++;}
+  for(const sz of [-25,25]){
+    for(let x=-17.05;x<=17.06;x+=3.2){tube(x,0,sz,x,4.2,sz,.045,fenceMat);stats.fence++;}
+    for(let y=.7;y<4.2;y+=.7){tube(-17.05,y,sz,17.05,y,sz,.009,wire);stats.fence++;}
   }
   function label(text,accent,x,y,z,rotation=0){
     const canv=document.createElement("canvas");canv.width=1024;canv.height=256;
@@ -92,16 +92,16 @@ export function createTennisVisuals(T,scene) {
     const p=new T.Mesh(new T.PlaneGeometry(11,2.75),new T.MeshBasicMaterial({map:tx,side:T.DoubleSide}));
     p.position.set(x,y,z);p.rotation.y=rotation;group.add(p);
   }
-  label("MATCHMAKE TENNIS","#54eaff",0,5.05,-22.5);
-  label("NIGHT COURTS","#ff619d",0,5.05,22.5,Math.PI);
-  for(const [x,z,color] of [[-14,-21,blue],[14,-21,0xa89aff],[-14,21,0xa89aff],[14,21,pink]]){
+  label("MATCHMAKE TENNIS","#54eaff",0,5.05,-27.2);
+  label("NIGHT COURTS","#ff619d",0,5.05,27.2,Math.PI);
+  for(const [x,z,color] of [[-19,-26,blue],[19,-26,0xa89aff],[-19,26,0xa89aff],[19,26,pink]]){
     tube(x,0,z,x,11.7,z,.16,fenceMat);
     box(2.0,.28,.95,mat(0xe5faff,.25,.4,color,.8),x,12,z,"floodlight");
     const light=new T.PointLight(color,155,57,2);light.position.set(x,12,z);scene.add(light);
   }
   const bench=mat(0x6d819b,.58,.35),dark=mat(0x0c1930,.91);
   for(const side of [-1,1]){
-    const x=side*16;
+    const x=side*20.5;
     for(const z of [-6,7]){
       box(3,.15,.94,bench,x,.6,z,"sideline-bench");
       box(3,.72,.16,dark,x,.98,z,"bench-back");
@@ -111,8 +111,8 @@ export function createTennisVisuals(T,scene) {
   // City context behind the fence.
   const buildings=Array.from({length:8},(_,i)=>mat(new T.Color().setHSL(.60+i*.008,.23,.09+i*.01)));
   for(let i=0;i<90;i++){
-    const side=i%4,x=side<2?(side===0?-1:1)*(24+rand()*35):(rand()-.5)*125;
-    const z=side>=2?(side===2?-1:1)*(27+rand()*25):(rand()-.5)*105;
+    const side=i%4,x=side<2?(side===0?-1:1)*(30+rand()*35):(rand()-.5)*135;
+    const z=side>=2?(side===2?-1:1)*(36+rand()*25):(rand()-.5)*125;
     const w=3+rand()*8,d=3+rand()*8,h=5+rand()*24;
     box(w,h,d,buildings[i%8],x,h/2-.2,z,"city");
     stats.buildings++;
@@ -150,7 +150,8 @@ export function createTennisVisuals(T,scene) {
     }
   }
   const south=athlete("south",0x4de9f7,0xb88462,7),north=athlete("north",0xf65991,0xd29a7c,9);
-  const ball=new T.Mesh(new T.SphereGeometry(C.ballR,18,12),mat(0xdfff55,.49,.05,0xa6b600,.1));
+  // Slightly oversized purely visual ball improves ball reading in a fast arcade match.
+  const ball=new T.Mesh(new T.SphereGeometry(C.ballR*1.38,18,12),mat(0xeaff58,.48,.05,0xa6b600,.18));
   ball.name="tennis-ball";scene.add(ball);
   const shadow=new T.Mesh(new T.CircleGeometry(.33,22),new T.MeshBasicMaterial({color:0x020713,transparent:true,opacity:.35,depthWrite:false}));
   shadow.rotation.x=-Math.PI/2;shadow.position.y=.018;scene.add(shadow);
@@ -159,5 +160,6 @@ export function createTennisVisuals(T,scene) {
     new T.MeshBasicMaterial({color:0xf8e7b8,side:T.DoubleSide,transparent:true,opacity:.7,depthWrite:false}));
   landing.rotation.x=-Math.PI/2;landing.position.y=.075;scene.add(landing);
   return {south,north,ball,shadow,landing,stats,group,
-    report:()=>({...stats,courtLength:C.halfLength*2,courtWidth:C.singlesHalf*2,netHeight:C.netCenter})};
+    report:()=>({...stats,courtLength:C.halfLength*2,courtWidth:C.singlesHalf*2,
+      totalAreaWidth:32,totalAreaLength:48,netHeight:C.netCenter})};
 }
