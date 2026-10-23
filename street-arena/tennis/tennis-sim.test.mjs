@@ -38,6 +38,8 @@ test("player momentum accelerates, stops and respects near court bounds",()=>{
   assert.ok(p.x<=COURT.playableHalfX);
   assert.ok(p.z<=COURT.playableHalfZ);
   assert.ok(p.z>=.65);
+  // Check braking away from an end boundary (the boundary may already have set velocity to zero).
+  p.x=0;p.z=10;p.vx=4;p.vz=0;
   const speed=Math.hypot(p.vx,p.vz);
   advance(s,30,{});
   assert.ok(Math.hypot(p.vx,p.vz)<speed);
