@@ -44,11 +44,11 @@ button{font:inherit;color:inherit;cursor:pointer}
 @media(pointer:coarse),(max-width:700px){#touch{display:flex}header{padding:12px}.topright{display:none}footer{display:none}.hud{padding:5px 10px}.hud strong{font-size:22px}.brand{font-size:9px;letter-spacing:.12em}.brand span{padding:6px}}
 @media(max-height:600px){.panel{padding:17px}.panel h1{font-size:35px;margin:10px}.panel p{margin-bottom:10px}.features{display:none}}
 
-.actionhud{position:fixed;top:123px;left:50%;transform:translateX(-50%);width:215px;text-align:center;pointer-events:none;color:#d7f1ff;font-size:11px;font-weight:800;letter-spacing:.07em;text-shadow:0 2px 10px #000}
+.actionhud{position:fixed;top:123px;left:50%;transform:translateX(-50%);width:300px;text-align:center;pointer-events:none;color:#d7f1ff;font-size:11px;font-weight:800;letter-spacing:.07em;text-shadow:0 2px 10px #000}
 .actionhud .power{height:7px;margin:8px 0 5px;border-radius:20px;background:#253851c9;border:1px solid #77e4ff66;overflow:hidden}
 #powerFill{height:100%;width:0;background:linear-gradient(90deg,#39f0ff,#ff5285);transition:width .05s linear}
-.actionhud small{color:#829fb5;font-size:9px;letter-spacing:.03em}
-@media(max-width:700px){.actionhud{top:68px;width:145px;font-size:9px}.actionhud small{display:none}.action button{font-size:13px}.dpad{grid-template-columns:repeat(3,42px);grid-template-rows:repeat(3,42px)}}
+.actionhud small{color:#b6d3e5;font-size:9px;letter-spacing:.03em}#actionMode{font-size:10px;margin-top:5px;color:#abd6e9;}
+@media(max-width:700px){.actionhud{top:68px;width:250px;font-size:9px}.actionhud small{display:none}#actionMode{display:none}.action button{font-size:13px}.dpad{grid-template-columns:repeat(3,42px);grid-template-rows:repeat(3,42px)}}
 </style>
 </head>
 <body>
@@ -57,16 +57,16 @@ button{font:inherit;color:inherit;cursor:pointer}
 <header>
   <div class="brand"><span>MM</span><div>MATCHMAKE<small>STREET ARENA · PROTOTIPO</small></div></div>
   <div class="hud"><strong class="score-a" id="scoreA">0</strong><span class="sep">:</span><strong class="score-b" id="scoreB">0</strong><span class="clock" id="clock">02:30</span></div>
-  <div class="topright">ALFA 0.2 · SOLO LOCAL</div>
+  <div class="topright">ALFA 0.3 · 2V2 LOCAL</div>
 </header>
-<div class="actionhud"><div id="possession">BALÓN LIBRE</div><div class="power"><div id="powerFill"></div></div><small>MANTÉN S PARA CARGAR DISPARO</small></div><div id="toast" role="status" aria-live="polite"></div>
+<div class="actionhud"><div id="possession">BALÓN LIBRE</div><div id="actionMode">A: ROBAR · E: BARRIDA</div><div class="power"><div id="powerFill"></div></div><small id="aimHelp">MANTÉN D PARA APUNTAR · Q+D EFECTO</small></div><div id="toast" role="status" aria-live="polite"></div>
 <div id="menu">
   <section class="panel">
     <div class="eyebrow">● PRIMER PROTOTIPO EN LA NUBE</div>
     <h1>MATCHMAKE<br/><em>STREET ARENA</em></h1>
-    <p id="menuDesc">Nuevo control: flechas para moverte. A pase, S disparo con carga, D regate o barrida, W pase largo, Q recepción fina, E sprint. Primera versión experimental de las nuevas físicas.</p>
+    <p id="menuDesc">¡Ahora 2 contra 2! Flechas para moverte. A: pase al hueco raso, S: pase dirigido, D: disparo con carga y dirección, W: correr, E: pase al hueco elevado y Q: regate. Q+D: tiro con efecto. En defensa A: robar y E: barrida.</p>
     <button id="start" type="button">ENTRAR A LA CANCHA →</button>
-    <div class="features"><span><span class="kbd">↑ ← ↓ →</span> Mover</span><span><span class="kbd">S</span> Tiro cargado</span><span><span class="kbd">A</span> Pase/robo</span><span><span class="kbd">Q</span> Control</span></div>
+    <div class="features"><span><span class="kbd">FLECHAS</span> Mover/apuntar</span><span><span class="kbd">D</span> Tiro</span><span><span class="kbd">Q+D</span> Efecto</span><span><span class="kbd">A/E</span> Defender</span></div>
   </section>
 </div>
 <div id="touch" aria-label="Controles táctiles">
@@ -75,9 +75,9 @@ button{font:inherit;color:inherit;cursor:pointer}
     <button data-key="arrowleft" aria-label="Izquierda">◀</button><button class="none" aria-hidden="true"></button><button data-key="arrowright" aria-label="Derecha">▶</button>
     <button class="none" aria-hidden="true"></button><button data-key="arrowdown" aria-label="Abajo">▼</button><button class="none" aria-hidden="true"></button>
   </div>
-  <div class="action"><button data-key="q" aria-label="Recepción fina">Q</button><button data-key="w" aria-label="Pase largo">W</button><button data-key="e" aria-label="Sprint">E</button><button data-key="a" aria-label="Pase o robo">A</button><button data-key="s" id="shoot" aria-label="Disparo cargado">S ⚡</button><button data-key="d" aria-label="Regate o barrida">D</button></div>
+  <div class="action"><button data-key="q" aria-label="Regate, combinar con D para efecto">Q</button><button data-key="w" aria-label="Correr">W</button><button data-key="e" aria-label="Pase al hueco elevado o barrida">E</button><button data-key="a" aria-label="Pase al hueco raso o robar">A</button><button data-key="s" aria-label="Pase dirigido">S</button><button data-key="d" id="shoot" aria-label="Disparo cargado con dirección">D ⚡</button></div>
 </div>
-<footer>FLECHAS · MOVER &nbsp; A · PASE / ROBAR &nbsp; S · DISPARO CARGADO &nbsp; D · REGATE / BARRIDA &nbsp; W · PASE LARGO &nbsp; Q · CONTROL &nbsp; E · SPRINT &nbsp; | &nbsp; SIN ONLINE</footer>
+<footer>FLECHAS: MOVER/APUNTAR · A: PASE AL HUECO / ROBAR · S: PASE DIRIGIDO · D: DISPARO · W: CORRER · E: GLOBO / BARRIDA · Q: REGATE · Q+D: EFECTO · 2V2 LOCAL</footer>
 <script type="module" src="./game.js"></script>
 </body>
 </html>
