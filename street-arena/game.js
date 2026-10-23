@@ -13,7 +13,7 @@ const clockEl = document.querySelector("#clock");
 const toastEl = document.querySelector("#toast");
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.55));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -22,8 +22,8 @@ renderer.toneMappingExposure = 1.36;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x080e22);
 scene.fog = new THREE.FogExp2(0x080e22, 0.013);
-const camera = new THREE.PerspectiveCamera(49, innerWidth / innerHeight, 0.1, 145);
-camera.position.set(0, 25.8, 36.2);
+const camera = new THREE.PerspectiveCamera(53, innerWidth / innerHeight, 0.1, 160);
+camera.position.set(0, 26.5, 36.2);
 camera.lookAt(0, 0, 0);
 const cyan = 0x44e8f6, coral = 0xff5683, violet = 0x8a74ff;
 const BALL_RADIUS = 0.46;
@@ -35,10 +35,7 @@ function addLight(x, y, z, color, intensity, range) {
   const light = new THREE.PointLight(color, intensity, range, 2);
   light.position.set(x, y, z); scene.add(light); return light;
 }
-addLight(-11, 12, -12, cyan, 115, 45);
-addLight(11, 11, 12, coral, 100, 45);
-addLight(-12, 12, 13, violet, 80, 32);
-addLight(12, 13, -13, 0xd4f6ff, 75, 32);
+// Four arena floodlights are provided by court-scene.js (no duplicated lights).
 
 function material(color, roughness = .76, metalness = .06, emissive = 0x000000, intensity = 0) {
   return new THREE.MeshStandardMaterial({ color, roughness, metalness, emissive, emissiveIntensity: intensity });
