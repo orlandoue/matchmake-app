@@ -96,7 +96,7 @@ export function attachGameplayV03({THREE,renderer,camera,scene,athletes,sphere,b
     power.style.width=Math.round(Math.min(1,state.shot.charge/.72)*100)+"%";
     const owner=state.ball.owner,our=owner&&state.players[owner].team==="cyan";
     possession.textContent=our?"EN CONTROL · "+owner.toUpperCase():owner?"DEFENDIENDO":"BALÓN LIBRE";
-    modeText.textContent=our?"A: HUECO · S: PASE · D: TIRO · E: GLOBO · Q: REGATE":"A: ROBAR · E: BARRIDA · W: CORRER";
+    modeText.textContent=our?"A: HUECO · S: PASE · D: TIRO · E: GLOBO · Q: REGATE":"A: ROBAR · E: BARRIDA · Q: CAMBIAR · W: CORRER";
     const aiming=state.shot.held&&playing;
     aimText.textContent=aiming?(state.shot.finesse?"TIRO CON EFECTO · ← → APUNTAR":"← → APUNTAR A PORTERÍA"):"MANTÉN D PARA CARGAR Y APUNTAR · Q+D CON EFECTO";
     aimLine.visible=aiming;spot.visible=aiming;
