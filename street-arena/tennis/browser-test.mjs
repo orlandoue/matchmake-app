@@ -11,6 +11,8 @@ try{
  const initial=await page.evaluate(()=>window.__matchmakeTennisDebug());
  assert.equal(initial.scene.courtWidth,8.23);
  assert.equal(initial.scene.netHeight,.914);
+ assert.equal(initial.scene.totalAreaWidth,32);
+ assert.equal(initial.scene.totalAreaLength,48);
  assert.equal(initial.simHz,120);
  assert.ok(initial.scene.buildings>50,"original neon city background");
  await page.locator("#start").click();
@@ -21,8 +23,16 @@ try{
  await page.keyboard.up("ArrowRight");
  const moved=await page.evaluate(()=>window.__matchmakeTennisDebug());
  assert.ok(moved.player.x>initial.player.x+.1,"player can move");
+ // VT-inspired deliberate two-tap serve: toss, release, time second stroke.
  await page.keyboard.down("KeyD");
- await page.waitForTimeout(350);
+ await page.waitForTimeout(180);
+ await page.keyboard.up("KeyD");
+ const tossed=await page.evaluate(()=>window.__matchmakeTennisDebug());
+ assert.equal(tossed.state,"ready");
+ assert.equal(tossed.serve.toss,true);
+ await page.waitForTimeout(210);
+ await page.keyboard.down("KeyD");
+ await page.waitForTimeout(70);
  await page.keyboard.up("KeyD");
  await page.waitForTimeout(650);
  const rally=await page.evaluate(()=>window.__matchmakeTennisDebug());
