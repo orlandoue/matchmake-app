@@ -14,6 +14,14 @@ try{
  assert.equal(initial.scene.totalAreaWidth,32);
  assert.equal(initial.scene.totalAreaLength,48);
  assert.equal(initial.simHz,120);
+ assert.equal(initial.cameraMode,"tv");
+ await page.keyboard.press("KeyC");
+ await page.waitForTimeout(120);
+ const playerCamera=await page.evaluate(()=>window.__matchmakeTennisDebug());
+ assert.equal(playerCamera.cameraMode,"player");
+ await page.keyboard.press("KeyC");
+ await page.waitForTimeout(120);
+ assert.equal((await page.evaluate(()=>window.__matchmakeTennisDebug())).cameraMode,"tv");
  assert.ok(initial.scene.buildings>50,"original neon city background");
  await page.locator("#start").click();
  await page.waitForTimeout(350);
