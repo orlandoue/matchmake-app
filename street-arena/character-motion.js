@@ -11,13 +11,13 @@ const DURATIONS = Object.freeze({
   tackle:.34, slide:.50,
   tennis_prepare:.54, tennis_serve:.62, tennis_forehand:.45, tennis_slice:.48, tennis_lob:.54
 });
-export function playMotion(motion, type, side = 1) {
+export function playMotion(motion, type, side = 1, startPhase = 0) {
   if (!(type in DURATIONS)) return false;
   const duration = DURATIONS[type];
   // Never interrupt an active slide with a short low-priority receive.
   if (motion.action === "slide" && motion.actionAge < motion.actionDuration*.70 && type === "receive") return false;
   motion.action = type;
-  motion.actionAge = 0;
+  motion.actionAge = clamp(startPhase,0,.85)*duration;
   motion.actionDuration = duration;
   motion.actionSide = side >= 0 ? 1 : -1;
   return true;
