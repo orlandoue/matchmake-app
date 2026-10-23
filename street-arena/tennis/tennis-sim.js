@@ -137,7 +137,7 @@ export function solveShot(s,side,type,targetX,targetZ,charge=0.5,quality=1,serve
   let speedFactor=1-0.22*(1-quality);
   let flight=profile.flight*(1+.2*(1-charge)) / Math.max(.82,speedFactor);
   const fromY=serve?2.35:Math.max(.52,b.y);
-  const intendedX=clamp(targetX,-COURT.doublesHalf+.22,COURT.doublesHalf-.22);
+  const intendedX=clamp(targetX,-COURT.singlesHalf+.20,COURT.singlesHalf-.20);
   const intendedZ=clamp(targetZ,-COURT.halfLength+.38,COURT.halfLength-.38);
   const spin=profile.spin, sidespin=profile.side*((intendedX-b.x)>=0?1:-1)*charge;
   const v=guessLaunch(b.x,fromY,b.z,intendedX,intendedZ,flight,spin,sidespin);
@@ -193,6 +193,10 @@ function updatePlayerInput(s,input,dt){
   // During shot preparation, lateral arrows influence court positioning slightly
   // while changing aim; ground positioning is still under user control.
   acceleration(p,x,z,dt,!!input.w,!!p.shot);
+  // Serving ball follows the racket hand during preparation; no detached toss.
+  if(s.phase==="ready" && s.server==="south"){
+    b.x=p.x;b.z=p.z-.46;b.y=1.30;
+  }
   for(const key of ["a","s","d","q","e"])s.inputPrev[key]=!!input[key];
   if(s.phase==="ready"&&s.server==="south"&&p.shot && p.charge>.18){
     // For first iteration, serve launches after preparation rather than requiring a separate toss input.
@@ -218,7 +222,7 @@ function updateCPU(s,dt){
     s.ai.readTimer=0;
     if(b.lastHit==="south" && b.vz<0){
       const where=projectLanding(b,2.8);
-      if(where&&where.crossed && where.z<-.05) {
+      if(where&&(where.crossed||b.netCrossed) && where.z<-.05) {
         s.ai.targetX=clamp(where.x,-6.2,6.2);
         s.ai.targetZ=clamp(where.z+1.55,-16,-.7);
       }
