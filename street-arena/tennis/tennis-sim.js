@@ -156,7 +156,8 @@ function strike(s,side,type,serve=false){
   p.stroke=type;p.strokeTimer=.39;
   if(serve){s.phase="rally";s.rallyHits=0;}
   s.rallyHits++;
-  emitted(s,serve?"serve":"hit",{side,shotType:type,quality,targetX:v.targetX,targetZ:v.targetZ,charge:prepared});
+  emitted(s,serve?"serve":"hit",{side,shotType:type,quality,targetX:v.targetX,targetZ:v.targetZ,
+    charge:prepared,contact:{x:b.x,y:b.y,z:b.z},tick:s.tick});
 }
 function attemptReturn(s,side){
   const p=s.players[side],b=s.ball;
