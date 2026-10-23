@@ -10,9 +10,9 @@ renderer.outputColorSpace=THREE.SRGBColorSpace;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure=1.32;
 const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(47,innerWidth/innerHeight,.1,170);
-camera.position.set(0,22,27.7);
-camera.lookAt(0,0,0);
+const camera=new THREE.PerspectiveCamera(51,innerWidth/innerHeight,.1,190);
+camera.position.set(0,17.2,25.5);
+camera.lookAt(0,0,-2.0);
 const visual=createTennisVisuals(THREE,scene);
 let state=newMatch(),running=false,lag=0,last=performance.now();
 let pausedForToast=0,previous=null;
@@ -70,12 +70,16 @@ function events(){
   if(e.type==="point"){
    notify(e.winner==="south"?"¡PUNTO TUYO!":"¡PUNTO CPU!",.8);
   }else if(e.type==="hit" && e.side==="south"){
-   notify(e.type==="topspin"?"TOPSPIN":e.quality>.83?"¡GOLPE PERFECTO!":"¡BUEN GOLPE!",.5);
-  }else if(e.type==="serve"&&e.side==="south"){notify("¡SAQUE!",.5);}
+   notify(e.quality>.83?"¡GOLPE PERFECTO!":e.quality>.53?"¡BUEN GOLPE!":"¡GOLPE FORZADO!",.5);
+  }else if(e.type==="toss"&&e.side==="south"){notify("PULSA OTRA VEZ PARA SACAR",.85);}
+  else if(e.type==="serve"&&e.side==="south"){notify("¡SAQUE!",.5);}
   else if(e.type==="match"){notify(e.winner==="south"?"¡VICTORIA!":"FIN DEL PARTIDO",2);finish();}
+  if(e.type==="prepare"&&e.side==="south")visual.south.motion.play("tennis_prepare",1);
+  if(e.type==="toss"&&e.side==="south")visual.south.motion.play("tennis_prepare",1);
   if((e.type==="hit"||e.type==="serve")){
    const av=e.side==="south"?visual.south:visual.north;
-   av.motion.play(e.type==="serve"?"shot":e.type==="topspin"?"shot":e.type==="lob"?"lob_through":"finesse_shot",1);
+   av.motion.play(e.type==="serve"?"tennis_serve":e.type==="slice"?"tennis_slice":
+     e.type==="lob"?"tennis_lob":"tennis_forehand",1);
   }
  }
 }
@@ -109,16 +113,19 @@ function render(dt){
  $("southScore").textContent=String(state.score.south);
  $("northScore").textContent=String(state.score.north);
  const phase=state.phase;
- $("status").textContent=phase==="ready"?(state.server==="south"?"TU SAQUE · A / S / D / Q":"SAQUE DE CPU · PREPÁRATE"):
+ $("status").textContent=phase==="ready"?(state.server==="south"?(state.serve.toss?"2ª PULSACIÓN PARA GOLPEAR":"TU SAQUE · PULSA GOLPE PARA LANZAR"):"SAQUE DE CPU · PREPÁRATE"):
   phase==="rally"?"PELOTEO · ANTICIPA LA TRAYECTORIA":phase==="point"?"SIGUIENTE PUNTO":"PARTIDO TERMINADO";
  $("charge").style.width=Math.round(100*Math.min(1,p.south.charge/.65))+"%";
  $("preparation").textContent=p.south.shot?
   "PREPARANDO "+p.south.shot.toUpperCase()+" · ← → DIRECCIÓN":"MANTÉN GOLPE ANTES DEL CONTACTO";
  if(pausedForToast>0){pausedForToast-=dt;if(pausedForToast<=0)toast.classList.remove("show");}
  const tall=innerWidth/innerHeight<.82;
- const target=new THREE.Vector3(0,tall?36:23,tall?38:27.7);
- camera.position.lerp(target,Math.min(1,dt*2));
- camera.lookAt(new THREE.Vector3(0,0,0));
+ // Three-quarter arcade broadcast camera: lower, closer, subtly tracks the rally.
+ const xFollow=Math.max(-2,Math.min(2,p.south.x*.16+state.ball.x*.08));
+ const zFollow=state.phase==="rally"?Math.max(-2,Math.min(1,state.ball.z*.055)):0;
+ const target=new THREE.Vector3(xFollow,tall?28:17.2,tall?35.2:25.5+zFollow);
+ camera.position.lerp(target,Math.min(1,dt*3.0));
+ camera.lookAt(new THREE.Vector3(xFollow*.25,0,-2.0+zFollow*.20));
  renderer.render(scene,camera);
 }
 function loop(now){
@@ -137,12 +144,12 @@ function loop(now){
  render(dt);
 }
 addEventListener("resize",()=>{
- camera.aspect=innerWidth/innerHeight;camera.fov=innerWidth/innerHeight<.82?54:47;
+ camera.aspect=innerWidth/innerHeight;camera.fov=innerWidth/innerHeight<.82?59:51;
  camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);
  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.55));
 });
 window.__matchmakeTennisDebug=()=>({
- state:state.phase,score:{...state.score},rallyHits:state.rallyHits,
+ state:state.phase,score:{...state.score},rallyHits:state.rallyHits,serve:{...state.serve},
  player:{x:state.players.south.x,z:state.players.south.z,charge:state.players.south.charge},
  ball:{x:state.ball.x,y:state.ball.y,z:state.ball.z},
  scene:visual.report(),simHz:Math.round(1/DT)
