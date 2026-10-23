@@ -5,8 +5,11 @@ export const DT=1/120;
 export const COURT=Object.freeze({
   singlesHalf:4.115,doublesHalf:5.485,halfLength:11.885,
   playableHalfX:15.0,playableHalfZ:22.0,
-  netCenter:.914,netPost:1.07,serviceLine:6.40,ballR:.105
+  netCenter:.914,netPost:1.07,serviceLine:6.40,ballR:.0335
 });
+// ITF Type 2 ball dimensions; aerodynamics are tunable initial estimates, not measured calibration.
+export const BALL_PHYSICS=Object.freeze({massKg:.0577,airDensity:1.2,dragCoefficient:.48});
+const DRAG_FACTOR=.5*BALL_PHYSICS.airDensity*BALL_PHYSICS.dragCoefficient*Math.PI*COURT.ballR**2/BALL_PHYSICS.massKg;
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const hypot=(a,b)=>Math.hypot(a,b);
 const signSide=s=>s==="south"?1:-1; // south player is at positive z
@@ -69,7 +72,7 @@ const acceleration=(player,dx,dz,dt,sprint=false,prepared=false)=>driveFootwork(
 function integrate(b,dt){
   const horizontal=Math.hypot(b.vx,b.vz);
   const total=Math.hypot(horizontal,b.vy);
-  const drag=.0065*total;
+  const drag=DRAG_FACTOR*total;
   const side=b.sidespin*.0080*horizontal;
   const top=b.spin*.0105*horizontal;
   const ax=-drag*b.vx + side*b.vz;
