@@ -13,6 +13,8 @@ try{
  assert.equal(initial.scene.netHeight,.914);
  assert.equal(initial.scene.ballCollisionRadius,.0335);
  assert.equal(initial.scene.ballVisualRadius,.085);
+ assert.ok(Math.abs(initial.avatarYaw.south)<.01,"south athlete faces net");
+ assert.ok(Math.abs(Math.abs(initial.avatarYaw.north)-Math.PI)<.01,"north athlete faces net");
  assert.equal(initial.scene.totalAreaWidth,32);
  assert.equal(initial.scene.totalAreaLength,48);
  assert.equal(initial.simHz,120);
