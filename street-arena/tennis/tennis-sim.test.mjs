@@ -98,6 +98,29 @@ test("100 seeded basic serves receive a legal CPU return",()=>{
   }
   assert.equal(returned,100);
 });
+test("fast flat winners punish out-of-position CPU without becoming automatic",()=>{
+  let legal=0,returned=0;
+  for(let seed=0;seed<100;seed++){
+    const s=newMatch(seed,"normal");
+    s.phase="rally";
+    Object.assign(s.ball,{x:0,y:1.15,z:5,lastHit:"north"});
+    const targetX=(seed%2?1:-1)*[3.2,3.8,4][seed%3];
+    const v=solveShot(s,"south","flat",targetX,-10.8,.8,.95,false);
+    Object.assign(s.ball,v,{lastHit:"south",bounces:0,flight:0,netCrossed:false});
+    s.rallyHits=2;
+    s.players.north.x=-Math.sign(targetX)*3.8;
+    s.players.north.z=-13.4;
+    const landing=projectLanding(s.ball,3);
+    if(landing?.crossed&&landing.netHeight>COURT.netCenter+COURT.ballR&&
+       Math.abs(landing.x)<COURT.singlesHalf&&Math.abs(landing.z)<COURT.halfLength)legal++;
+    for(let i=0;i<500&&s.phase==="rally";i++){
+      tickMatch(s,{});
+      if(s.events.some(e=>e.type==="hit"&&e.side==="north")){returned++;break;}
+    }
+  }
+  assert.equal(legal,100);
+  assert.ok(returned>=20&&returned<=60,"off-balance returns should be difficult but possible: "+returned);
+});
 test("topspin, slice and lob have distinct trajectories and spin",()=>{
   const s=newMatch(),type=["topspin","slice","lob","flat"];
   const shots=type.map(x=>solveShot(s,"south",x,1,-9,.75,1,false));
