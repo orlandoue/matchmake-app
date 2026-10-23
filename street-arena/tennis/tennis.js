@@ -104,7 +104,7 @@ function render(dt){
   v.racket.rotation.z=pos.strokeTimer>0?.3:0;
   v.racket.rotation.x=(pos.strokeTimer>0?.45:0)+(pos.shot?.18:0);
  }
- visual.ball.position.set(lerp(old.bx,cur.bx),lerp(old.by,cur.by),lerp(old.bz,cur.bz));
+ visual.ball.position.set(lerp(old.bx,cur.bx),lerp(old.by,cur.by)+visual.ball.userData.groundOffset,lerp(old.bz,cur.bz));
  visual.ball.rotation.x+=state.ball.vz*dt*2;
  visual.shadow.position.set(visual.ball.position.x,.015,visual.ball.position.z);
  visual.shadow.material.opacity=Math.max(.07,.4-state.ball.y*.055);
