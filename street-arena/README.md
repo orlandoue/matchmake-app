@@ -1,4 +1,25 @@
-# MatchMake Street Arena — Alpha 0.4 (articulated 2v2)
+# MatchMake Street Arena — Alpha 0.5 (expanded urban 2v2)
+
+Alpha 0.5 builds on articulated Alpha 0.4. Static browser 3D game on an isolated GitHub branch and manual Render deployment.
+
+## New urban court
+- Court artwork 24 x 38 units (formerly 20 x 32): **20% wider, 18.75% longer**, 42.5% more surface area.
+- Shared `court-config.js` is the single source of truth for game physics, goal mouth, field lines, fence, props and match camera. Playable physics box: 22.7 x 36.4.
+- Original canvas-textured worn asphalt, corner markers, center circle, penalty areas, penalty spots and neon edge lights.
+- New aligned goal frames with back nets; tall wire fencing and side barriers.
+- Original MATCHMAKE / STREET ARENA signs, benches, gym bags, cones, spare balls, floodlights and a procedural city skyline.
+- No third-party textures or models or external visual asset downloads.
+- Perspective is opened up for the larger pitch; no new local installation needed.
+- Court scenery is in `court-scene.js` and stays separate from the deterministic gameplay engine and character rig.
+
+## Validation
+- Fixed-step 60 Hz game physics remains in `simulation-v03.js`.
+- `court-layout.test.mjs` checks center, scoring plane, rebounds, limits and shared dimensions.
+- Chromium test asserts expected geometry and procedural props, verifies animated player limbs and checks page errors.
+- Performance still needs human playtesting on lower-end mobile devices; a screenshot and green CI are necessary but not sufficient.
+
+
+## Previous gameplay / animation work
 
 Original browser-based arcade street football. Isolated from MatchMake app development and payment production code.
 
