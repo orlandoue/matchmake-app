@@ -11,13 +11,13 @@ const DURATIONS = Object.freeze({
   tackle:.34, slide:.50,
   tennis_prepare:.54, tennis_serve:.62, tennis_forehand:.45, tennis_slice:.48, tennis_lob:.54
 });
-export function playMotion(motion, type, side = 1) {
+export function playMotion(motion, type, side = 1, startPhase = 0) {
   if (!(type in DURATIONS)) return false;
   const duration = DURATIONS[type];
   // Never interrupt an active slide with a short low-priority receive.
   if (motion.action === "slide" && motion.actionAge < motion.actionDuration*.70 && type === "receive") return false;
   motion.action = type;
-  motion.actionAge = 0;
+  motion.actionAge = clamp(startPhase,0,.85)*duration;
   motion.actionDuration = duration;
   motion.actionSide = side >= 0 ? 1 : -1;
   return true;
@@ -129,6 +129,28 @@ export function advanceMotion(m, actor, dt, flags={}) {
     defaultPose.leftShoulderX-=.75*strength;
     defaultPose.rightShoulderX+=.5*strength;
     defaultPose.torsoZ+=.12*m.actionSide*strength;
+  }
+  // Tennis-only overlay. Football animations never pass this flag.
+  if(flags.tennis&&!slide){
+    const lateral=clamp(flags.lateral||0,-1,1);
+    const braking=clamp(flags.braking||0,0,1);
+    const split=clamp(flags.split||0,0,1);
+    const sideways=Math.abs(lateral);
+    defaultPose.leftHipX*=1-.55*sideways;
+    defaultPose.rightHipX*=1-.55*sideways;
+    defaultPose.leftHipZ=lateral*(.08+.23*Math.max(0,wave));
+    defaultPose.rightHipZ=lateral*(.08+.23*Math.max(0,-wave));
+    defaultPose.leftAnkleZ=-defaultPose.leftHipZ*.45;
+    defaultPose.rightAnkleZ=-defaultPose.rightHipZ*.45;
+    defaultPose.torsoZ-=lateral*.085;
+    defaultPose.rootY-=braking*.045;
+    defaultPose.torsoX+=braking*.10;
+    defaultPose.leftKneeX-=braking*.12;
+    defaultPose.rightKneeX-=braking*.12;
+    const splitLift=Math.sin(Math.PI*split);
+    defaultPose.rootY+=.06*splitLift;
+    defaultPose.leftKneeX-=.12*splitLift;
+    defaultPose.rightKneeX-=.12*splitLift;
   }
   if(flags.aiming&&!slide){
     defaultPose.leftHipX*=.15;

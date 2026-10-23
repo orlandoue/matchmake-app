@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - prototype/street-arena-cloud-20261022
+      - prototype/tennis-overnight-20261023
     paths:
       - 'street-arena/**'
       - '.github/workflows/street-arena-tests.yml'
@@ -39,6 +40,7 @@ jobs:
         run: |
           npm test --prefix street-arena
           node --test street-arena/tennis/*.test.mjs
+          node street-arena/tennis/tennis-benchmark.mjs
   browser:
     runs-on: ubuntu-latest
     permissions:
@@ -66,4 +68,5 @@ jobs:
           path: |
             street-arena/animated-players-smoke.png
             street-arena/tennis/tennis-browser-smoke.png
+            street-arena/tennis/tennis-benchmark-result.json
           if-no-files-found: ignore

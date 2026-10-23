@@ -11,7 +11,7 @@ renderer.toneMapping=THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure=1.32;
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(51,innerWidth/innerHeight,.1,190);
-camera.position.set(0,17.2,25.5);
+camera.position.set(0,13.5,25.0);
 camera.lookAt(0,0,-2.0);
 const visual=createTennisVisuals(THREE,scene);
 let state=newMatch(),running=false,lag=0,last=performance.now();
@@ -82,8 +82,9 @@ function events(){
   if(e.type==="toss"&&e.side==="south")visual.south.motion.play("tennis_prepare",1);
   if((e.type==="hit"||e.type==="serve")){
    const av=e.side==="south"?visual.south:visual.north;
-   av.motion.play(e.type==="serve"?"tennis_serve":e.type==="slice"?"tennis_slice":
-     e.type==="lob"?"tennis_lob":"tennis_forehand",1);
+   av.motion.play(e.type==="serve"?"tennis_serve":e.shotType==="slice"?"tennis_slice":
+     e.shotType==="lob"?"tennis_lob":"tennis_forehand",1,.42);
+   av.impact=e.contact;av.impactAge=0;av.bestImpactError=Infinity;
   }
  }
 }
@@ -96,15 +97,28 @@ function render(dt){
   const oldX=side==="south"?old.sx:old.nx,oldZ=side==="south"?old.sz:old.nz;
   v.group.position.set(lerp(oldX,newX),0,lerp(oldZ,newZ));
   // Keep the torso generally facing the net while feet run omnidirectionally.
-  const face=side==="south"?Math.PI:0;
+  const face=side==="south"?0:Math.PI;
   const heading=Math.atan2(-pos.faceX,-pos.faceZ);
-  v.group.rotation.y=face+Math.atan2(Math.sin(heading-face),Math.cos(heading-face))*.28;
-  v.motion.update(pos,dt,{aiming:!!pos.shot});
-  v.racket.rotation.y=Math.sin(pos.strokeTimer*18)*.9;
-  v.racket.rotation.z=pos.strokeTimer>0?.3:0;
-  v.racket.rotation.x=(pos.strokeTimer>0?.45:0)+(pos.shot?.18:0);
+  const turn=Math.atan2(Math.sin(heading-face),Math.cos(heading-face));
+  // Shuffle while prepared; turn more into the run when sprinting or recovering.
+  const turnWeight=pos.shot?.20:Math.hypot(pos.vx,pos.vz)>5?.68:.38;
+  v.group.rotation.y=face+turn*turnWeight;
+  v.motion.update(pos,dt,{aiming:!!pos.shot,tennis:true,
+    lateral:pos.lateralBlend||0,braking:Math.min(1,(pos.plantTimer||0)/.14),
+    split:Math.min(1,(pos.splitTimer||0)/.3)});
+  const follow=pos.strokeTimer>0?1-Math.min(1,pos.strokeTimer/.39):0;
+  v.racket.rotation.y=pos.strokeTimer>0?.24+.67*Math.sin(follow*Math.PI*.8):0;
+  v.racket.rotation.z=pos.strokeTimer>0?.22*(1-follow):0;
+  v.racket.rotation.x=(pos.strokeTimer>0?.16+.52*follow:0)+(pos.shot?.18:0);
+  if(v.impact&&v.impactAge<.16){
+   v.group.updateMatrixWorld(true);
+   const head=v.racket.localToWorld(new THREE.Vector3(0,0,-.19));
+   const contact=new THREE.Vector3(v.impact.x,v.impact.y,v.impact.z);
+   v.bestImpactError=Math.min(v.bestImpactError,head.distanceTo(contact));
+   v.impactAge+=dt;
+  }
  }
- visual.ball.position.set(lerp(old.bx,cur.bx),lerp(old.by,cur.by),lerp(old.bz,cur.bz));
+ visual.ball.position.set(lerp(old.bx,cur.bx),lerp(old.by,cur.by)+visual.ball.userData.groundOffset,lerp(old.bz,cur.bz));
  visual.ball.rotation.x+=state.ball.vz*dt*2;
  visual.shadow.position.set(visual.ball.position.x,.015,visual.ball.position.z);
  visual.shadow.material.opacity=Math.max(.07,.4-state.ball.y*.055);
@@ -130,7 +144,7 @@ function render(dt){
  const playerCam=cameraMode==="player";
  const target=playerCam?
   new THREE.Vector3(p.south.x*.62,tall?19.2:11.8,p.south.z+(tall?22:15)):
-  new THREE.Vector3(xFollow,tall?28:17.2,tall?35.2:25.5+zFollow);
+  new THREE.Vector3(xFollow,tall?28:13.5,tall?35.2:25.0+zFollow);
  camera.position.lerp(target,Math.min(1,dt*3.0));
  camera.lookAt(playerCam?
    new THREE.Vector3(p.south.x*.25,0,Math.max(-6,p.south.z-13)):
@@ -161,6 +175,8 @@ window.__matchmakeTennisDebug=()=>({
  state:state.phase,score:{...state.score},rallyHits:state.rallyHits,serve:{...state.serve},cameraMode,
  player:{x:state.players.south.x,z:state.players.south.z,charge:state.players.south.charge},
  ball:{x:state.ball.x,y:state.ball.y,z:state.ball.z},
- scene:visual.report(),simHz:Math.round(1/DT)
+ scene:visual.report(),avatarYaw:{south:visual.south.group.rotation.y,north:visual.north.group.rotation.y},
+ impactError:{south:Number.isFinite(visual.south.bestImpactError)?visual.south.bestImpactError:null,
+ north:Number.isFinite(visual.north.bestImpactError)?visual.north.bestImpactError:null},simHz:Math.round(1/DT)
 });
 requestAnimationFrame(loop);

@@ -5,8 +5,11 @@ export const DT=1/120;
 export const COURT=Object.freeze({
   singlesHalf:4.115,doublesHalf:5.485,halfLength:11.885,
   playableHalfX:15.0,playableHalfZ:22.0,
-  netCenter:.914,netPost:1.07,serviceLine:6.40,ballR:.105
+  netCenter:.914,netPost:1.07,serviceLine:6.40,ballR:.0335
 });
+// ITF Type 2 ball dimensions; aerodynamics are tunable initial estimates, not measured calibration.
+export const BALL_PHYSICS=Object.freeze({massKg:.0577,airDensity:1.2,dragCoefficient:.48});
+const DRAG_FACTOR=.5*BALL_PHYSICS.airDensity*BALL_PHYSICS.dragCoefficient*Math.PI*COURT.ballR**2/BALL_PHYSICS.massKg;
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const hypot=(a,b)=>Math.hypot(a,b);
 const signSide=s=>s==="south"?1:-1; // south player is at positive z
@@ -14,7 +17,7 @@ const other=s=>s==="south"?"north":"south";
 const rng=s=>((s.seed=(Math.imul(s.seed,1664525)+1013904223)>>>0)/4294967296);
 const precision=1e-8;
 const shotProfiles=Object.freeze({
-  flat:{flight:.94,spin:0,side:.03},
+  flat:{flight:.72,spin:0,side:.03},
   topspin:{flight:1.08,spin:1.2,side:.045},
   slice:{flight:1.25,spin:-.5,side:.035},
   lob:{flight:1.70,spin:.45,side:.015}
@@ -69,7 +72,7 @@ const acceleration=(player,dx,dz,dt,sprint=false,prepared=false)=>driveFootwork(
 function integrate(b,dt){
   const horizontal=Math.hypot(b.vx,b.vz);
   const total=Math.hypot(horizontal,b.vy);
-  const drag=.0065*total;
+  const drag=DRAG_FACTOR*total;
   const side=b.sidespin*.0080*horizontal;
   const top=b.spin*.0105*horizontal;
   const ax=-drag*b.vx + side*b.vz;
@@ -77,6 +80,8 @@ function integrate(b,dt){
   const ay=-9.81-drag*b.vy-top*horizontal;
   b.vx+=ax*dt;b.vy+=ay*dt;b.vz+=az*dt;
   b.x+=b.vx*dt;b.y+=b.vy*dt;b.z+=b.vz*dt;
+  const spinRetention=Math.exp(-.12*dt);
+  b.spin*=spinRetention;b.sidespin*=spinRetention;
   b.flight+=dt;
 }
 function firstBounce(start,seconds=3){
@@ -153,7 +158,8 @@ function strike(s,side,type,serve=false){
   p.stroke=type;p.strokeTimer=.39;
   if(serve){s.phase="rally";s.rallyHits=0;}
   s.rallyHits++;
-  emitted(s,serve?"serve":"hit",{side,type,quality,targetX:v.targetX,targetZ:v.targetZ,charge:prepared});
+  emitted(s,serve?"serve":"hit",{side,shotType:type,quality,targetX:v.targetX,targetZ:v.targetZ,
+    charge:prepared,contact:{x:b.x,y:b.y,z:b.z},tick:s.tick});
 }
 function attemptReturn(s,side){
   const p=s.players[side],b=s.ball;
@@ -258,7 +264,9 @@ function stepBall(s,dt){
   if(old.z*b.z<=0 && Math.abs(b.z-old.z)>precision){
     const t=old.z/(old.z-b.z);
     const y=old.y+(b.y-old.y)*t;
-    if(y < COURT.netCenter+COURT.ballR && Math.abs(old.x+(b.x-old.x)*t)<COURT.doublesHalf+.55){
+    const crossX=old.x+(b.x-old.x)*t;
+    const netAtX=COURT.netCenter+(COURT.netPost-COURT.netCenter)*Math.min(1,Math.abs(crossX)/6.02);
+    if(y < netAtX+COURT.ballR && Math.abs(crossX)<COURT.doublesHalf+.55){
       emitted(s,"net",{by:b.lastHit});pointTo(s,other(b.lastHit),"net");return;
     }
     b.netCrossed=true;

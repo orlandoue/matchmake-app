@@ -2,6 +2,8 @@ import { COURT as C } from "./tennis-sim.js";
 import { createAnimatedAthlete } from "../character-rig.js";
 
 export function createTennisVisuals(T,scene) {
+  const theme=new URLSearchParams(location.search).get("court")==="night"?"night":"tournament";
+  const day=theme==="tournament";
   let seed=95477;
   const rand=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
   const group=new T.Group();scene.add(group);
@@ -26,21 +28,25 @@ export function createTennisVisuals(T,scene) {
     l.rotation.y=-Math.atan2(z2-z1,x2-x1);
   };
   // Original night rooftop shell and procedural granular acrylic paint.
-  scene.background=new T.Color(0x070d20);
-  scene.fog=new T.FogExp2(0x090e21,.016);
-  scene.add(new T.HemisphereLight(0x9bbfff,0x14283b,2.1));
-  scene.add(new T.AmbientLight(0x8d91bf,.7));
+  scene.background=new T.Color(day?0xb5dcf0:0x070d20);
+  scene.fog=new T.FogExp2(day?0xa5cbdc:0x090e21,day?.006:.016);
+  scene.add(new T.HemisphereLight(day?0xf2faff:0x9bbfff,day?0x55776e:0x14283b,day?2.2:2.1));
+  scene.add(new T.AmbientLight(day?0xffffff:0x8d91bf,day?.45:.7));
+  if(day){
+    const sun=new T.DirectionalLight(0xfff5db,2.0);
+    sun.position.set(-14,25,11);scene.add(sun);
+  }
   const cv=document.createElement("canvas");cv.width=512;cv.height=1024;
-  const ctx=cv.getContext("2d");ctx.fillStyle="#144356";ctx.fillRect(0,0,512,1024);
+  const ctx=cv.getContext("2d");ctx.fillStyle=day?"#236d91":"#144356";ctx.fillRect(0,0,512,1024);
   for(let i=0;i<15000;i++){
     ctx.fillStyle=rand()>.4?"rgba(185,248,238,.035)":"rgba(7,13,35,.09)";
     ctx.fillRect(rand()*512,rand()*1024,1+rand()*2,1+rand()*2);
   }
   const tex=new T.CanvasTexture(cv);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=4;
-  box(85,.4,100,mat(0x0b1627),0,-.35,0,"night-rooftop");
-  box(33,.12,48.3,mat(0x1c2a44,.9),0,-.14,0,"court-platform");
+  box(85,.4,100,mat(day?0x6e9b8d:0x0b1627),0,-.35,0,"arena-base");
+  box(33,.12,48.3,mat(day?0x287e9b:0x1c2a44,.9),0,-.14,0,"court-platform");
   box(32,.018,47.8,new T.MeshStandardMaterial({map:tex,roughness:.96}),0,-.04,0,"blue-hardcourt");
-  box(12.8,.012,C.halfLength*2+.32,mat(0x194e5b,.97),0,-.019,0,"tennis-color-zone");
+  box(12.8,.012,C.halfLength*2+.32,mat(day?0x1463a1:0x194e5b,.97),0,-.019,0,"tennis-color-zone");
   const baseline=C.halfLength, singles=C.singlesHalf, doubles=C.doublesHalf;
   for(const side of [-1,1]){
     stripe(-singles,side*baseline,singles,side*baseline,.076);
@@ -70,7 +76,16 @@ export function createTennisVisuals(T,scene) {
   box(32.6,.09,.12,unlit(0x54d9ed),0,.04,-24,"edge-lights");
   box(32.6,.09,.12,unlit(0xee6b9f),0,.04,24,"edge-lights");
   for(const x of [-16.0,16.0])box(.12,.08,47.3,unlit(x<0?blue:pink),x,.04,0,"sideline-led");
-  // Rooftop perimeter barrier / chain fence outside playable rectangle.
+  if(day){
+    const seat=mat(0x44768d,.88),step=mat(0x9cb6be,.93);
+    for(const sx of [-1,1])for(let row=0;row<7;row++){
+      box(1.75,.55,46.5,row%2?step:seat,sx*(18.8+row*1.8),.18+row*.55,0,"sideline-stand");
+    }
+    for(const sz of [-1,1])for(let row=0;row<5;row++){
+      box(32,.55,1.75,row%2?step:seat,0,.18+row*.55,sz*(27.3+row*1.8),"baseline-stand");
+    }
+  }
+  // Tournament perimeter barrier / night rooftop fence outside playable rectangle.
   const fenceMat=mat(0x708299,.53,.65),wire=new T.MeshBasicMaterial({color:0x9dc5d5,transparent:true,opacity:.16,depthWrite:false});
   for(const sx of [-17.05,17.05]){
     for(let z=-25;z<=25.1;z+=3.2){tube(sx,0,z,sx,4.2,z,.045,fenceMat);stats.fence++;}
@@ -92,12 +107,12 @@ export function createTennisVisuals(T,scene) {
     const p=new T.Mesh(new T.PlaneGeometry(11,2.75),new T.MeshBasicMaterial({map:tx,side:T.DoubleSide}));
     p.position.set(x,y,z);p.rotation.y=rotation;group.add(p);
   }
-  label("MATCHMAKE TENNIS","#54eaff",0,5.05,-27.2);
-  label("NIGHT COURTS","#ff619d",0,5.05,27.2,Math.PI);
+  label(day?"MATCHMAKE OPEN":"MATCHMAKE TENNIS",day?"#bdefff":"#54eaff",0,5.05,-27.2);
+  label(day?"WORLD TOUR":"NIGHT COURTS",day?"#bdefff":"#ff619d",0,5.05,27.2,Math.PI);
   for(const [x,z,color] of [[-19,-26,blue],[19,-26,0xa89aff],[-19,26,0xa89aff],[19,26,pink]]){
     tube(x,0,z,x,11.7,z,.16,fenceMat);
     box(2.0,.28,.95,mat(0xe5faff,.25,.4,color,.8),x,12,z,"floodlight");
-    const light=new T.PointLight(color,155,57,2);light.position.set(x,12,z);scene.add(light);
+    if(!day){const light=new T.PointLight(color,155,57,2);light.position.set(x,12,z);scene.add(light);}
   }
   const bench=mat(0x6d819b,.58,.35),dark=mat(0x0c1930,.91);
   for(const side of [-1,1]){
@@ -151,16 +166,19 @@ export function createTennisVisuals(T,scene) {
     }
   }
   const south=athlete("south",0x4de9f7,0xb88462,7),north=athlete("north",0xf65991,0xd29a7c,9);
-  // Slightly oversized purely visual ball improves ball reading in a fast arcade match.
-  const ball=new T.Mesh(new T.SphereGeometry(C.ballR*1.38,18,12),mat(0xeaff58,.48,.05,0xa6b600,.18));
+  // Arcade readability is independent from the regulation collision radius.
+  const ballVisualRadius=.085;
+  const ball=new T.Mesh(new T.SphereGeometry(ballVisualRadius,18,12),mat(0xeaff58,.48,.05,0xa6b600,.18));
+  ball.userData.groundOffset=ballVisualRadius-C.ballR;
   ball.name="tennis-ball";scene.add(ball);
-  const shadow=new T.Mesh(new T.CircleGeometry(.33,22),new T.MeshBasicMaterial({color:0x020713,transparent:true,opacity:.35,depthWrite:false}));
+  const shadow=new T.Mesh(new T.CircleGeometry(.24,22),new T.MeshBasicMaterial({color:0x020713,transparent:true,opacity:.30,depthWrite:false}));
   shadow.rotation.x=-Math.PI/2;shadow.position.y=.018;scene.add(shadow);
   // Soft projected landing marker is a helpful training aid for arcade feel.
   const landing=new T.Mesh(new T.RingGeometry(.20,.28,30),
     new T.MeshBasicMaterial({color:0xf8e7b8,side:T.DoubleSide,transparent:true,opacity:.7,depthWrite:false}));
   landing.rotation.x=-Math.PI/2;landing.position.y=.075;scene.add(landing);
   return {south,north,ball,shadow,landing,stats,group,
-    report:()=>({...stats,courtLength:C.halfLength*2,courtWidth:C.singlesHalf*2,
-      totalAreaWidth:32,totalAreaLength:48,netHeight:C.netCenter})};
+    report:()=>({...stats,theme,courtLength:C.halfLength*2,courtWidth:C.singlesHalf*2,
+      totalAreaWidth:32,totalAreaLength:48,netHeight:C.netCenter,
+      ballCollisionRadius:C.ballR,ballVisualRadius})};
 }
