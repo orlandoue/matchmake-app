@@ -1,9 +1,10 @@
 // MatchMake Tennis - independent deterministic physics and arcade rally kernel.
 // No Three.js, DOM, timers or networking. All measurements in metres and seconds.
+import {driveFootwork,strikeQuality,forecastIntercept} from "./tennis-feel.js";
 export const DT=1/120;
 export const COURT=Object.freeze({
   singlesHalf:4.115,doublesHalf:5.485,halfLength:11.885,
-  playableHalfX:11.5,playableHalfZ:18.0,
+  playableHalfX:15.0,playableHalfZ:22.0,
   netCenter:.914,netPost:1.07,serviceLine:6.40,ballR:.105
 });
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -30,6 +31,7 @@ export function newMatch(seed=20261023,difficulty="normal"){
     events:[],players:{south:makePlayer("south"),north:makePlayer("north")},
     ball:{x:0,y:1.30,z:13.1,vx:0,vy:0,vz:0,spin:0,sidespin:0,
       lastHit:null,bounces:0,flight:0,netCrossed:false},
+    serve:{toss:false,clock:0},
     inputPrev:{a:false,s:false,d:false,q:false,e:false},ai:{serveTimer:.75,readTimer:0,targetX:0,targetZ:-12}
   };
 }
@@ -42,7 +44,7 @@ function setReady(s){
   const server=s.server,p=s.players[server];
   s.ball={x:p.x,y:1.30,z:p.z-signSide(server)*.42,
     vx:0,vy:0,vz:0,spin:0,sidespin:0,lastHit:null,bounces:0,flight:0,netCrossed:false};
-  s.phase="ready";s.ai.serveTimer=.88;s.ai.readTimer=0;
+  s.phase="ready";s.serve={toss:false,clock:0};s.ai.serveTimer=.88;s.ai.readTimer=0;
 }
 export function pointTo(s,side,reason){
   if(s.phase!=="rally"&&s.phase!=="ready")return;
@@ -60,23 +62,10 @@ export function pointTo(s,side,reason){
     s.server=(Math.floor(s.pointsPlayed/2)%2===0)?"south":"north";
   }
 }
-const acceleration=(player,dx,dz,dt,sprint=false,prepared=false)=>{
-  const len=hypot(dx,dz);if(len>1){dx/=len;dz/=len;}
-  const speed=sprint?7.4:prepared?4.25:6.0;
-  const a=prepared?24:35;
-  const targetX=dx*speed,targetZ=dz*speed;
-  const diffX=targetX-player.vx,diffZ=targetZ-player.vz;
-  const factor=Math.min(1,(len>.01?a:62)*dt/(hypot(diffX,diffZ)||1));
-  player.vx+=diffX*factor;player.vz+=diffZ*factor;
-  player.x=clamp(player.x+player.vx*dt,-COURT.playableHalfX,COURT.playableHalfX);
-  player.z=clamp(player.z+player.vz*dt,
-    player.side==="south"?.65:-COURT.playableHalfZ,
-    player.side==="south"?COURT.playableHalfZ:-.65);
-  if(len>.04){player.faceX=dx;player.faceZ=dz;}
-  player.setQuality+=(len<.20?dt*.9:-dt*.9);
-  player.setQuality=clamp(player.setQuality,0,1);
-  player.footworkPhase+=hypot(player.vx,player.vz)*dt*1.55;
-};
+const acceleration=(player,dx,dz,dt,sprint=false,prepared=false)=>driveFootwork(
+  player,dx,dz,dt,{sprint,prepared,split:player.splitTimer>0,
+    halfX:COURT.playableHalfX,halfZ:COURT.playableHalfZ}
+);
 function integrate(b,dt){
   const horizontal=Math.hypot(b.vx,b.vz);
   const total=Math.hypot(horizontal,b.vy);
@@ -150,7 +139,7 @@ function strike(s,side,type,serve=false){
   const relative=hypot(b.x-p.x,b.z-p.z);
   const balance=clamp(1-moving/10,0,1);
   const reach=clamp(1-Math.max(0,relative-.55)/1.8,0,1);
-  const quality=clamp(.23+.45*prepared+.19*balance+.13*reach,0,1);
+  const quality=strikeQuality(p,b,{serve});
   const aimed=clamp(p.aim,-1,1),depth=clamp(p.depth,-1,1);
   const targetX=(aimed*3.92)+((rng(s)-.5)*(.54*(1-quality)));
   let targetZ=signSide(side)*(-10.1-1.0*depth);
@@ -172,7 +161,7 @@ function attemptReturn(s,side){
   if(Math.sign(b.z)!==signSide(side))return false;
   const d=hypot(b.x-p.x,b.z-p.z);
   const enoughHeight=b.y>.40 && b.y<2.5;
-  const reach=1.55 + (p.shot==="slice"?.25:0) + (p.splitTimer>.01?.15:0);
+  const reach=1.75 + (p.shot==="slice"?.18:0) + (p.splitTimer>.01?.25:0);
   if(d<reach && enoughHeight && b.bounces<=1){
     strike(s,side,p.shot);return true;
   }
@@ -184,8 +173,22 @@ function updatePlayerInput(s,input,dt){
   const press=key=>!!input[key]&&!s.inputPrev[key];
   const action=Object.entries({a:"topspin",s:"slice",d:"flat",q:"lob"}).find(([key])=>press(key));
   if(press("e")){p.splitTimer=.3;emitted(s,"split",{side:"south"});}
-  if(action && !p.shot){p.shot=action[1];p.charge=.015;p.aim=0;p.depth=0;emitted(s,"prepare",{side:"south",type:p.shot});}
-  if(p.shot){
+  if(s.phase==="ready" && s.server==="south" && action){
+    if(!s.serve.toss){
+      s.serve.toss=true;s.serve.clock=0;
+      p.shot=action[1];p.charge=.015;p.aim=0;p.depth=0;
+      emitted(s,"toss",{side:"south",type:p.shot});
+    }else if(s.serve.clock>.18){
+      p.shot=action[1];
+      p.charge=clamp(.36+Math.sin(Math.min(s.serve.clock,1.10)/1.10*Math.PI)*.35,.12,.74);
+      strike(s,"south",p.shot,true);
+      s.serve.toss=false;s.serve.clock=0;
+    }
+  } else if(s.phase==="rally" && action && !p.shot){
+    p.shot=action[1];p.charge=.015;p.aim=0;p.depth=0;
+    emitted(s,"prepare",{side:"south",type:p.shot});
+  }
+  if(p.shot && s.phase==="rally"){
     p.charge=clamp(p.charge+dt,0,.85);
     p.aim=clamp(p.aim+x*dt*1.75,-1,1);
     p.depth=clamp(p.depth-z*dt*1.05,-1,1);
@@ -195,13 +198,19 @@ function updatePlayerInput(s,input,dt){
   acceleration(p,x,z,dt,!!input.w,!!p.shot);
   // Serving ball follows the racket hand during preparation; no detached toss.
   if(s.phase==="ready" && s.server==="south"){
-    b.x=p.x;b.z=p.z-.46;b.y=1.30;
+    b.x=p.x;b.z=p.z-.46;
+    if(s.serve.toss){
+      s.serve.clock+=dt;
+      b.y=1.25+1.55*Math.sin(Math.min(1,s.serve.clock/1.15)*Math.PI);
+      p.charge=clamp(s.serve.clock/1.05,0,1);
+      p.aim=clamp(p.aim+x*dt*1.5,-1,1);
+      if(s.serve.clock>=1.15){
+        s.serve.toss=false;s.serve.clock=0;p.shot=null;p.charge=0;
+        pointTo(s,"north","late_serve");
+      }
+    }else b.y=1.30;
   }
   for(const key of ["a","s","d","q","e"])s.inputPrev[key]=!!input[key];
-  if(s.phase==="ready"&&s.server==="south"&&p.shot && p.charge>.18){
-    // For first iteration, serve launches after preparation rather than requiring a separate toss input.
-    strike(s,"south",p.shot,true);
-  }
   if(s.phase==="rally")attemptReturn(s,"south");
 }
 function updateCPU(s,dt){
@@ -216,15 +225,16 @@ function updateCPU(s,dt){
     return;
   }
   if(s.phase!=="rally")return;
-  const react={easy:.30,normal:.19,hard:.11}[s.difficulty];
+  const react={easy:.26,normal:.15,hard:.10}[s.difficulty];
   s.ai.readTimer+=dt;
   if(s.ai.readTimer>=react){
     s.ai.readTimer=0;
     if(b.lastHit==="south" && b.vz<0){
-      const where=projectLanding(b,2.8);
-      if(where&&(where.crossed||b.netCrossed) && where.z<-.05) {
-        s.ai.targetX=clamp(where.x,-6.2,6.2);
-        s.ai.targetZ=clamp(where.z+1.55,-16,-.7);
+      const intercept=forecastIntercept(b,p,DT,integrate,
+        {radius:COURT.ballR,ownSide:"north",maxSeconds:2.65});
+      if(intercept) {
+        s.ai.targetX=clamp(intercept.x,-COURT.playableHalfX,COURT.playableHalfX);
+        s.ai.targetZ=clamp(intercept.z-.35,-COURT.playableHalfZ,-.7);
       }
     }else {
       s.ai.targetX=.6;s.ai.targetZ=-12.0;
@@ -234,7 +244,7 @@ function updateCPU(s,dt){
   const l=hypot(dx,dz);
   acceleration(p,l>.25?dx/l:0,l>.25?dz/l:0,dt,false,l<1.2);
   if(b.lastHit==="south"&&b.vz<0 && b.z<0 && b.y<3.3){
-    if(!p.shot){p.shot=(rng(s)<.2?"slice":"topspin");p.charge=.1;p.aim=0;p.depth=0;}
+    if(!p.shot){p.shot=(rng(s)<.2?"slice":"topspin");p.charge=.12;p.aim=0;p.depth=0;}
     p.charge=Math.min(.85,p.charge+dt);
     const bias=clamp((s.players.south.x>=0?-.88:.88)+(rng(s)-.5)*.07,-1,1);
     p.aim += (bias-p.aim)*Math.min(1,dt*3);
