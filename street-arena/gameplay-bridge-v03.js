@@ -63,6 +63,10 @@ export function attachGameplayV03({THREE,renderer,camera,scene,athletes,sphere,b
   }
   function dispatchEvents(){
     for(const e of state.events){
+      // Animate authored visual poses for all on-ball/off-ball actions.
+      const actorVisual=athletes[e.who];
+      if(actorVisual?.motion)actorVisual.motion.play(e.type,1);
+
       if(e.type==="goal")flash(e.who==="player"?"¡GOOOL!":"GOL DEL RIVAL");
       else if(e.type==="shot"&&state.players[e.who]?.team==="cyan")flash("¡DISPARO!");
       else if(e.type==="finesse_shot")flash("¡TIRO CON EFECTO!");
@@ -81,7 +85,7 @@ export function attachGameplayV03({THREE,renderer,camera,scene,athletes,sphere,b
       const p=state.players[id],old=prev.actors[id]||cur.actors[id];
       visual.group.position.set(mix(old.x,p.x,t),0,mix(old.z,p.z,t));
       visual.group.rotation.y=Math.atan2(-p.faceX,-p.faceZ);
-      visual.group.rotation.z=p.slideTicks>0?-.55:0;
+      visual.motion.update(p,dt,{aiming:playing && id===state.selected && state.shot.held, controlled:state.ball.owner===id});
       visual.halo.material.opacity=id===state.selected?.98:(state.ball.owner===id?.84:.39);
       visual.halo.scale.setScalar(id===state.selected?1.12:.83);
     }
@@ -137,5 +141,9 @@ export function attachGameplayV03({THREE,renderer,camera,scene,athletes,sphere,b
     camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.8));
   });
+  // Read-only diagnostics for cloud browser animation regression testing.
+  window.__streetArenaMotionDebug=()=>Object.fromEntries(
+    Object.entries(athletes).map(([id,visual])=>[id,visual.motion.debug()])
+  );
   requestAnimationFrame(frame);
 }
