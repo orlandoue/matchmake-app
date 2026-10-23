@@ -40,13 +40,19 @@ test("player momentum accelerates, stops and respects near court bounds",()=>{
   advance(s,30,{});
   assert.ok(Math.hypot(p.vx,p.vz)<speed);
 });
-test("early preparation charges shot while running slows stance",()=>{
+test("early preparation charges shot while moving and serves on preparation completion",()=>{
   const s=newMatch();
   advance(s,24,{d:true,x:1});
   const p=s.players.south;
-  assert.ok(p.charge>=.18);
-  assert.ok(p.aim>.1);
-  assert.equal(s.phase,"rally"); // first serve after preparation
+  assert.equal(s.phase,"rally");
+  assert.equal(p.charge,0); // the serve has released the stored preparation
+  assert.ok(s.ball.lastHit==="south");
+  const r=newMatch();
+  r.phase="rally";r.ball.lastHit="north";
+  r.ball.x=0;r.ball.z=-4;r.ball.y=1.4;
+  advance(r,24,{d:true,x:1});
+  assert.ok(r.players.south.charge>=.18);
+  assert.ok(r.players.south.aim>.1);
 });
 test("ballistic target solver yields a landable outgoing serve inside service box",()=>{
   const s=newMatch();
