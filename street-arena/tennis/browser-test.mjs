@@ -11,6 +11,7 @@ try{
  const initial=await page.evaluate(()=>window.__matchmakeTennisDebug());
  assert.equal(initial.scene.courtWidth,8.23);
  assert.equal(initial.scene.netHeight,.914);
+ assert.equal(initial.scene.theme,"tournament");
  assert.equal(initial.scene.ballCollisionRadius,.0335);
  assert.equal(initial.scene.ballVisualRadius,.085);
  assert.ok(Math.abs(initial.avatarYaw.south)<.01,"south athlete faces net");
@@ -58,5 +59,7 @@ try{
  assert.ok(Number.isFinite(rally.impactError.south),"racket contact gap is observable");
  assert.deepEqual(errors,[],"no uncaught script errors");
  await page.screenshot({path:"street-arena/tennis/tennis-browser-smoke.png"});
+ await page.goto("http://127.0.0.1:4173/tennis/?court=night",{waitUntil:"domcontentloaded",timeout:30000});
+ await page.waitForFunction(()=>window.__matchmakeTennisDebug?.().scene?.theme==="night",{timeout:30000});
  console.log("MATCHMAKE TENNIS BROWSER PASS",JSON.stringify({initial,moved,rally}));
 }finally{await browser.close();}
